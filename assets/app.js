@@ -1,7 +1,7 @@
 "use strict";
 const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const state={all:[],filtered:[],limit:18};
-const filters=["search","dynasty","theme","form","hardness","status"];
+const filters=["search","dynasty","theme","form","hardness","model","tool","status"];
 const CHOSEN=["山川","江河","湖泊","田园","边塞","春景","秋景","雪景","月夜","雨雾","古城","楼阁","瀑布","节庆"];
 const github="https://github.com/jackson-heylion/Poetic-Realms";
 function option(select,items){items.forEach(item=>{const e=document.createElement("option");e.value=item;e.textContent=item;select.append(e);});}
@@ -15,8 +15,8 @@ function render(){
  const vals=Object.fromEntries(filters.map(k=>[k,$("#"+k).value.trim()]));
  const query=vals.search.toLocaleLowerCase();
  state.filtered=state.all.filter(p=>{
-  const hay=[p.title,p.author,p.dynasty,p.excerpt,p.visualBrief,...p.categories].join(" ").toLocaleLowerCase();
-  return (!query||hay.includes(query))&&(!vals.dynasty||p.dynasty===vals.dynasty)&&(!vals.theme||p.categories.includes(vals.theme))&&(!vals.form||p.form===vals.form)&&(!vals.hardness||p.hardness===vals.hardness)&&(!vals.status||p.sceneStatus===vals.status);
+  const hay=[p.title,p.author,p.dynasty,p.excerpt,p.visualBrief,p.model||"",p.hardness,...p.tools,...p.categories].join(" ").toLocaleLowerCase();
+  return (!query||hay.includes(query))&&(!vals.dynasty||p.dynasty===vals.dynasty)&&(!vals.theme||p.categories.includes(vals.theme))&&(!vals.form||p.form===vals.form)&&(!vals.hardness||p.hardness===vals.hardness)&&(!vals.model||(p.model||"待分配")===vals.model)&&(!vals.tool||(p.tools.length?p.tools:["待分配"]).includes(vals.tool))&&(!vals.status||p.sceneStatus===vals.status);
  });
  const shown=state.filtered.slice(0,state.limit);
  $("#catalog-grid").innerHTML=shown.length?shown.map((p,i)=>card(p,i)).join(""):'<div class="empty">未找到符合条件的诗境。试试放宽筛选条件。</div>';
@@ -42,7 +42,7 @@ async function start(){
   const data=await res.json();if(!Array.isArray(data.poems))throw Error("目录格式错误");
   state.all=data.poems;
   const eras=[...new Set(state.all.map(x=>x.dynasty))], themes=[...new Set(state.all.flatMap(x=>x.categories))], forms=[...new Set(state.all.map(x=>x.form))];
-  option($("#dynasty"),eras);option($("#theme"),themes);option($("#form"),forms);
+  option($("#dynasty"),eras);option($("#theme"),themes);option($("#form"),forms);option($("#model"),[...new Set(state.all.map(x=>x.model||"待分配"))]);option($("#tool"),[...new Set(state.all.flatMap(x=>x.tools.length?x.tools:["待分配"]))]);
   $("#metric-total").textContent=state.all.length;$("#metric-eras").textContent=eras.length;$("#metric-tasks").textContent=state.all.filter(x=>x.issueNumber).length;
   $("#popular").innerHTML=CHOSEN.filter(x=>themes.includes(x)).map(x=>'<button class="chip" type="button" data-theme="'+esc(x)+'">'+esc(x)+'</button>').join("");
   filters.forEach(k=>$("#"+k).addEventListener(k==="search"?"input":"change",()=>{state.limit=18;render();}));
