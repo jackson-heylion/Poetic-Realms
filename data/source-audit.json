@@ -1120,6 +1120,19 @@
           "西塞山前白鷺飛，桃花流水鱖魚肥。",
           "青篛笠，綠簑衣，斜風細雨不須歸。"
         ]
+      },
+      {
+        "path": "全唐诗/poet.tang.49000.json",
+        "matchTitle": "漁父 一",
+        "matchAuthor": "張志和",
+        "similarity": 1,
+        "titleSimilarity": 0.33,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "西塞山前白鷺飛，桃花流水鱖魚肥。",
+          "青箬笠，綠蓑衣，斜風細雨不須歸。"
+        ]
       }
     ],
     "wannchun": [
@@ -1302,6 +1315,21 @@
         "poemText": [
           "向晚意不適，驅車登古原。",
           "夕陽無限好，只是近黃昏。"
+        ]
+      }
+    ],
+    "yijiangnan": [
+      {
+        "path": "全唐诗/poet.tang.49000.json",
+        "matchTitle": "憶江南 一",
+        "matchAuthor": "白居易",
+        "similarity": 1,
+        "titleSimilarity": 0.75,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "江南好，風景舊曾諳。",
+          "日出江花紅勝火，春來江水綠如藍，能不憶江南。"
         ]
       }
     ]
