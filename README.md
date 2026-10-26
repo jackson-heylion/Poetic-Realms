@@ -9,7 +9,7 @@
 - **126 条首批候选诗词、词曲及景观相关古文**，跨先秦、两汉、魏晋、南北朝、唐、宋、元、明、清。保存诗题、作者、体裁、摘句、完整电子全文、出处、异文提示、景观标签和场景创作信息。
 - **静态导航站**：搜索诗题/作者/诗句/意象，按朝代、景观、体裁、模型、工具、难度、制作状态筛选；展开全文、核对原文出处和异文说明。
 - **首个可交互 WebGL 原型**：[《江雪》](scenes/jiangxue.html)，支持旋转、缩放、动态降雪、画质切换与暂停；单 HTML，可离线打开。
-- **极简一键创作**：126 首诗的卡片、详情及任务大厅均可复制提示词，内容**仅有对应摘句和「用单个 HTML 文件生成 3D 动态场景」的要求**，不限制 AI 的实现、画面或流程，也不要求 GitHub 账号；需要参与仓库共建的开发者可另行使用 Issue / PR。
+- **创作与交作业分离**：126 首诗都有「复制创作提示词」（只含诗句和单 HTML 3D 动态场景要求）与「复制交作业提示词」（把做好 HTML 作为新版本提交 GitHub）。每首诗允许收录多个互不覆盖的 HTML，展厅可切换浏览。
 - **GitHub Issue 任务池**：首批 10 道 3D 场景任务。AI Agent 与贡献者按 `/claim model=... tool=...` 认领，领取工作流尽力自动分配 Assignee；PR 合并前人工审核。
 - **CI 结构校验**：JSON 唯一性、字段约束、站内资源引用及脚本语法。
 
@@ -44,7 +44,10 @@ node scripts/test-agent-prompt.mjs
 index.html                   主展馆 / 搜索导航 / 任务入口
 assets/                      原生静态站样式、JS、图标
 data/poems.json              126条诗词、电子全文与原文来源、异文、场景元数据
-scenes/{id}.html             各场景独立自包含 HTML
+scenes/{id}.html             历史作品保留的 HTML
+scenes/{id}/{variant-id}.html 同一首诗的多个独立创作版本
+gallery.html                 多版本场景浏览器
+assets/gallery.js             切换版本及独立打开
 data/source-audit.json       原文电子语料自动匹配与证据记录
 docs/CATALOG_RULES.md        分类与版本校勘规则
 docs/TEXTUAL_AUDIT.md        126篇逐篇出处表、异文和后续底本校勘清单
@@ -68,3 +71,17 @@ scripts/validate.mjs         数据、引用、JavaScript 检查
 126篇录有电子全文和可追踪链接，具体来源与电子转录比对结果逐篇见 [poems.json](data/poems.json)、[source-audit.json](data/source-audit.json)。84篇摘句与数字语料简繁规范化后可吻合；五篇存在明确的关键异文，见审校文档。主要电子语料：[chinese-poetry](https://github.com/chinese-poetry/chinese-poetry)、[维基文库](https://zh.wikisource.org/)。当前只完成**数字原文收集、逐篇来源记录、自动对照及部分异文核查**，尚未完成纸本底本逐字校勘；不得标为“已版本校勘”。引入第三方转录、译文、注释、图片或音频前须核对其许可与来源；古诗文原作的年代与现代整理成果的权利应分开处理。
 
 本仓库将模型/工具/Hardness 作为**创作过程元数据**，而不是给诗歌分优劣等级。
+
+## 一诗多境 · 作品交付
+
+复制创作提示词后，AI 自由发挥，生成单个 HTML。做好后使用独立的「复制交作业提示词」，引导 Agent 将作品上传仓库并登记为该首诗的一个新版本，不覆盖旧作品。
+
+馆藏数据现为 `schemaVersion: 3`，每篇增加 `scenes[]`：
+
+```json
+{"id":"jiangxue","scenes":[
+  {"id":"original","title":"初版 · 江雪","path":"scenes/jiangxue.html","model":"GPT-6","tools":["WebGL1","Vanilla JS"],"status":"prototype"}
+]}
+```
+
+新作品可追加 `{"id":"ink-style","title":"水墨风格","path":"scenes/jiangxue/ink-style.html","model":"实际模型","tools":["实际工具"],"status":"prototype"}`。此新版本**仅是格式例子，并非目前存在的作品**。PR 必须包含实际 HTML 才能通过 CI。已收录版本可以在 `gallery.html?poem=jiangxue` 一键切换；每次只加载当前选中的一个 HTML。
