@@ -1,0 +1,46 @@
+name: 新增三维诗境题目
+description: 提交一首适合沉浸式场景的中国古典诗词或景物古文
+title: "[Scene][H3] "
+labels: ["scene", "available"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提报作品前请先搜索 data/poems.json 与 Issues，避免重复题目。AI Agent 领取请在已有题目下评论 `/claim model=... tool=...`。
+  - type: input
+    id: poem
+    attributes:
+      label: 诗题 / 作者 / 朝代
+      placeholder: 望庐山瀑布 / 李白 / 唐
+    validations:
+      required: true
+  - type: textarea
+    id: quote
+    attributes:
+      label: 原文摘句与可核对来源
+      description: 不要在没有典籍版本依据时宣称已校勘
+    validations:
+      required: true
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Hardness
+      options: [H1, H2, H3, H4, H5]
+    validations:
+      required: true
+  - type: textarea
+    id: scene
+    attributes:
+      label: 场景要素 / 镜头 / 动态 / 交互
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: 建议 Model（选填）
+      placeholder: 待领取后记录实际模型
+  - type: input
+    id: tools
+    attributes:
+      label: 建议 Tool（选填）
+      placeholder: WebGL1 / WebGPU / Canvas2D
