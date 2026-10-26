@@ -25,7 +25,7 @@
 
 ## JSON 约定
 
-目录为 `data/poems.json`，首层 `schemaVersion` + `poems`。每条记录包含 `id`、`title`、`author`、`dynasty`、`form`、`excerpt`、`categories[]`、`hardness`、`visualBrief`、`textReview`、`sceneStatus`、`scenePath`、`model`、`tools[]`、`issueNumber`。当前 `schemaVersion=2`，每条另含：`sources[]`（种类、来源、篇名、卷目、可查网址、摘句匹配方式），`sourceStatus`（transcription-exact / transcription-near / reference-reviewed），`sourceNote`（篇次、异文、作者争议与待查项）、`transcription.text[]`（电子全文原文保留原有简繁及标点）、`transcription.mode` 和 `warning`；自动比对的详细中间证据另见 `data/source-audit.json`。未来地理字段应保持版本兼容，禁止把 AI 自行猜测的坐标当作可靠数据。
+目录为 `data/poems.json`，首层 `schemaVersion` + `poems`。每条记录包含 `id`、`title`、`author`、`dynasty`、`form`、`excerpt`、`categories[]`、`hardness`、`visualBrief`、`textReview`、`sceneStatus`、`scenePath`、`model`、`tools[]`、`issueNumber`。当前 `schemaVersion=3`，每条另含：`sources[]`（种类、来源、篇名、卷目、可查网址、摘句匹配方式），`sourceStatus`（transcription-exact / transcription-near / reference-reviewed），`sourceNote`（篇次、异文、作者争议与待查项）、`transcription.text[]`（电子全文原文保留原有简繁及标点）、`transcription.mode` 和 `warning`；自动比对的详细中间证据另见 `data/source-audit.json`。未来地理字段应保持版本兼容，禁止把 AI 自行猜测的坐标当作可靠数据。
 
 ## 推荐数据策略
 
@@ -39,3 +39,9 @@
 - 网络源不一定提供原书卷次，不能补造。缺乏书目坐标时应原样标记“待查卷次”。
 - 古籍版权与现代整理成果的版式、注解、翻译版权不同。来源引文只用于溯源，不盲目复制现代译注。
 - 每次新增文本先完成原文链接记录、校对异文和 CI，再考虑公开成品。
+
+## 多场景交付规则（v3）
+
+每首诗的 `scenes[]` 可列出任意多个自包含 HTML。每项必须具备：本诗内唯一 `id`、标题 `title`、文件 `path`、实际模型 `model`、`tools[]`、`status=prototype|published`。新版本路径 `scenes/{poem-id}/{variant-id}.html`；旧版保留 `scenes/{poem-id}.html`，不得覆盖其他版本。所有路径均需实际存在、在仓库内且不可重复。
+
+诗词级 `scenePath` 是兼容旧目录的历史字段，不代表只能有一个作品。页面由 `gallery.html?poem={poem-id}&scene={variant-id}` 切换不同的真实 HTML。创作提示词始终极简，投稿的仓库流程由单独「交作业提示词」负责。
