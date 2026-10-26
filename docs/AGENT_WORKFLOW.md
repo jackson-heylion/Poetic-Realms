@@ -12,9 +12,9 @@
 
 1. 先核对诗文、列出诗句支持的意象，并注明艺术加工。
 2. 明确场景镜头、空间布局、光照天气、动态规律、交互方式和性能预算。
-3. 从最新 main 新建分支，交付 `scenes/{id}.html`；一题一个自包含 HTML，不引入 CDN、不请求远程 API、不引用站点样式、无需打包。
+3. 从最新 main 新建分支，一篇诗可收录多个自包含 HTML。保留旧 `scenes/{id}.html`，新作品交付 `scenes/{id}/{variant-id}.html`，不引入 CDN、不请求远程 API、不引用站点样式、无需打包。
 4. 场景优先真实三维 WebGL（WebGL1 兼容主流手机），纯 CSS/2D 不能伪装成 3D。允许根据题目选择 Canvas2D，但须如实记录方法。
-5. 更新 `data/poems.json` 的 `scenePath`、`sceneStatus`、`model`、`tools`，保持稳定 ID。原型标 `prototype`，验收通过后再改 `published`。
+5. 在 `data/poems.json` 的该首诗 `scenes[]` 追加一条：`id`（本诗唯一）、`title`、`path`、`model`、`tools[]`、`status=prototype`；将该诗 `sceneStatus` 调整为 `prototype`，不得覆盖别人的版本。`scenePath` 是旧版兼容字段，新投稿不用设置。
 6. 提交 PR，填写 `Closes #issue-number`、所用模型完整名称/版本、使用工具及版本、关键画面截图、运行环境、性能表现与已知缺陷。
 
 ## 3. Hardness 指南
@@ -54,3 +54,11 @@ Hardness 是**预估任务工程难度**，允许 PR 复核调整。
 ```
 
 **复制提示词仅用于自由创作**，不包含 GitHub 链接、Issue、PR、Hardness、模型、工具、测试或其他开发约束。需向本仓库提交作品时，可再独立遵循本文件前述 Issue 和 PR 贡献流程；它们不应添加到一键复制内容中。
+
+## 7. 复制交作业提示词 / 一诗多境
+
+「复制创作提示词」继续仅提供诗句和单 HTML 动态 3D 场景要求，供 AI 自由发挥。
+
+第二个独立按钮「复制交作业提示词」用于已完成创作的投稿：引导有 GitHub 权限的 Agent 将新 HTML 保存到 `scenes/{poem-id}/{variant-id}.html`，追加 `data/poems.json` 的 `scenes[]` 元数据，最后提交 Pull Request 并返回链接。没有写入权限则说明阻断，不得虚构交付。
+
+多个作者可就同一首诗提交不同 HTML。保留现有 `scenes/{poem-id}.html`；重复的 `id` 或文件路径会被 CI 拦截。页面从 `gallery.html?poem={poem-id}` 进入版本展厅，可切换版本或单独打开，切换时只加载一个渲染 iframe，避免多 WebGL 实例同时运行。
