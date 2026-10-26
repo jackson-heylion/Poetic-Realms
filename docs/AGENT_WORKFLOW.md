@@ -42,3 +42,15 @@ Hardness 是**预估任务工程难度**，允许 PR 复核调整。
 ## 5. 标签约定
 
 `scene`、`available`、`in-progress`、`review`、`published`、`hardness:H1`~`hardness:H5`。模型与工具的实际值**先写 Issue 认领命令和 PR**；后续可按稳定名称补充 `model:<name>` 和 `tool:<name>` 标签。不得把 `model=unassigned` 解释成已经由模型执行。
+
+## 6. 网页「一键复制 Agent 提示词」
+
+打开 GitHub Pages 主展馆，在诗词卡片、诗词详情或「创作共建」任务大厅点击 **复制 Agent 任务提示词**。复制后粘贴给能访问仓库的 Codex、Claude Code 或其他 AI Agent。
+
+提示词由 `assets/agent-prompt.js` 根据每条 `data/poems.json` 元数据生成，自动包含：稳定条目 ID、实际应编辑的 `scenes/{id}.html`、诗题/作者/难度、完整电子全文、版本说明、来源链接、画面要求、对应 Issue、认领流程、实现规范、CI 检查和 PR 交付格式。
+
+**复制不等于认领。** Agent 必须先检索当前 Issue 与 Assignee。未被领取的 Issue 用 `/claim model=<实际模型> tool=<实际工具>` 申请；当前账号已被分配则继续执行，不应重复评论；被他人认领就停止，避免并行冲突。无 Issue 则创建并回填 `issueNumber`。没有 GitHub 写入能力则说明阻断并提供可用补丁，不能声称提交成功。
+
+**交作业是 PR，而非截图或效果描述。** Agent 需实际提交代码、更新源数据、运行 `node scripts/validate.mjs` 与 `node scripts/test-agent-prompt.mjs`，在 PR 中关联 `Closes #Issue`，报告实际截图、性能测试及 CI 状态。
+
+静态页面本身不储存 GitHub Token，也不会代表访问者自动在 GitHub 评论、分配 Assignee 或推送代码。
