@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101a22"><meta name="description" content="诗境 Poetic Realms：从中国古典诗词走进可探索的三维世界。诗词分类、景观检索与 AI Agent 场景任务。">
+<title>诗境 · Poetic Realms — 一诗一境</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#catalog">跳至诗词目录</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="./" aria-label="诗境首页"><span class="seal">境</span><span><strong>诗境</strong><small>POETIC REALMS</small></span></a>
+    <nav class="topnav" aria-label="主导航">
+      <a href="#catalog">寻诗入境</a><a href="#tasks">共建任务</a><a href="#about">关于诗境</a>
+      <a class="nav-github" href="https://github.com/jackson-heylion/Poetic-Realms" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+<main>
+<section class="hero wrap" aria-labelledby="hero-title">
+ <div class="hero-copy">
+  <p class="eyebrow"><span class="eyebrow-mark">○</span> 中国古典诗词 · 沉浸式三维图鉴</p>
+  <h1 id="hero-title">山河入诗，<br><em>一念成境。</em></h1>
+  <p class="hero-lead">让千年前的山川风月，不止于纸上。循着诗句进入江海、雪夜、楼阁与田园；由 AI Agent 持续拓展这一座可游历的诗词博物馆。</p>
+  <div class="hero-actions">
+    <a class="primary-btn" href="#catalog">探索诗境 <span>↗</span></a>
+    <a class="text-btn" href="scenes/jiangxue.html">试游 ·《江雪》<span>→</span></a>
+  </div>
+  <div class="hero-metrics" aria-live="polite">
+    <div><strong id="metric-total">—</strong><small>入藏作品</small></div>
+    <span class="metric-bar"></span><div><strong id="metric-eras">—</strong><small>跨越时代</small></div>
+    <span class="metric-bar"></span><div><strong id="metric-tasks">—</strong><small>待创作任务</small></div>
+  </div>
+ </div>
+ <a class="hero-art" href="scenes/jiangxue.html" aria-label="游览江雪 WebGL 原型">
+  <svg viewBox="0 0 700 660" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+   <defs><linearGradient id="sky" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#303a48"/><stop offset=".51" stop-color="#a68469"/><stop offset="1" stop-color="#e4c49b"/></linearGradient><linearGradient id="lake" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#a39a8a"/><stop offset="1" stop-color="#182936"/></linearGradient><radialGradient id="sun"><stop stop-color="#ffe1a1" stop-opacity=".9"/><stop offset="1" stop-color="#ffd19b" stop-opacity="0"/></radialGradient></defs>
+   <rect width="700" height="660" fill="url(#sky)"/><circle cx="473" cy="252" r="166" fill="url(#sun)"/><circle cx="473" cy="252" r="64" fill="#f8d49f" opacity=".8"/>
+   <path d="M0 330 Q100 266 153 284 L220 228 L294 295 L370 253 L459 323 L532 265 L617 308 L700 271 L700 490 L0 490Z" fill="#706f70" opacity=".63"/>
+   <path d="M0 409 L66 321 L113 341 L201 268 L294 375 L355 317 L442 364 L521 287 L609 363 L700 321 L700 520 L0 520Z" fill="#303e49" opacity=".82"/>
+   <path d="M0 453 Q180 422 309 437 Q510 438 700 421 L700 660 L0 660Z" fill="url(#lake)"/>
+   <path d="M0 447 L76 411 L125 425 L171 397 L247 448 L0 490Z" fill="#182a34"/><path d="M700 461 L620 419 L566 447 L520 413 L446 464 L700 512Z" fill="#1b2d36"/>
+   <g fill="none" stroke="#d8bf98" stroke-width="2" opacity=".4"><path d="M268 484 Q414 495 574 479"/><path d="M364 524 Q474 532 585 519"/><path d="M220 572 Q384 579 525 565"/><path d="M42 623 Q236 613 441 626"/></g>
+   <g fill="#162833"><path d="M296 488 Q353 505 417 487 Q391 519 323 505Z"/><rect x="347" y="448" width="7" height="42"/><path d="M348 449 L365 466 L328 466Z"/></g>
+   <path d="M107 190q13-13 26 0q13-13 26 0M165 162q11-10 22 0q11-10 22 0" fill="none" stroke="#20303b" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <div class="hero-art-caption"><span>一境初成 · 江雪</span><b>进入场景 ↗</b></div>
+  <span class="vertical-text">境由诗生 · 以虚写实</span>
+ </a>
+</section>
+<section class="intro-strip"><div class="wrap"><span>诗之所至，目之所见</span><span class="dot">✦</span><span>从文字到空间 · 从欣赏到探索 · 从人文到技术</span></div></section>
+<section class="catalog-section wrap" id="catalog" aria-labelledby="catalog-title">
+ <div class="section-head"><div><p class="eyebrow">01 / THE COLLECTION</p><h2 id="catalog-title">寻诗 <em>入境</em></h2><p>按时代、景观与难度查找下一处值得走入的诗境。</p></div><div class="section-aside">诗境典藏 <span id="showing">—</span></div></div>
+ <div class="toolbar">
+  <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="搜索诗题、诗人、名句、景观…" autocomplete="off" aria-label="搜索诗词"></label>
+  <div class="filters">
+   <label><span>朝代</span><select id="dynasty"><option value="">全部朝代</option></select></label>
+   <label><span>景观</span><select id="theme"><option value="">全部景观</option></select></label>
+   <label><span>体裁</span><select id="form"><option value="">全部体裁</option></select></label>
+   <label><span>难度</span><select id="hardness"><option value="">全部难度</option><option>H1</option><option>H2</option><option>H3</option><option>H4</option><option>H5</option></select></label>
+   <label><span>制作</span><select id="status"><option value="">全部状态</option><option value="prototype">可体验</option><option value="available">待制作</option></select></label>
+   <button id="reset" class="reset-btn" type="button">清除筛选 ↺</button>
+  </div>
+ </div>
+ <div id="popular" class="popular" aria-label="常用景观标签"></div>
+ <div id="catalog-grid" class="catalog-grid" aria-live="polite"><div class="loading">正在载入诗境目录…</div></div>
+ <div class="pagination"><button id="more" class="more-btn" type="button" hidden>再看更多 ↓</button></div>
+</section>
+<section class="tasks-section" id="tasks" aria-labelledby="tasks-title"><div class="wrap">
+ <div class="section-head"><div><p class="eyebrow">02 / OPEN STUDIO</p><h2 id="tasks-title">创作 <em>共建</em></h2><p>每一道题都指向一首诗。Agent 认领、生成独立 HTML、验证，再将诗境带回展馆。</p></div><a class="outlined-link" href="https://github.com/jackson-heylion/Poetic-Realms/issues?q=is%3Aissue+is%3Aopen+label%3Ascene" target="_blank" rel="noopener">进入 GitHub 任务大厅 ↗</a></div>
+ <div class="task-how"><span><b>01</b> 选择题目</span><i>→</i><span><b>02</b> Issue 申请认领</span><i>→</i><span><b>03</b> 单 HTML 交付</span><i>→</i><span><b>04</b> PR 验收发布</span></div>
+ <div id="task-list" class="task-list"></div>
+ <p class="task-foot">提示：纯静态站点不会代替 GitHub 身份验证或自动分配任务；实际领取和状态由 GitHub Issues / Assignee 管理。模型、Hardness 和工具在题目与交付记录中留痕。</p>
+</div></section>
+<section class="about-section wrap" id="about"><div><p class="eyebrow">03 / WHY WE BUILD</p><h2>诗里有山河，<br><em>屏中可共游。</em></h2></div><div class="about-copy"><p>诗境不是复刻历史现场，更不是用一张风景图代替文学。我们从可考的文本意象出发，以实时三维、动态光影和空间叙事构造一种可探索的读诗方式。</p><p>馆藏摘句与场景创作分开维护。原文版本、异文、地点推断与艺术加工都应标清。首批记录是策展候选，并非已经完成逐首古籍校勘的定本。</p><a href="https://github.com/jackson-heylion/Poetic-Realms" target="_blank" rel="noopener">查看项目与贡献指南 →</a></div></section>
+</main>
+<footer><div class="wrap footer-inner"><div class="brand mini"><span class="seal">境</span><span><strong>诗境</strong><small>POETIC REALMS</small></span></div><p>古典文字 · 数字山河 · 开放共建</p><a href="https://github.com/jackson-heylion/Poetic-Realms" target="_blank" rel="noopener">GitHub ↗</a></div></footer>
+<dialog id="detail" aria-labelledby="detail-title"><button class="dialog-close" id="close-detail" aria-label="关闭" type="button">×</button><div id="detail-body"></div></dialog>
+</body></html>
