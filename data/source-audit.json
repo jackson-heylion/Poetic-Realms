@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 1,
+  "method": "automatic fuzzy normalized excerpt and title/author match on community corpora; not critical edition collation; inspect individual record for title variants and attribution",
+  "sourceRepository": "https://github.com/chinese-poetry/chinese-poetry",
+  "matchedAt": "2026-10-26",
+  "entries": {
+    "baidicheng": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "早發白帝城",
+        "matchAuthor": "李白",
+        "similarity": 0.714,
+        "titleSimilarity": 0.8,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "早發白帝城",
+        "matchAuthor": "李白",
+        "similarity": 0.714,
+        "titleSimilarity": 0.8,
+        "authorSimilarity": 1
+      }
+    ],
+    "dujingmen": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "渡荊門送別",
+        "matchAuthor": "李白",
+        "similarity": 0.8,
+        "titleSimilarity": 0.4,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "渡荆門送別",
+        "matchAuthor": "李白",
+        "similarity": 0.8,
+        "titleSimilarity": 0.6,
+        "authorSimilarity": 1
+      }
+    ],
+    "tianmu": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "夢遊天姥吟留別",
+        "matchAuthor": "李白",
+        "similarity": 0.714,
+        "titleSimilarity": 0.57,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "夢遊天姥吟留別",
+        "matchAuthor": "李白",
+        "similarity": 0.714,
+        "titleSimilarity": 0.57,
+        "authorSimilarity": 1
+      }
+    ],
+    "lyuye": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "旅夜書懷",
+        "matchAuthor": "杜甫",
+        "similarity": 0.9,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "蒙学/qianjiashi.json",
+        "matchTitle": "旅夜書懷",
+        "matchAuthor": "（唐）杜甫",
+        "similarity": 0.9,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "旅夜書懷",
+        "matchAuthor": "杜甫",
+        "similarity": 0.8,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1
+      }
+    ],
+    "deng-yueyanglou": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "登岳陽樓",
+        "matchAuthor": "杜甫",
+        "similarity": 0.8,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "蒙学/qianjiashi.json",
+        "matchTitle": "登岳陽樓",
+        "matchAuthor": "（唐）杜甫",
+        "similarity": 0.7,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "登岳陽樓",
+        "matchAuthor": "杜甫",
+        "similarity": 0.8,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1
+      }
+    ],
+    "jiandejiang": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "宿建德江",
+        "matchAuthor": "孟浩然",
+        "similarity": 0.8,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "宿建德江",
+        "matchAuthor": "孟浩然",
+        "similarity": 0.8,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1
+      }
+    ],
+    "guogurenzhuang": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "過故人莊",
+        "matchAuthor": "孟浩然",
+        "similarity": 0.7,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "過故人莊",
+        "matchAuthor": "孟浩然",
+        "similarity": 0.7,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1
+      }
+    ],
+    "guyuan": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "賦得古原草送別",
+        "matchAuthor": "白居易",
+        "similarity": 0.7,
+        "titleSimilarity": 0.71,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "賦得古原草送別",
+        "matchAuthor": "白居易",
+        "similarity": 0.7,
+        "titleSimilarity": 0.71,
+        "authorSimilarity": 1
+      }
+    ],
+    "boqinhuai": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "泊秦淮",
+        "matchAuthor": "杜牧",
+        "similarity": 0.786,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "蒙学/qianjiashi.json",
+        "matchTitle": "秦淮夜泊",
+        "matchAuthor": "（唐）杜牧",
+        "similarity": 0.786,
+        "titleSimilarity": 0.67,
+        "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "泊秦淮",
+        "matchAuthor": "杜牧",
+        "similarity": 0.786,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1
+      }
+    ],
+    "yeyu-jibei": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "夜雨寄北",
+        "matchAuthor": "李商隱",
+        "similarity": 0.786,
+        "titleSimilarity": 1,
+        "authorSimilarity": 0.67
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "夜雨寄北",
+        "matchAuthor": "李商隱",
+        "similarity": 0.786,
+        "titleSimilarity": 1,
+        "authorSimilarity": 0.67
+      }
+    ],
+    "guanque": [
+      {
+        "path": "蒙学/tangshisanbaishou.json",
+        "matchTitle": "登鸛雀樓",
+        "matchAuthor": "王之渙",
+        "similarity": 0.8,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 0.67
+      },
+      {
+        "path": "蒙学/qianjiashi.json",
+        "matchTitle": "登鸛雀樓",
+        "matchAuthor": "（唐）王之渙",
+        "similarity": 0.8,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 0.67
+      },
+      {
+        "path": "全唐诗/唐诗三百首.json",
+        "matchTitle": "登鸛雀樓",
+        "matchAuthor": "王之渙",
+        "similarity": 0.8,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 0.67
+      }
+    ],
+    "jiangnanchun": [
+      {
+        "path": "蒙学/qianjiashi.json",
+        "matchTitle": "江南春",
+        "matchAuthor": "（唐）杜牧",
+        "similarity": 0.714,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1
+      }
+    ],
+    "guanshu": [
+      {
+        "path": "蒙学/qianjiashi.json",
+        "matchTitle": "觀書有感（其一）",
+        "matchAuthor": "（宋）朱熹",
+        "similarity": 0.714,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1
+      }
+    ],
+    "tilinandi": [
+      {
+        "path": "蒙学/qianjiashi.json",
+        "matchTitle": "題臨安邸",
+        "matchAuthor": "（宋）林升",
+        "similarity": 0.714,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1
+      }
+    ],
+    "shijing-jianjia": [
+      {
+        "path": "诗经/shijing.json",
+        "matchTitle": "蒹葭",
+        "matchAuthor": "",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 0.7
+      }
+    ],
+    "shijing-taoyao": [
+      {
+        "path": "诗经/shijing.json",
+        "matchTitle": "桃夭",
+        "matchAuthor": "",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 0.7
+      }
+    ],
+    "chuci-xiangfuren": [
+      {
+        "path": "楚辞/chuci.json",
+        "matchTitle": "湘夫人",
+        "matchAuthor": "屈原",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1
+      }
+    ],
+    "changxiangsi": [
+      {
+        "path": "纳兰性德/纳兰性德诗集.json",
+        "matchTitle": "长相思·山一程",
+        "matchAuthor": "纳兰性德",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1
+      }
+    ],
+    "guan-canghai": [
+      {
+        "path": "曹操诗集/caocao.json",
+        "matchTitle": "观沧海",
+        "matchAuthor": "",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 0.7
+      }
+    ]
+  }
+}
