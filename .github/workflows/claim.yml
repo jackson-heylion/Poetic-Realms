@@ -1,0 +1,45 @@
+name: Claim scene tasks
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  issues: write
+jobs:
+  claim:
+    if: ${{ !github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: scene-claim-${{ github.event.issue.number }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const body = (context.payload.comment.body || "").trim();
+            if (!/^\/claim(?:\s|$)/i.test(body)) return;
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.issue.number;
+            const actor = context.payload.comment.user.login;
+            const model = body.match(/\bmodel=([^\s]+)/i)?.[1];
+            const tool = body.match(/\btool=([^\s]+)/i)?.[1];
+            const say = message => github.rest.issues.createComment({owner,repo,issue_number,body:message});
+            const {data:issue} = await github.rest.issues.get({owner,repo,issue_number});
+            const labels = issue.labels.map(x => typeof x === "string" ? x : x.name);
+            if (!labels.includes("scene")) return;
+            if (!model || !tool) {
+              await say("领取格式：`/claim model=GPT-6 tool=WebGL1`。请填写实际模型与工具。");
+              return;
+            }
+            if ((issue.assignees || []).length || !labels.includes("available")) {
+              await say("此题已被领取或已暂停开放；请先检查 Assignee 与标签。");
+              return;
+            }
+            try {
+              await github.rest.issues.addAssignees({owner,repo,issue_number,assignees:[actor]});
+              await github.rest.issues.addLabels({owner,repo,issue_number,labels:["in-progress"]});
+              await github.rest.issues.removeLabel({owner,repo,issue_number,name:"available"});
+              await say("已认领：@"+actor+" · Model: `"+model+"` · Tool: `"+tool+"`。请提交场景 HTML 与 PR，并记录版本与实际测试。");
+            } catch(e) {
+              await say("自动认领未完成：可能不允许将此 GitHub 账号设为 Assignee，或仓库权限不足。请联系维护者手动确认。错误类别："+String(e.status||"unknown"));
+              core.warning(String(e.message));
+            }
