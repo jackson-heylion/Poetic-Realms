@@ -6,13 +6,13 @@
 
 ## 当前内容
 
-- **126 条首批候选诗词、词曲及景观相关古文**，跨先秦、两汉、魏晋、南北朝、唐、宋、元、明、清。保存诗题、作者、体裁、原文摘句、景观标签、场景创意、制作难度、文本校勘状态。
-- **静态导航站**：搜索诗题/作者/诗句/意象，按朝代、景观、体裁、难度、制作状态筛选，查看场景详情。
+- **126 条首批候选诗词、词曲及景观相关古文**，跨先秦、两汉、魏晋、南北朝、唐、宋、元、明、清。保存诗题、作者、体裁、摘句、完整电子全文、出处、异文提示、景观标签和场景创作信息。
+- **静态导航站**：搜索诗题/作者/诗句/意象，按朝代、景观、体裁、模型、工具、难度、制作状态筛选；展开全文、核对原文出处和异文说明。
 - **首个可交互 WebGL 原型**：[《江雪》](scenes/jiangxue.html)，支持旋转、缩放、动态降雪、画质切换与暂停；单 HTML，可离线打开。
 - **GitHub Issue 任务池**：首批 10 道 3D 场景任务。AI Agent 与贡献者按 `/claim model=... tool=...` 认领，领取工作流尽力自动分配 Assignee；PR 合并前人工审核。
 - **CI 结构校验**：JSON 唯一性、字段约束、站内资源引用及脚本语法。
 
-> 重要：第一批属于**策展候选清单**，原文仅录摘句，均标记「待校勘」。不得把目录当作古籍校定本，不得把 AI 生成的古建/地形当作历史现场。
+> 本次新增：**126/126 篇可检索完整电子全文、126/126 篇具备来源链接**，其中 89 篇比对了开源诗词语料，84 篇在简繁与标点规范化后摘句完全吻合，另有逐篇网络底本与文本异文线索。**全都仍处于“待版本校勘”状态**：网上转录与书目定位不等于逐一对照可靠纸本底本的古籍校定。本项目不将其冒充权威定本。详细数据及异文请见 [文本审校记录](docs/TEXTUAL_AUDIT.md)。
 
 ## 访问 GitHub Pages
 
@@ -41,9 +41,11 @@ node scripts/validate.mjs
 ```text
 index.html                   主展馆 / 搜索导航 / 任务入口
 assets/                      原生静态站样式、JS、图标
-data/poems.json              诗词记录与场景元数据唯一数据源
+data/poems.json              126条诗词、电子全文与原文来源、异文、场景元数据
 scenes/{id}.html             各场景独立自包含 HTML
-docs/CATALOG_RULES.md        分类与校勘规则
+data/source-audit.json       原文电子语料自动匹配与证据记录
+docs/CATALOG_RULES.md        分类与版本校勘规则
+docs/TEXTUAL_AUDIT.md        126篇逐篇出处表、异文和后续底本校勘清单
 docs/AGENT_WORKFLOW.md       Agent 领取、模型和难度标签、交付标准
 scripts/validate.mjs         数据、引用、JavaScript 检查
 .github/ISSUE_TEMPLATE/       新题提报
@@ -61,6 +63,6 @@ scripts/validate.mjs         数据、引用、JavaScript 检查
 
 ## 数据来源与版权边界
 
-首批条目由经典作品人工选题与 AI 辅助整理，尚未逐首对照指定版本校勘。候选参考数据集：[chinese-poetry](https://github.com/chinese-poetry/chinese-poetry)、[open-chinese/poetry-collection](https://github.com/open-chinese/poetry-collection)。**这两个链接是后续核对线索，不代表每一条当前已经从其直接验证或复制**。引入第三方转录、译文、注释、图片或音频前须核对其许可与来源；古诗文原作的年代与现代整理成果的权利应分开处理。
+126篇录有电子全文和可追踪链接，具体来源与电子转录比对结果逐篇见 [poems.json](data/poems.json)、[source-audit.json](data/source-audit.json)。84篇摘句与数字语料简繁规范化后可吻合；五篇存在明确的关键异文，见审校文档。主要电子语料：[chinese-poetry](https://github.com/chinese-poetry/chinese-poetry)、[维基文库](https://zh.wikisource.org/)。当前只完成**数字原文收集、逐篇来源记录、自动对照及部分异文核查**，尚未完成纸本底本逐字校勘；不得标为“已版本校勘”。引入第三方转录、译文、注释、图片或音频前须核对其许可与来源；古诗文原作的年代与现代整理成果的权利应分开处理。
 
 本仓库将模型/工具/Hardness 作为**创作过程元数据**，而不是给诗歌分优劣等级。
