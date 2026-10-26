@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "notes": "首批策展候选：仅保存原文摘句和3D创作简述；完整原文、异文及典籍版本需逐首校勘。textReview=待校勘不是已核实。Hardness 为制作难度，非诗词价值评分。",
+  "schemaVersion": 2,
+  "notes": "126条逐首来源字段已建；sourceStatus 表示来源线索与文本对照程度，不表示原典校勘完成。全部 textReview=待版本校勘；不得把电子文本校验冒称权威定本。",
   "sourceCandidates": [
     "https://github.com/chinese-poetry/chinese-poetry",
     "https://github.com/open-chinese/poetry-collection"
@@ -11,7 +11,7 @@
       "title": "蒹葭",
       "author": "佚名",
       "dynasty": "先秦",
-      "form": "古体/乐府",
+      "form": "诗经",
       "excerpt": "蒹葭苍苍，白露为霜。",
       "categories": [
         "江河",
@@ -20,19 +20,33 @@
       ],
       "hardness": "H2",
       "visualBrief": "秋晨河岸的芦苇、白露与对岸朦胧人影",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "蒹葭",
+          "collection": "诗经",
+          "locator": "诗经/shijing.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%AF%97%E7%BB%8F/shijing.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "shijing-taoyao",
       "title": "桃夭",
       "author": "佚名",
       "dynasty": "先秦",
-      "form": "古体/乐府",
+      "form": "诗经",
       "excerpt": "桃之夭夭，灼灼其华。",
       "categories": [
         "花木",
@@ -41,19 +55,33 @@
       ],
       "hardness": "H2",
       "visualBrief": "春日桃树盛放、暖风与乡野",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "桃夭",
+          "collection": "诗经",
+          "locator": "诗经/shijing.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%AF%97%E7%BB%8F/shijing.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "chuci-xiangfuren",
       "title": "九歌·湘夫人",
       "author": "屈原",
       "dynasty": "先秦",
-      "form": "古体/乐府",
+      "form": "楚辞",
       "excerpt": "袅袅兮秋风，洞庭波兮木叶下。",
       "categories": [
         "湖泊",
@@ -62,12 +90,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "洞庭秋波、飘落木叶与朦胧神话气息",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "湘夫人",
+          "collection": "楚辞",
+          "locator": "楚辞/chuci.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E6%A5%9A%E8%BE%9E/chuci.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "jiangnan-cailian",
@@ -83,12 +125,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "夏日荷塘、莲叶漂浮与采莲小舟",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "江南（汉乐府）",
+          "collection": "《乐府诗集》卷二十六",
+          "url": "https://zh.wikisource.org/wiki/%E6%B1%9F%E5%8D%97_(%E6%BC%A2%E6%A8%82%E5%BA%9C)",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "guan-canghai",
@@ -104,12 +157,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "礁岩高处的浩荡沧海、浪涌与海风",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "观沧海",
+          "collection": "曹操诗集",
+          "locator": "曹操诗集/caocao.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E6%9B%B9%E6%93%8D%E8%AF%97%E9%9B%86/caocao.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "guiyuan-tianju",
@@ -125,12 +192,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "暮色田畴、村落归烟与鸡犬",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "归园田居六首·其一",
+          "collection": "《陶渊明集》",
+          "url": "https://zh.wikisource.org/wiki/%E6%AD%B8%E5%9C%92%E7%94%B0%E5%B1%85",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "《归园田居》为组诗，摘句来自其一；电子页并列‘三十年’等异文。"
     },
     {
       "id": "yinjiu-wu",
@@ -146,12 +224,23 @@
       ],
       "hardness": "H2",
       "visualBrief": "秋菊篱笆、南山远景与缓慢云影",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "饮酒二十首·其五",
+          "collection": "《陶渊明集》卷三",
+          "url": "https://zh.wikisource.org/wiki/%E9%A3%B2%E9%85%92%E4%BA%8C%E5%8D%81%E9%A6%96",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "《饮酒》二十首之其五；‘采菊’/‘採菊’属于简繁差异，正文‘欲辩’/‘欲辨’应留意版本。"
     },
     {
       "id": "chile-ge",
@@ -167,16 +256,27 @@
       ],
       "hardness": "H3",
       "visualBrief": "辽阔草原、云影掠地与牛羊群",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "敕勒歌",
+          "collection": "《乐府广题》（辑录）",
+          "url": "https://zh.wikisource.org/wiki/%E6%95%95%E5%8B%92%E6%AD%8C",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "shanzhong-zashi",
-      "title": "山中杂诗",
+      "title": "山中杂诗三首·其一",
       "author": "吴均",
       "dynasty": "南北朝",
       "form": "诗",
@@ -188,12 +288,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "山间炊烟、竹影穿光与飞鸟",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "山中杂诗三首·其一",
+          "collection": "《吴朝请集》/《汉魏六朝百三家集》卷101",
+          "url": "https://zh.wikisource.org/wiki/%E5%90%B3%E6%9C%9D%E8%AB%8B%E9%9B%86",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "吴均《山中杂诗三首》的其一，原目录未标篇次。"
     },
     {
       "id": "deng-chishanglou",
@@ -209,12 +320,23 @@
       ],
       "hardness": "H2",
       "visualBrief": "春塘新草、柳枝与鸟语",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "登池上楼",
+          "collection": "《昭明文选》卷二十二",
+          "url": "https://zh.wikisource.org/wiki/%E7%99%BB%E6%B1%A0%E4%B8%8A%E6%A8%93",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "tengwangge",
@@ -230,16 +352,27 @@
       ],
       "hardness": "H5",
       "visualBrief": "滕王阁远眺秋水、落霞与飞鸟同框",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": 1
+      "issueNumber": 1,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "滕王阁序",
+          "collection": "《文苑英华》卷718 /《古今事文类聚》续集卷7",
+          "url": "https://zh.wikisource.org/wiki/%E6%BB%95%E7%8E%8B%E9%96%A3%E5%BA%8F",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "通行简称《滕王阁序》，长题《秋日登洪府滕王阁饯别序》；所查电子页面注明‘孤鹜’一作‘孤雾’。"
     },
     {
       "id": "wanglushan",
-      "title": "望庐山瀑布",
+      "title": "望庐山瀑布·其二",
       "author": "李白",
       "dynasty": "唐",
       "form": "诗",
@@ -251,12 +384,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "香炉峰日照、紫色山岚与飞流瀑布",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": 5
+      "issueNumber": 5,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "望廬山瀑布水二首 二",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.8000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.8000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "《望庐山瀑布》二首；摘句出自其二。所查文库录“前川”并注明“一作长川”。"
     },
     {
       "id": "baidicheng",
@@ -272,12 +419,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "清晨峡江高速行舟、两岸山影",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "早發白帝城",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "huanghelou-songbie",
@@ -293,12 +454,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "远帆驶入长江天际、送别楼台",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "黃鶴樓送孟浩然之廣陵",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "jingtingshan",
@@ -314,12 +489,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "静坐山岭、鸟群散去与孤云飘行",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "獨坐敬亭山",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.8000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.8000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "dujingmen",
@@ -335,12 +524,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "荆门江面从峡谷转入无垠平野",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "渡荊門送別",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "emeishan-yue",
@@ -356,12 +559,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "半轮秋月映入缓流江水",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "峨眉山月歌",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.8000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.8000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "ye-su-shansi",
@@ -377,12 +594,24 @@
       ],
       "hardness": "H3",
       "visualBrief": "高山寺楼、夜空繁星与高空眺望",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "夜宿山寺（题峰顶寺存疑）",
+          "collection": "作者与篇名均存在争议",
+          "url": "https://zh.wikisource.org/wiki/%E5%A4%9C%E5%AE%BF%E5%B1%B1%E5%AF%BA",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "作者与作品源流存疑。题名《夜宿山寺》不见《李太白全集》此题；《题峰顶寺》也有伪作争议。标为李白通行署名，不作李白确作教学。",
+      "attributionStatus": "disputed"
     },
     {
       "id": "tianmu",
@@ -398,12 +627,26 @@
       ],
       "hardness": "H5",
       "visualBrief": "梦境巨山、云海与超现实尺度",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "夢遊天姥吟留別",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "shudao",
@@ -419,12 +662,26 @@
       ],
       "hardness": "H5",
       "visualBrief": "天梯石栈、悬崖飞瀑与险峻蜀道",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "相和歌辭 蜀道難",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.1000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.1000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "jueju-huangli",
@@ -440,12 +697,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "春柳黄鹂、白鹭划过蓝天",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "絕句四首 三",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.11000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.11000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "jueju-chiri",
@@ -461,12 +732,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "春日山河、花草与徐徐暖风",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "絕句二首 一",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.11000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.11000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "chunyu",
@@ -482,12 +767,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "春夜细雨、田畴滋润与晓时花木",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "春夜喜雨",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.11000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.11000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "denggao",
@@ -503,12 +802,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "秋风落叶、激流长江与高处眺望",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "登高",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "wangyue",
@@ -524,12 +837,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "泰山高处云海与起伏群峰",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "望嶽",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.10000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.10000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "jiangpan-xunhua",
@@ -545,12 +872,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "繁花压枝、蝶舞江边小径",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "江畔獨步尋花七絕句 六",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.11000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.11000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "lyuye",
@@ -566,12 +907,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "广阔平野、星空低垂与月下江流",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "旅夜書懷",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "deng-yueyanglou",
@@ -587,12 +942,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "岳阳楼眺洞庭、浩大湖面与云光",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "登岳陽樓",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "shanju-qiuyu",
@@ -608,12 +977,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "雨后秋山、竹林清泉与薄雾",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": 4
+      "issueNumber": 4,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "山居秋暝",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.6000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "luzhai",
@@ -629,12 +1012,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "深林幽暗与返景斜光",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "輞川集 鹿柴",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.6000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "zhuliguan",
@@ -650,12 +1047,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "幽篁深处琴声、清月与竹影",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "輞川集 竹里館",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.6000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "niaomingjian",
@@ -671,12 +1082,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "幽谷落花、明月与惊鸟",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "皇甫嶽雲溪雜題五首 鳥鳴澗",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.6000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "damo-guyan",
@@ -692,12 +1117,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "落日大漠、孤烟直上、远河蜿蜒",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": 2
+      "issueNumber": 2,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "使至塞上",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.6000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "zhongnanshan",
@@ -713,12 +1152,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "终南连峰与云霭变化",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "終南山",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.6000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "weichen",
@@ -734,12 +1187,23 @@
       ],
       "hardness": "H2",
       "visualBrief": "渭城清晨微雨、柳色客舍",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "渭城曲（一作送元二使安西）",
+          "collection": "《全唐诗》卷128",
+          "url": "https://zh.wikisource.org/wiki/%E6%B8%AD%E5%9F%8E%E6%9B%B2",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "《全唐诗》卷128作《渭城曲》，一作《送元二使安西》，歌辞又称《阳关曲》。"
     },
     {
       "id": "weichuan-tianjia",
@@ -755,12 +1219,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "夕阳乡村、牧归牛羊与归家农人",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "渭川田家",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.5000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.5000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "chunxiao",
@@ -776,12 +1254,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "春晨庭院、花瓣与鸟鸣",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "春曉",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.7000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.7000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "jiandejiang",
@@ -797,12 +1289,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "夜泊江面、低天远树与水月",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "宿建德江",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "guogurenzhuang",
@@ -818,12 +1324,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "田园村舍、青山外郭与稻田",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "過故人莊",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "dongtinghu",
@@ -839,12 +1359,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "洞庭蒸腾云雾、波浪拍岸",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "望洞庭湖贈張丞相",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.7000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.7000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "yijiangnan",
@@ -860,12 +1394,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "江南水乡晨光、红花与碧水",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "憶江南 一",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.49000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.49000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "qiantanghu",
@@ -881,12 +1429,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "西湖早春水面、燕子与湖堤",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "錢唐湖春行",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.23000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.23000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "mujiangyin",
@@ -902,12 +1464,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "斜阳将江水分染青红与新月初上",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "暮江吟",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.23000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.23000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "dalinsi",
@@ -923,12 +1499,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "高山寺桃花与山下季节反差",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "大林寺桃花",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.22000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.22000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "guyuan",
@@ -944,12 +1534,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "草场野火后的春芽复苏",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "賦得古原草送別",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "jiangxue",
@@ -965,7 +1569,7 @@
       ],
       "hardness": "H2",
       "visualBrief": "冷雪空山、寒江孤舟与垂钓蓑笠翁",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "prototype",
       "scenePath": "scenes/jiangxue.html",
       "model": "GPT-6",
@@ -973,7 +1577,21 @@
         "WebGL1",
         "Vanilla JS"
       ],
-      "issueNumber": 9
+      "issueNumber": 9,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "江雪",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.18000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.18000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "yuweng",
@@ -989,12 +1607,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "江上晨雾消散、渔船与翠山",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "漁翁",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.18000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.18000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "wangdongting",
@@ -1010,12 +1642,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "秋月静湖、水镜微波与远山",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "望洞庭",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.19000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.19000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "zhuzhici",
@@ -1031,12 +1677,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "杨柳江岸、歌声与缓行小舟",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "竹枝詞二首 一",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.19000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.19000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "wuyixiang",
@@ -1052,12 +1712,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "南京旧巷、朱雀桥、野草与斜阳",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "金陵五題 烏衣巷",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.19000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.19000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "langtaosha",
@@ -1073,12 +1747,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "黄河急流、泥沙与河湾",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "雜曲歌辭 浪淘沙 一",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.2000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.2000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "fengqiao",
@@ -1094,12 +1782,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "姑苏夜泊、桥影、渔火与寒霜",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": 3
+      "issueNumber": 3,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "楓橋夜泊",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "yugezi",
@@ -1115,12 +1817,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "江南春水、桃花与白鹭飞行",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "漁父歌 一",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.16000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.16000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "yongliu",
@@ -1136,12 +1852,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "春风下的高柳与飘荡嫩枝",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "詠柳",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.5000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.5000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "shanxing",
@@ -1157,12 +1887,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "山路深秋枫林与晚照",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "山行",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.28000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.28000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "jiangnanchun",
@@ -1178,12 +1922,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "江南水村、寺塔烟雨和酒旗",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "江南春",
+          "collection": "蒙学",
+          "locator": "蒙学/qianjiashi.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/qianjiashi.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "boqinhuai",
@@ -1199,12 +1957,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "秦淮河雾月、临水酒家与夜舟",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "泊秦淮",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "qiuxi",
@@ -1220,12 +1992,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "宫院秋夜、烛光与萤火",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "秋夕",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "yeyu-jibei",
@@ -1241,12 +2027,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "巴山雨夜、秋池涨水与窗灯",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "夜雨寄北",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "leyouyuan",
@@ -1262,12 +2062,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "长安高原落日与远城剪影",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "樂遊原",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.29000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.29000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "chusai",
@@ -1283,12 +2097,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "边关城墙、荒野月色与远征路",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "出塞二首 一",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.6000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "congjunxing",
@@ -1304,12 +2132,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "青海苍云雪峰、边关孤城",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "從軍行七首 四",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.6000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "guanque",
@@ -1325,12 +2167,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "登楼俯瞰黄河与山后落日；诗意取景并非精确地理",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "登鸛雀樓",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "liangzhouci",
@@ -1346,12 +2202,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "高山孤城、河谷与云天",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "涼州詞二首” 一",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.13000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.13000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "huanghelou",
@@ -1367,12 +2237,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "晴川高楼、洲渚与长江",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "登黃鶴樓",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "baixuege",
@@ -1388,12 +2272,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "塞北营地、积雪树冠与风雪",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "白雪歌送武判官歸京",
+          "collection": "蒙学",
+          "locator": "蒙学/tangshisanbaishou.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/tangshisanbaishou.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "biedongda",
@@ -1409,12 +2307,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "昏黄天云、北风飞雁与雪幕",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "別董大二首 一",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.10000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.10000.json",
+          "excerptMatch": "approximate",
+          "matchScore": 0.929
+        }
+      ],
+      "sourceStatus": "transcription-near",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "chuzhouxijian",
@@ -1430,12 +2342,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "幽草溪涧与春潮渡口",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "滁州西澗",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.9000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.9000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "shiwuyewangyue",
@@ -1451,12 +2377,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "中秋庭院、桂花与白月光",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "十五夜望月寄杜郎中",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.16000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.16000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "zaochun",
@@ -1472,12 +2412,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "细雨长安街、浅草初萌",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "早春呈水部張十八員外二首 一",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.18000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.18000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "wannchun",
@@ -1493,12 +2447,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "暮春各色繁花竞放",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "遊城南十六首 晚春",
+          "collection": "全唐诗",
+          "locator": "全唐诗/poet.tang.18000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.18000.json",
+          "excerptMatch": "approximate",
+          "matchScore": 0.929
+        }
+      ],
+      "sourceStatus": "transcription-near",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "wanghuchunyu",
@@ -1514,12 +2482,23 @@
       ],
       "hardness": "H4",
       "visualBrief": "西湖晴雨变化、山水雾光",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": 6
+      "issueNumber": 6,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "饮湖上初晴后雨二首·其二",
+          "collection": "《东坡全集》卷4",
+          "url": "https://zh.wikisource.org/wiki/%E6%9D%B1%E5%9D%A1%E5%85%A8%E9%9B%86/%E5%8D%B7004",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "所查《东坡全集》卷4摘句作‘水光瀲灧晴方好’且注‘水’一作‘湖’，‘空濛’与‘空蒙’存在字形与用字差别。"
     },
     {
       "id": "tixilinbi",
@@ -1535,12 +2514,23 @@
       ],
       "hardness": "H4",
       "visualBrief": "庐山不同视点形态切换",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "题西林壁",
+          "collection": "《东坡全集》待查卷",
+          "url": "https://zh.wikisource.org/wiki/%E9%A1%8C%E8%A5%BF%E6%9E%97%E5%A3%81_(%E8%98%87%E8%BB%BE)",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "‘各不同’另有‘总不同’等异文；‘祇缘’与‘只缘’须区分版本。"
     },
     {
       "id": "huichong",
@@ -1556,12 +2546,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "春江桃花、竹林与游鸭",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "惠崇春江晚景",
+          "collection": "《东坡全集》待查卷",
+          "url": "https://zh.wikisource.org/wiki/%E6%83%A0%E5%B4%87%E6%98%A5%E6%B1%9F%E6%99%9A%E6%99%AF",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "《惠崇春江晚景》通行有二首，选用‘竹外桃花’篇，务必辨篇次。"
     },
     {
       "id": "wanghulou",
@@ -1577,12 +2578,23 @@
       ],
       "hardness": "H4",
       "visualBrief": "乌云骤雨、西湖船舱与雨滴",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "六月二十七日望湖楼醉书五首·其一",
+          "collection": "《东坡全集》卷3",
+          "url": "https://zh.wikisource.org/wiki/%E6%9D%B1%E5%9D%A1%E5%85%A8%E9%9B%86/%E5%8D%B7003",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "《六月二十七日望湖楼醉书》是五首组诗，摘句属其一。"
     },
     {
       "id": "chibi",
@@ -1598,12 +2610,26 @@
       ],
       "hardness": "H5",
       "visualBrief": "临江乱石、巨浪飞沫与怀古氛围；文学赤壁非三国战场复原",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": 10
+      "issueNumber": 10,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "念奴娇",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.1000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.1000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "苏轼怀古之文学赤壁不可直接当作三国赤壁大战遗址建模。"
     },
     {
       "id": "dingfengbo",
@@ -1619,12 +2645,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "林间行路、骤雨打叶与风停云散",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "定风波",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.1000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.1000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "shuidiaogetou",
@@ -1640,12 +2680,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "中秋明月、夜空与古亭",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "水调歌头",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.1000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.1000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "huanxisha-qingquansi",
@@ -1661,12 +2715,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "青溪山路、松林沙径",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "浣溪沙",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.1000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.1000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "xijiangyue",
@@ -1682,12 +2750,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "夜行稻田、明月、蝉鸣与蛙声",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "西江月",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.11000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.11000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "yuanxi",
@@ -1703,12 +2785,26 @@
       ],
       "hardness": "H5",
       "visualBrief": "上元夜市、灯火与焰火",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": 7
+      "issueNumber": 7,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "青玉案",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.11000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.11000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "pozhenzi",
@@ -1724,12 +2820,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "烛光军帐、梦回营垒",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "破阵子",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.11000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.11000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "pusa-man",
@@ -1745,12 +2855,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "郁孤台一带江山与东流水势",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "菩萨蛮",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.11000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.11000.json",
+          "excerptMatch": "approximate",
+          "matchScore": 0.9
+        }
+      ],
+      "sourceStatus": "transcription-near",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "qingpingle-cunju",
@@ -1766,12 +2890,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "茅屋溪畔、夏草与乡居",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "清平乐",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.11000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.11000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "rumengling-xiting",
@@ -1787,12 +2925,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "暮日溪亭、划舟误入藕花",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "如梦令",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.6000.json",
+          "excerptMatch": "approximate",
+          "matchScore": 0.917
+        }
+      ],
+      "sourceStatus": "transcription-near",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "rumengling-yushu",
@@ -1808,12 +2960,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "昨夜风雨与次晨海棠",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "如梦令",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.6000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "shengshengman",
@@ -1829,12 +2995,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "梧桐黄昏细雨、孤院灯影",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "声声慢",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.6000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "zuihuayin",
@@ -1850,12 +3030,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "薄雾深院、重阳菊影",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "醉花阴",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.6000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.6000.json",
+          "excerptMatch": "approximate",
+          "matchScore": 0.917
+        }
+      ],
+      "sourceStatus": "transcription-near",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "caisangzi-xihu",
@@ -1871,12 +3065,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "颍州西湖轻舟、水波与绿岸；不是杭州西湖",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "采桑子",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.0.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.0.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "欧阳修《采桑子》中的‘西湖’指颍州西湖，不是杭州西湖。"
     },
     {
       "id": "dielianhua",
@@ -1892,12 +3100,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "深重庭院、垂柳与层叠帘幕",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "蝶恋花二十二首·之九",
+          "collection": "《欧阳修集》卷131",
+          "url": "https://zh.wikisource.org/wiki/%E6%AD%90%E9%99%BD%E4%BF%AE%E9%9B%86/%E5%8D%B7131",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "欧阳修《蝶恋花》；所查《欧阳修集》卷131将其列为二十二首之九。"
     },
     {
       "id": "huanxisha-yanshu",
@@ -1913,12 +3132,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "春园落花、双燕归来",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "浣溪沙",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.0.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.0.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "wanghaichao",
@@ -1934,12 +3167,26 @@
       ],
       "hardness": "H5",
       "visualBrief": "北宋杭州繁华水城、桥梁街巷",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "望海潮",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.0.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.0.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "yulinling",
@@ -1955,12 +3202,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "雨后长亭、舟边柳岸与离别",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "雨霖铃",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.0.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.0.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "sumuzhe-fanzhongyan",
@@ -1976,12 +3237,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "秋天黄叶、寒烟与宽阔水面",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "苏幕遮",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.0.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.0.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "yujiaao",
@@ -1997,12 +3272,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "边塞群峰、军城与暮烟",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "渔家傲",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.0.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.0.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "yueyanglouji",
@@ -2018,12 +3307,23 @@
       ],
       "hardness": "H5",
       "visualBrief": "岳阳楼、洞庭巨湖和天气变化",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "岳阳楼记",
+          "collection": "《范文正公集》卷7",
+          "url": "https://zh.wikisource.org/wiki/%E8%8C%83%E6%96%87%E6%AD%A3%E5%85%AC%E9%9B%86/%E5%8D%B707",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "可核《范文正公集》卷7，‘霪雨/淫雨’、‘先天下之忧…欤/乎’存在异文。"
     },
     {
       "id": "xiao-jingci",
@@ -2039,12 +3339,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "杭州西湖盛夏荷塘与朝阳",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "晓出净慈寺送林子方",
+          "collection": "原集卷次待核",
+          "url": "https://zh.wikisource.org/wiki/%E6%9B%89%E5%87%BA%E6%B7%A8%E6%85%88%E5%AF%BA%E9%80%81%E6%9E%97%E5%AD%90%E6%96%B9",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "通行署杨万里；所查数字转录页还标‘一说苏轼，题《西湖绝句》’，须补查作者别集卷次。"
     },
     {
       "id": "xiaochi",
@@ -2060,16 +3371,27 @@
       ],
       "hardness": "H2",
       "visualBrief": "小池泉眼、树荫和新荷",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "小池",
+          "collection": "原集卷次待核",
+          "url": "https://zh.wikisource.org/wiki/%E5%B0%8F%E6%B1%A0",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "xinxu",
-      "title": "宿新市徐公店",
+      "title": "宿新市徐公店二首·其一",
       "author": "杨万里",
       "dynasty": "宋",
       "form": "诗",
@@ -2081,12 +3403,23 @@
       ],
       "hardness": "H2",
       "visualBrief": "乡间篱笆、油菜田与儿童追蝶",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "宿新市徐公店二首·其一",
+          "collection": "原集卷次待核",
+          "url": "https://zh.wikisource.org/wiki/%E5%AE%BF%E6%96%B0%E5%B8%82%E5%BE%90%E5%85%AC%E5%BA%97%E4%BA%8C%E9%A6%96",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "《宿新市徐公店》有二首，摘句属其一。‘树头新绿’与‘树头花落’存在传本分歧，制作春景不应混成同时发生的确定史实。"
     },
     {
       "id": "zhouguo-anren",
@@ -2102,12 +3435,23 @@
       ],
       "hardness": "H2",
       "visualBrief": "河面小舟、孩童撑伞",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "secondary-text",
+          "work": "舟过安仁",
+          "collection": "诗人别集卷次待核",
+          "url": "https://www.gushiwen.cn/mingju/juv_37896c57870b.aspx",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "youshanxicun",
@@ -2123,12 +3467,23 @@
       ],
       "hardness": "H4",
       "visualBrief": "山路曲折转入村落的空间揭示",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "游山西村",
+          "collection": "陆游别集卷次待核",
+          "url": "https://zh.wikisource.org/wiki/%E9%81%8A%E5%B1%B1%E8%A5%BF%E6%9D%91",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "linan-chunyu",
@@ -2144,12 +3499,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "临安夜雨、小楼与晨巷",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "临安春雨初霁",
+          "collection": "陆游别集卷次待核",
+          "url": "https://zh.wikisource.org/wiki/%E8%87%A8%E5%AE%89%E6%98%A5%E9%9B%A8%E5%88%9D%E9%9C%BD",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "bushuazi-yongmei",
@@ -2165,12 +3531,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "断桥驿边的冬梅",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "卜算子",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.9000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.9000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "bochuanguazhou",
@@ -2186,12 +3566,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "江岸春绿、夜泊与归乡明月",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "泊船瓜洲",
+          "collection": "《王临川集》",
+          "url": "https://zh.wikisource.org/wiki/%E6%B3%8A%E8%88%B9%E7%93%9C%E6%B4%B2",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "现录通行句‘春风又绿江南岸’；所查维基文库《王临川集》电子页主文作‘春风自绿江南岸’，并称‘又绿’为常见异文。存在版本冲突，暂不强制改写。"
     },
     {
       "id": "shuhuyin",
@@ -2207,12 +3598,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "田畴环水、双山对门",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "书湖阴先生壁",
+          "collection": "《千家诗》卷三",
+          "url": "https://zh.wikisource.org/wiki/%E6%9B%B8%E6%B9%96%E9%99%B0%E5%85%88%E7%94%9F%E5%A3%81",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "meihua",
@@ -2228,12 +3630,23 @@
       ],
       "hardness": "H2",
       "visualBrief": "冬日墙角白梅与冷雾",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "梅花",
+          "collection": "王安石别集卷次待核",
+          "url": "https://zh.wikisource.org/wiki/%E6%A2%85%E8%8A%B1_(%E7%8E%8B%E5%AE%89%E7%9F%B3)",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "chunri",
@@ -2249,12 +3662,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "春风百花、泗水河畔的意象化场景",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "春日",
+          "collection": "《晦庵先生朱文公文集》（四部丛刊本）卷二",
+          "url": "https://zh.wikisource.org/wiki/%E6%98%A5%E6%97%A5_(%E6%9C%B1%E7%86%B9)",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "guanshu",
@@ -2270,12 +3694,26 @@
       ],
       "hardness": "H2",
       "visualBrief": "半亩清池、倒映云影",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "觀書有感（其一）",
+          "collection": "蒙学",
+          "locator": "蒙学/qianjiashi.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/qianjiashi.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "tilinandi",
@@ -2291,12 +3729,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "南宋临安城与重楼湖景",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "題臨安邸",
+          "collection": "蒙学",
+          "locator": "蒙学/qianjiashi.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E8%92%99%E5%AD%A6/qianjiashi.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "youyuanbuzhi",
@@ -2312,12 +3764,23 @@
       ],
       "hardness": "H2",
       "visualBrief": "古园门外、红杏探出围墙",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "游园不值",
+          "collection": "《两宋名贤小集》（四库本）卷260",
+          "url": "https://zh.wikisource.org/wiki/%E9%81%8A%E5%9C%92%E4%B8%8D%E5%80%BC",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "xiangcun-siyue",
@@ -2333,12 +3796,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "江南秧田、山原与烟雨",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "乡村四月",
+          "collection": "《西岩集》（四库本），《千家诗》另署范成大",
+          "url": "https://zh.wikisource.org/wiki/%E9%84%89%E6%9D%91%E5%9B%9B%E6%9C%88",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "所查《西岩集》收翁卷《乡村四月》，但《千家诗》有《村居即事》、署范成大的异署记录。"
     },
     {
       "id": "yueke",
@@ -2354,12 +3828,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "梅雨小镇、池塘蛙声与夜灯",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "约客",
+          "collection": "《千家诗》卷三",
+          "url": "https://zh.wikisource.org/wiki/%E7%B4%84%E5%AE%A2",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "queqiaoxian",
@@ -2375,12 +3860,26 @@
       ],
       "hardness": "H5",
       "visualBrief": "银河星空与神话鹊桥",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "鹊桥仙",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.3000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.3000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "tashaxing",
@@ -2396,12 +3895,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "浓雾吞没楼台与月下渡口",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "踏莎行",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.3000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.3000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "sumuzhe-zhou",
@@ -2417,12 +3930,26 @@
       ],
       "hardness": "H3",
       "visualBrief": "初阳雨后荷塘、荷叶滴水",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "苏幕遮",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.4000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.4000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "yangzhouman",
@@ -2438,12 +3965,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "扬州萧瑟古桥与河面冷月",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "扬州慢",
+          "collection": "宋词",
+          "locator": "宋词/ci.song.12000.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%AE%8B%E8%AF%8D/ci.song.12000.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "tianjingsha",
@@ -2459,12 +4000,23 @@
       ],
       "hardness": "H2",
       "visualBrief": "秋日晚霞、老树石桥与古道瘦马",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": 8
+      "issueNumber": 8,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "天净沙·秋思",
+          "collection": "《全元曲》数字收录",
+          "url": "https://zh.wikisource.org/wiki/%E5%A4%A9%E6%B7%A8%E6%B2%99%C2%B7%E7%A7%8B%E6%80%9D",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "《天净沙·秋思》部分版本‘小桥流水人家’作‘小桥流水平沙’，已留异文。"
     },
     {
       "id": "tianjingsha-qiu",
@@ -2480,12 +4032,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "秋村夕照、暮霞与寒鸦",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "天净沙·秋",
+          "collection": "《全元曲》数字收录",
+          "url": "https://zh.wikisource.org/wiki/%E5%A4%A9%E6%B7%A8%E6%B2%99_(%E7%99%BD%E6%A8%B8)",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "tongguan",
@@ -2501,12 +4064,23 @@
       ],
       "hardness": "H4",
       "visualBrief": "潼关山河关隘、黄河怒涛",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "山坡羊·潼关怀古",
+          "collection": "《全元曲》数字收录",
+          "url": "https://zh.wikisource.org/wiki/%E5%B1%B1%E5%9D%A1%E7%BE%8A_%E6%BD%BC%E9%97%9C%E6%87%B7%E5%8F%A4",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "taohuange",
@@ -2514,7 +4088,7 @@
       "author": "唐寅",
       "dynasty": "明",
       "form": "诗",
-      "excerpt": "桃花坞里桃花庵，桃花庵下桃花仙。",
+      "excerpt": "桃花坞里桃花庵，桃花庵里桃花仙。",
       "categories": [
         "花木",
         "庭院",
@@ -2522,12 +4096,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "桃花庵院与落英",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "桃花庵歌",
+          "collection": "苏州唐寅园碑拓片（数字转录）",
+          "url": "https://zh.wikisource.org/wiki/%E6%A1%83%E8%8A%B1%E5%BA%B5%E6%AD%8C",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "原目录‘桃花庵下桃花仙’对应流传异本；所查唐寅园碑拓片转录作‘桃花庵里桃花仙’，已按该记录改为‘庵里’并保留异文说明。"
     },
     {
       "id": "linjiangxian-yangshen",
@@ -2543,12 +4128,23 @@
       ],
       "hardness": "H4",
       "visualBrief": "苍茫长江、浪涛与历史变迁象征",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "临江仙·滚滚长江东逝水",
+          "collection": "《二十一史弹词》（后为《三国演义》卷首词）",
+          "url": "https://zh.wikisource.org/wiki/%E8%87%A8%E6%B1%9F%E4%BB%99_(%E6%A5%8A%E6%85%8E)",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "changxiangsi",
@@ -2564,12 +4160,26 @@
       ],
       "hardness": "H4",
       "visualBrief": "塞外军旅行帐、千帐灯火与风雪",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "community-transcription",
+          "source": "chinese-poetry/chinese-poetry",
+          "work": "长相思·山一程",
+          "collection": "纳兰性德",
+          "locator": "纳兰性德/纳兰性德诗集.json",
+          "url": "https://github.com/chinese-poetry/chinese-poetry/blob/master/%E7%BA%B3%E5%85%B0%E6%80%A7%E5%BE%B7/%E7%BA%B3%E5%85%B0%E6%80%A7%E5%BE%B7%E8%AF%97%E9%9B%86.json",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "cunju",
@@ -2585,12 +4195,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "早春村庄、柳堤与儿童放鸢",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "村居（高鼎）",
+          "collection": "作者诗作别集卷次待核",
+          "url": "https://zh.wikisource.org/wiki/%E6%9D%91%E5%B1%85_(%E9%AB%98%E9%BC%8E)",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "suojian",
@@ -2606,12 +4227,23 @@
       ],
       "hardness": "H2",
       "visualBrief": "牛背牧童、蝉鸣与林荫",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "所见（袁枚）",
+          "collection": "作者诗作别集卷次待核",
+          "url": "https://zh.wikisource.org/wiki/%E6%89%80%E8%A6%8B(%E8%A2%81%E6%9E%9A)",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "袁枚《所见》用于草木和牧童场景时应注意先秦/宋/清时代差异。"
     },
     {
       "id": "zhushi",
@@ -2627,12 +4259,23 @@
       ],
       "hardness": "H3",
       "visualBrief": "岩缝竹林、劲风与山石",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "竹石",
+          "collection": "郑燮题画诗",
+          "url": "https://zh.wikisource.org/wiki/%E7%AB%B9%E7%9F%B3",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
     },
     {
       "id": "jihai",
@@ -2648,12 +4291,23 @@
       ],
       "hardness": "H2",
       "visualBrief": "春末落花入泥与新芽生长",
-      "textReview": "待校勘",
+      "textReview": "待版本校勘",
       "sceneStatus": "available",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "work": "己亥杂诗·其五",
+          "collection": "《己亥杂诗》其五",
+          "url": "https://zh.wikisource.org/wiki/%E5%B7%B1%E4%BA%A5%E9%9B%9C%E8%A9%A9",
+          "excerptMatch": "manually-located"
+        }
+      ],
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "龚自珍《己亥杂诗》共315首，摘句出其五。"
     }
   ]
 }
