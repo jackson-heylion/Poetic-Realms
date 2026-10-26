@@ -46,8 +46,8 @@
       "【执行顺序——务必真实执行】",
       "1. 打开并检查仓库 main 的 AGENTS.md、docs/AGENT_WORKFLOW.md、docs/CATALOG_RULES.md、对应 Issue、data/poems.json 与现有场景；以仓库和 Issue 最新状态为准，静态站显示的待制作状态可能滞后。",
       issue
-        ? "2. 先检查 " + issue + " 的 open/closed、标签和 Assignee。仅在 issue 为 open、含 scene 和 available 标签且无人认领时，用当前已授权的 GitHub 账号评论 /claim model=<你实际使用的模型> tool=<你实际使用的技术>；等待分配 Assignee 且标签变成 in-progress 才算领题成功。若已被别人认领，不能抢占、不能擅改，立即说明并停止本题开发；若自动认领失败，联系维护者确认后再动手。"
-        : "2. 若没有 Issue，先检查同名/同 ID 任务；通过仓库模板创建 Issue，再按 /claim model=<实际模型> tool=<实际技术> 认领，并等待 Assignee 和 in-progress 确认；不能仅凭创建 Issue 就宣称领题成功。",
+        ? "2. 先检查 " + issue + " 的 open/closed、标签和 Assignee。仅在 issue 为 open、含 scene 和 available 标签且无人认领时，用当前已授权的 GitHub 账号评论 /claim model=<你实际使用的模型> tool=<你实际使用的技术>；等待分配 Assignee 且标签变成 in-progress 才算领题成功。若 Assignee 已是当前执行账号且状态为 in-progress，直接继续现有任务，不重复认领；若已被别人认领，不得抢占或擅改，立即说明并停止本题开发；若自动认领失败，联系维护者确认后再动手。"
+        : "2. 若没有 Issue，先检查同名/同 ID 任务；通过仓库模板创建 Issue，记录新编号到本条数据的 issueNumber，再按 /claim model=<实际模型> tool=<实际技术> 认领，并等待 Assignee 和 in-progress 确认；不能仅凭创建 Issue 就宣称领题成功。",
       "3. 从 main 创建独立分支，先分析诗句里的真实意象与艺术想象边界；写出简短可执行的场景目标与性能预算，不必为简单实现撰写冗长规格书。",
       "4. 实际编写或改进 " + scenePath + "，交付一个完全自包含、可离线用 file:// 运行的 HTML。默认尽量采用 WebGL1 与原生 JS 的真实 3D，不依赖 CDN、远程 API、额外构建器。支持拖动/触控、缩放、暂停与画质调节，照顾低端 PC 和手机。",
       "5. 对应更新 data/poems.json 中该条的 scenePath、sceneStatus=prototype、实际 model 与 tools；保持 ID、原文来源和待校勘状态不被误改。首次交付不擅自标记 published，也不覆盖无关条目。",
