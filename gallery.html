@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101a22">
+<meta name="description" content="诗境多作品浏览：同一首诗的不同 HTML 3D 动态场景，自由切换。">
+<title>诗境 · 多作品展厅</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/gallery.js" defer></script>
+</head>
+<body class="gallery-page">
+<header class="site-header">
+ <div class="wrap header-inner">
+  <a class="brand" href="./" aria-label="返回诗境首页"><span class="seal">境</span><span><strong>诗境</strong><small>POETIC REALMS</small></span></a>
+  <nav class="topnav"><a href="./#catalog">返回馆藏</a><a href="./#tasks">自由创作</a></nav>
+ </div>
+</header>
+<main class="gallery-main wrap" id="gallery-main">
+ <div class="gallery-intro">
+  <div><p class="eyebrow">A POEM, MANY REALMS</p><h1 id="gallery-title">正在加载诗境…</h1><p id="gallery-verse" class="gallery-verse"></p></div>
+  <a id="gallery-detail" class="gallery-detail-link" href="./#catalog">查看诗文与创作</a>
+ </div>
+ <section class="gallery-shell" aria-label="多作品切换浏览">
+  <div class="gallery-toolbar">
+   <div><strong id="gallery-count">—</strong><span id="gallery-current" aria-live="polite"></span></div>
+   <div class="gallery-tools">
+    <button id="gallery-prev" type="button" aria-label="上一个场景">← 上一个</button>
+    <button id="gallery-next" type="button" aria-label="下一个场景">下一个 →</button>
+    <a id="gallery-standalone" href="#" target="_blank" rel="noopener">独立打开 ↗</a>
+   </div>
+  </div>
+  <div id="gallery-options" class="gallery-options" role="group" aria-label="选择场景版本"></div>
+  <div id="gallery-stage" class="gallery-stage">
+   <div id="gallery-empty" class="gallery-empty">正在准备作品…</div>
+   <iframe id="gallery-frame" title="诗境 3D 场景" loading="eager" allowfullscreen hidden></iframe>
+  </div>
+  <p class="gallery-footnote">同一首诗可有多个独立 HTML 作品；切换版本会重新载入场景，避免同时运行多个 3D 渲染器。</p>
+ </section>
+</main>
+</body>
+</html>
