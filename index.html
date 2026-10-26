@@ -6,6 +6,7 @@
 <title>诗境 · Poetic Realms — 一诗一境</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/site.css">
+<script src="assets/agent-prompt.js" defer></script>
 <script src="assets/app.js" defer></script>
 </head>
 <body>
@@ -72,13 +73,14 @@
  <div class="pagination"><button id="more" class="more-btn" type="button" hidden>再看更多 ↓</button></div>
 </section>
 <section class="tasks-section" id="tasks" aria-labelledby="tasks-title"><div class="wrap">
- <div class="section-head"><div><p class="eyebrow">02 / OPEN STUDIO</p><h2 id="tasks-title">创作 <em>共建</em></h2><p>每一道题都指向一首诗。Agent 认领、生成独立 HTML、验证，再将诗境带回展馆。</p></div><a class="outlined-link" href="https://github.com/jackson-heylion/Poetic-Realms/issues?q=is%3Aissue+is%3Aopen+label%3Ascene" target="_blank" rel="noopener">进入 GitHub 任务大厅 ↗</a></div>
- <div class="task-how"><span><b>01</b> 选择题目</span><i>→</i><span><b>02</b> Issue 申请认领</span><i>→</i><span><b>03</b> 单 HTML 交付</span><i>→</i><span><b>04</b> PR 验收发布</span></div>
+ <div class="section-head"><div><p class="eyebrow">02 / OPEN STUDIO</p><h2 id="tasks-title">创作 <em>共建</em></h2><p>每一道题都指向一首诗。选一个题目，一键复制任务提示词，交给有 GitHub 权限的 AI Agent 领题、生成场景并提交 PR。</p></div><a class="outlined-link" href="https://github.com/jackson-heylion/Poetic-Realms/issues?q=is%3Aissue+is%3Aopen+label%3Ascene" target="_blank" rel="noopener">进入 GitHub 任务大厅 ↗</a></div>
+ <div class="task-how"><span><b>01</b> 选题并复制</span><i>→</i><span><b>02</b> 交给 AI Agent</span><i>→</i><span><b>03</b> GitHub 领题、开发</span><i>→</i><span><b>04</b> 提交 PR 作业</span></div>
  <div id="task-list" class="task-list"></div>
- <p class="task-foot">提示：纯静态站点不会代替 GitHub 身份验证或自动分配任务；实际领取和状态由 GitHub Issues / Assignee 管理。模型、Hardness 和工具在题目与交付记录中留痕。</p>
+ <p class="task-foot">提示：复制提示词不代表已经领取。Agent 需使用已授权的 GitHub 账号，确认 Issue / Assignee 后再开发；真实交付以 PR 链接和 CI 结果为准。</p>
 </div></section>
 <section class="about-section wrap" id="about"><div><p class="eyebrow">03 / WHY WE BUILD</p><h2>诗里有山河，<br><em>屏中可共游。</em></h2></div><div class="about-copy"><p>诗境不是复刻历史现场，更不是用一张风景图代替文学。我们从可考的文本意象出发，以实时三维、动态光影和空间叙事构造一种可探索的读诗方式。</p><p>馆藏摘句与场景创作分开维护。原文版本、异文、地点推断与艺术加工都应标清。首批记录是策展候选，并非已经完成逐首古籍校勘的定本。</p><a href="https://github.com/jackson-heylion/Poetic-Realms" target="_blank" rel="noopener">查看项目与贡献指南 →</a></div></section>
 </main>
 <footer><div class="wrap footer-inner"><div class="brand mini"><span class="seal">境</span><span><strong>诗境</strong><small>POETIC REALMS</small></span></div><p>古典文字 · 数字山河 · 开放共建</p><a href="https://github.com/jackson-heylion/Poetic-Realms" target="_blank" rel="noopener">GitHub ↗</a></div></footer>
 <dialog id="detail" aria-labelledby="detail-title"><button class="dialog-close" id="close-detail" aria-label="关闭" type="button">×</button><div id="detail-body"></div></dialog>
+<div id="copy-status" class="copy-status" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 </body></html>
