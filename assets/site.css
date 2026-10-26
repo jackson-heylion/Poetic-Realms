@@ -27,3 +27,19 @@ dialog{border:1px solid #9b866c;padding:0;width:min(690px,calc(100% - 28px));max
 .fulltext summary{cursor:pointer;color:#e3c69d;font-size:16px}
 .fulltext p{font-size:15px;line-height:2.15;letter-spacing:.02em;color:#e8e0d2}
 .fulltext .text-warning{border-top:1px solid #3f5058;padding-top:15px;font:12px/1.9 system-ui,sans-serif;color:#9faaa9}
+
+/* One-click AI Agent task handoff */
+.copy-agent-btn,.detail-copy,.task-copy{font-family:system-ui,"PingFang SC",sans-serif;cursor:pointer}
+.copy-agent-btn{display:block;width:100%;background:#bc9d72;color:#101d25;border:1px solid #bc9d72;padding:11px 14px;margin-top:14px;text-align:center;font-size:12px;font-weight:650;line-height:1.5}
+.copy-agent-btn:hover{background:#e0c19a;border-color:#e0c19a}
+.copy-agent-btn:focus-visible,.detail-copy:focus-visible,.task-copy:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.task-copy{border:1px solid #917650;background:#25333b;color:#f4e3c6;white-space:nowrap;padding:9px 11px;font-size:12px}
+.task-copy:hover{background:#3b525c}
+.task-item a{margin:0;flex-shrink:0}
+.detail-links .detail-copy{background:#c7aa81;color:#17252e;border:1px solid #c7aa81;padding:12px 17px;font-size:13px}
+.detail-links .detail-copy:hover{background:#e0c19a}
+.copy-status{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:max-content;max-width:min(560px,calc(100vw - 30px));z-index:100;background:#233640;border:1px solid #d9b78b;color:#f0e9dd;box-shadow:0 14px 45px #0009;padding:14px 18px;line-height:1.7;font:13px system-ui,"PingFang SC",sans-serif;text-align:center}
+.copy-status[data-kind="error"]{border-color:#d59e97;color:#f1d9d5}
+.copy-status[hidden]{display:none}
+@media(max-width:920px){.task-item{flex-wrap:wrap}.task-item .task-summary{flex:1 1 calc(100% - 72px)}}
+@media(max-width:720px){.task-copy{flex:1 1 100%;text-align:center}.task-item a{margin-left:auto}.copy-status{bottom:82px}.detail-links .detail-copy{flex:1 1 100%}}
