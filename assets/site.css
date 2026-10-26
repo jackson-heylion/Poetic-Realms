@@ -43,3 +43,51 @@ dialog{border:1px solid #9b866c;padding:0;width:min(690px,calc(100% - 28px));max
 .copy-status[hidden]{display:none}
 @media(max-width:920px){.task-item{flex-wrap:wrap}.task-item .task-summary{flex:1 1 calc(100% - 72px)}}
 @media(max-width:720px){.task-copy{flex:1 1 100%;text-align:center}.task-item a{margin-left:auto}.copy-status{bottom:82px}.detail-links .detail-copy{flex:1 1 100%}}
+
+/* Per-poem multiple HTML submissions and separate create/submit actions */
+.card-copy-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.card-copy-actions .copy-agent-btn{margin:0;width:100%}
+.copy-submit-btn{width:100%;background:transparent;border:1px solid #b49c7b;color:#e7d3b4;padding:11px 9px;font:600 12px/1.5 system-ui,"PingFang SC",sans-serif}
+.copy-submit-btn:hover{background:#33414a}
+.task-submit{border:1px solid #b49c7b;background:transparent;color:#ecdabf;white-space:nowrap;padding:9px 11px;font:12px system-ui,"PingFang SC",sans-serif}
+.task-submit:hover{background:#34454f}
+.detail-links .detail-submit{border:1px solid #b49c7b;background:transparent;color:#ead4b6;padding:12px 17px;font:13px system-ui,"PingFang SC",sans-serif}
+.detail-links .detail-submit:hover{background:#2e424c}
+.copy-submit-btn:focus-visible,.task-submit:focus-visible,.detail-submit:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.scene-versions{margin-top:26px;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.scene-versions h3{font-weight:500;font-size:19px;color:#e6cba0}
+.scene-versions p{color:var(--dim);font:13px/1.8 system-ui,sans-serif}
+.scene-version-list{display:flex;flex-wrap:wrap;gap:9px}
+.scene-version-list a{border:1px solid #957e61;padding:10px 16px;font:12px system-ui,sans-serif;color:#e1c59c}
+.scene-version-list a:hover{background:#2e434b}
+.gallery-main{padding-top:44px;padding-bottom:55px}
+.gallery-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:28px}
+.gallery-intro .eyebrow{margin:0 0 12px}
+.gallery-intro h1{font-size:clamp(27px,3.8vw,49px);font-weight:500;line-height:1.4;margin:0 0 12px}
+.gallery-verse{margin:0;color:#b9c2c0;font-size:17px;line-height:1.8}
+.gallery-detail-link{color:#e6cfaf;border-bottom:1px solid #aa9474;padding:8px 0;font:13px system-ui,sans-serif;white-space:nowrap}
+.gallery-shell{border:1px solid #394953;background:#15222a}
+.gallery-toolbar{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid #364652;font:13px system-ui,"PingFang SC",sans-serif}
+.gallery-toolbar strong{color:#edce9d;margin-right:14px;font-weight:600}
+#gallery-current{color:#b4bfbd}
+.gallery-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.gallery-tools button,.gallery-tools a{border:1px solid #53636a;background:#1e303a;color:#e6dfd1;padding:9px 12px;white-space:nowrap;font:12px system-ui,sans-serif}
+.gallery-tools button:disabled{opacity:.35;cursor:not-allowed}
+.gallery-tools button:not(:disabled):hover,.gallery-tools a:hover{border-color:#c5a782}
+.gallery-options{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 17px}
+.gallery-option{border:1px solid #4c5b63;background:#22313a;color:#d3dedb;padding:10px 16px;font:13px system-ui,sans-serif}
+.gallery-option[aria-pressed="true"]{background:#c8aa82;color:#15222a;border-color:#c8aa82;font-weight:600}
+.gallery-option:hover{border-color:#c8aa82}
+.gallery-stage{position:relative;min-height:min(70vh,720px);background:#091118}
+.gallery-stage iframe{display:block;width:100%;height:min(70vh,720px);min-height:420px;border:0;background:#091118}
+.gallery-stage iframe[hidden],.gallery-stage .gallery-empty[hidden]{display:none}
+.gallery-empty{min-height:min(70vh,720px);display:grid;place-items:center;color:#acb9bb;text-align:center;padding:28px;font:14px/1.9 system-ui,sans-serif}
+.gallery-footnote{padding:0 18px;color:#9eaaa9;font:12px/1.8 system-ui,sans-serif}
+@media(max-width:720px){
+ .card-copy-actions{gap:7px}.card-copy-actions .copy-agent-btn,.copy-submit-btn{font-size:11px;padding:10px 6px}
+ .task-submit{flex:1 1 100%;text-align:center}
+ .gallery-main{padding-top:26px}.gallery-intro{align-items:flex-start;flex-direction:column;gap:10px}
+ .gallery-verse{font-size:14px}.gallery-toolbar{align-items:flex-start;flex-direction:column}
+ .gallery-tools{width:100%}.gallery-tools>*{flex:1;text-align:center}
+ .gallery-stage,.gallery-empty{min-height:60vh}.gallery-stage iframe{height:65vh;min-height:380px}
+}
