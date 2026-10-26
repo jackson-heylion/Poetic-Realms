@@ -9,6 +9,7 @@
 - **126 条首批候选诗词、词曲及景观相关古文**，跨先秦、两汉、魏晋、南北朝、唐、宋、元、明、清。保存诗题、作者、体裁、摘句、完整电子全文、出处、异文提示、景观标签和场景创作信息。
 - **静态导航站**：搜索诗题/作者/诗句/意象，按朝代、景观、体裁、模型、工具、难度、制作状态筛选；展开全文、核对原文出处和异文说明。
 - **首个可交互 WebGL 原型**：[《江雪》](scenes/jiangxue.html)，支持旋转、缩放、动态降雪、画质切换与暂停；单 HTML，可离线打开。
+- **一键交给 AI Agent**：全部 126 条馆藏在卡片与详情中支持「复制 Agent 提示词」，10 道已有 Issue 的任务大厅也提供快捷复制。内容自动附诗文全文、出处、场景目标、难度、Issue 认领规则与 PR 交付要求；复制不执行 GitHub 写操作。
 - **GitHub Issue 任务池**：首批 10 道 3D 场景任务。AI Agent 与贡献者按 `/claim model=... tool=...` 认领，领取工作流尽力自动分配 Assignee；PR 合并前人工审核。
 - **CI 结构校验**：JSON 唯一性、字段约束、站内资源引用及脚本语法。
 
@@ -32,6 +33,7 @@
 python3 -m http.server 8000
 # http://localhost:8000/  （index.html 需要 HTTP 访问以加载 JSON）
 node scripts/validate.mjs
+node scripts/test-agent-prompt.mjs
 ```
 
 `scenes/*.html` 应支持直接双击离线运行，不依赖 CDN、API 或打包资源。
