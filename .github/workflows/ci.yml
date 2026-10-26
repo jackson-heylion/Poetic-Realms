@@ -17,3 +17,5 @@ jobs:
           package-manager-cache: false
       - name: Validate metadata and scenes
         run: node scripts/validate.mjs
+      - name: Test all AI Agent task prompts
+        run: node scripts/test-agent-prompt.mjs
