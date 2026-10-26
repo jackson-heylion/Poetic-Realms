@@ -39,7 +39,17 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "蒹葭苍苍，白露为霜。所谓伊人，在水一方。溯洄从之，道阻且长。溯游从之，宛在水中央。",
+          "蒹葭萋萋，白露未晞。所谓伊人，在水之湄。溯洄从之，道阻且跻。溯游从之，宛在水中坻。",
+          "蒹葭采采，白露未已。所谓伊人，在水之涘。溯洄从之，道阻且右。溯游从之，宛在水中沚。"
+        ],
+        "sourcePath": "诗经/shijing.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "shijing-taoyao",
@@ -74,7 +84,17 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "桃之夭夭，灼灼其华。之子于归，宜其室家。",
+          "桃之夭夭，有蕡其实。之子于归，宜其家室。",
+          "桃之夭夭，其叶蓁蓁。之子于归，宜其家人。"
+        ],
+        "sourcePath": "诗经/shijing.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "chuci-xiangfuren",
@@ -109,7 +129,34 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "帝子降兮北渚，目眇眇兮愁予",
+          "袅袅兮秋风，洞庭波兮木叶下",
+          "登白薠兮骋望，与佳期兮夕张",
+          "鸟何萃兮苹中，罾何为兮木上？",
+          "沅有茝兮醴有兰，思公子兮未敢言",
+          "荒忽兮远望，观流水兮潺湲",
+          "麋何食兮庭中，蛟何为兮水裔",
+          "朝驰余马兮江皋，夕济兮西澨",
+          "闻佳人兮召余，将腾驾兮偕逝",
+          "筑室兮水中，葺之兮荷盖",
+          "荪壁兮紫坛，播芳椒兮成堂",
+          "桂栋兮兰橑，辛夷楣兮药房",
+          "罔薜荔兮为帷，擗蕙櫋兮既张",
+          "白玉兮为镇，疏石兰兮为芳",
+          "芷葺兮荷屋，缭之兮杜衡",
+          "合百草兮实庭，建芳馨兮庑门",
+          "九嶷缤兮并迎，灵之来兮如云",
+          "捐余袂兮江中，遗余褋兮醴浦",
+          "搴汀洲兮杜若，将以遗兮远者",
+          "时不可兮骤得，聊逍遥兮容与！"
+        ],
+        "sourcePath": "楚辞/chuci.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "jiangnan-cailian",
@@ -176,7 +223,21 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "东临碣石，以观沧海。",
+          "水何澹澹，山岛竦峙。",
+          "树木丛生，百草丰茂。",
+          "秋风萧瑟，洪波涌起。",
+          "日月之行，若出其中；",
+          "星汉灿烂，若出其里。",
+          "幸甚至哉，歌以咏志。"
+        ],
+        "sourcePath": "曹操诗集/caocao.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "guiyuan-tianju",
@@ -403,7 +464,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "《望庐山瀑布》二首；摘句出自其二。所查文库录“前川”并注明“一作长川”。"
+      "sourceNote": "《望庐山瀑布》二首；摘句出自其二。所查文库录“前川”并注明“一作长川”。",
+      "transcription": {
+        "text": [
+          "日照香爐生紫煙，遙看瀑布挂前川。",
+          "飛流直下三千尺，疑是銀河落九天。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.8000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "baidicheng",
@@ -438,7 +508,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "朝辭白帝彩雲間，千里江陵一日還。",
+          "兩岸猿聲啼不住，輕舟已過萬重山。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "huanghelou-songbie",
@@ -473,7 +552,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "故人西辭黃鶴樓，煙花三月下揚州。",
+          "孤帆遠影碧空盡，唯見長江天際流。 (唯 通：惟)"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "jingtingshan",
@@ -508,7 +596,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "衆鳥高飛盡，孤雲獨去閑。",
+          "相看兩不厭，只有敬亭山。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.8000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "dujingmen",
@@ -543,7 +640,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "渡遠荊門外，來從楚國遊。",
+          "山隨平野盡，江入大荒流。",
+          "月下飛天鏡，雲生結海樓。",
+          "仍憐故鄉水，萬里送行舟。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "emeishan-yue",
@@ -578,7 +686,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "峨眉山月半輪秋，影入平羌江水流。",
+          "夜發清溪向三峽，思君不見下渝州。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.8000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "ye-su-shansi",
@@ -646,7 +763,36 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "海客談瀛洲，煙濤微茫信難求。",
+          "越人語天姥，雲霓明滅或可覩。",
+          "天姥連天向天橫，勢拔五嶽掩赤城。",
+          "天台四萬八千丈，對此欲倒東南傾。",
+          "我欲因之夢吳越，一夜飛度鏡湖月。",
+          "湖月照我影，送我至剡溪。",
+          "謝公宿處今尚在，淥水蕩漾清猨啼。",
+          "脚著謝公屐，身登青雲梯。",
+          "半壁見海日，空中聞天雞。",
+          "千巖萬轉路不定，迷花倚石忽已暝。",
+          "熊咆龍吟殷巖泉，慄深林兮驚層巔。",
+          "雲青青兮欲雨，水澹澹兮生煙。",
+          "列缺霹靂，丘巒崩摧。",
+          "洞天石扇，訇然中開。",
+          "青冥浩蕩不見底，日月照耀金銀臺。",
+          "霓爲衣兮風爲馬，雲之君兮紛紛而來下。",
+          "虎鼓瑟兮鸞迴車，仙之人兮列如麻。",
+          "忽魂悸以魄動，怳驚起而長嗟。",
+          "惟覺時之枕席，失向來之煙霞。",
+          "世間行樂亦如此，古來萬事東流水。",
+          "別君去時何時還，且放白鹿青崖間，須行即騎訪名山。",
+          "安能摧眉折腰事權貴？使我不得開心顏。"
+        ],
+        "sourcePath": "全唐诗/唐诗三百首.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "shudao",
@@ -681,7 +827,34 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "噫吁嚱！危乎高哉！蜀道之難難於上青天！蠶叢及魚鳧，開國何茫然。",
+          "爾來四萬八千歲，乃與秦塞通人煙。",
+          "西當太白有鳥道，可以橫絕峨眉巔。",
+          "地崩山摧壯士死，然後天梯石棧方鉤連。",
+          "上有六龍迴日之高標，下有衝波逆折之迴川。",
+          "黃鶴之飛尚不得，猨猱欲度愁攀緣。",
+          "青泥何盤盤，百步九折縈巖巒。",
+          "捫參歷井仰脅息，以手撫膺坐長歎。",
+          "問君西遊何時還？畏途巉巖不可攀。",
+          "但見悲鳥號枯木，雄飛呼雌繞林間。",
+          "又聞子規啼夜月，愁空山，蜀道之難難於上青天！使人聽此彫朱顏。",
+          "連峰去天不盈尺，枯松倒挂倚絕壁。",
+          "飛湍瀑流相喧豗，砅崖轉石萬壑雷。",
+          "其嶮也若此，嗟爾遠道之人胡爲乎來哉？",
+          "劒閣崢嶸而崔嵬，一夫當關，萬夫莫開。",
+          "所守或匪親，化爲狼與豺。",
+          "朝避猛虎，夕避長蛇。",
+          "磨牙吮血，殺人如麻。",
+          "錦城雖云樂，不如早還家。",
+          "蜀道之難難於上青天，側身西望長咨嗟。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.1000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "jueju-huangli",
@@ -716,7 +889,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "兩箇黃鸝鳴翠柳，一行白鷺上青天。",
+          "窗含西嶺千秋雪，門泊東吳萬里船。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.11000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "jueju-chiri",
@@ -751,7 +933,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "遲日江山麗，春風花草香。",
+          "泥融飛燕子，沙暖睡鴛鴦。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.11000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "chunyu",
@@ -786,7 +977,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "好雨知時節，當春乃發生。",
+          "隨風潛入夜，潤物細無聲。",
+          "野徑雲俱黑，江船火獨明。",
+          "曉看紅濕處，花重錦官城。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.11000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "denggao",
@@ -821,7 +1023,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "風急天高猿嘯哀，渚清沙白鳥飛回。",
+          "無邊落木蕭蕭下，不盡長江滾滾來。",
+          "萬里悲秋常作客，百年多病獨登臺。",
+          "艱難苦恨繁霜鬢，潦倒新停濁酒杯。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "wangyue",
@@ -856,7 +1069,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "岱宗夫如何，齊魯青未了。",
+          "造化鍾神秀，陰陽割昏曉。",
+          "盪胷生曾雲，決眥入歸鳥。",
+          "會當凌絕頂，一覽衆山小。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.10000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "jiangpan-xunhua",
@@ -891,7 +1115,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "黃四娘家花滿蹊，千朵萬朵壓枝低。",
+          "留連戲蝶時時舞，自在嬌鶯恰恰啼。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.11000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "lyuye",
@@ -926,7 +1159,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "細草微風岸，危檣獨夜舟。",
+          "星垂平野闊，月涌大江流。",
+          "名豈文章著，官應老病休。",
+          "飄飄何所似，天地一沙鷗。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "deng-yueyanglou",
@@ -961,7 +1205,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "昔聞洞庭水，今上岳陽樓。",
+          "吳楚東南坼，乾坤日夜浮。",
+          "親朋無一字，老病有孤舟。",
+          "戎馬關山北，憑軒涕泗流。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "shanju-qiuyu",
@@ -996,7 +1251,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "空山新雨後，天氣晚來秋。",
+          "明月松間照，清泉石上流。",
+          "竹喧歸浣女，蓮動下漁舟。",
+          "隨意春芳歇，王孫自可留。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.6000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "luzhai",
@@ -1031,7 +1297,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "空山不見人，但聞人語響。",
+          "返景入深林，復照青苔上。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.6000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "zhuliguan",
@@ -1066,7 +1341,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "獨坐幽篁裏，彈琴復長嘯。",
+          "深林人不知，明月來相照。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.6000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "niaomingjian",
@@ -1101,7 +1385,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "人閑桂花落，夜靜春山空。",
+          "月出驚山鳥，時鳴春澗中。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.6000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "damo-guyan",
@@ -1136,7 +1429,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "單車欲問邊，屬國過居延。",
+          "征蓬出漢塞，歸雁入胡天。",
+          "大漠孤煙直，長河落日圓。",
+          "蕭關逢候吏，都護在燕然。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.6000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "zhongnanshan",
@@ -1171,7 +1475,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "太乙近天都，連山接海隅。",
+          "白雲迴望合，青靄入看無。",
+          "分野中峰變，陰晴衆壑殊。",
+          "欲投人處宿，隔水問樵夫。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.6000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "weichen",
@@ -1238,7 +1553,19 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "斜陽照墟落，窮巷牛羊歸。",
+          "野老念牧童，倚杖候荆扉。",
+          "雉雊麥苗秀，蠶眠桑葉稀。",
+          "田夫荷鋤至，相見語依依。",
+          "即此羨閑逸，悵然吟式微。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.5000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "chunxiao",
@@ -1273,7 +1600,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "春眠不覺曉，處處聞啼鳥。",
+          "夜來風雨聲，花落知多少。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.7000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "jiandejiang",
@@ -1308,7 +1644,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "移舟泊煙渚，日暮客愁新。",
+          "野曠天低樹，江清月近人。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "guogurenzhuang",
@@ -1343,7 +1688,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "故人具雞黍，邀我至田家。",
+          "綠樹村邊合，青山郭外斜。",
+          "開軒面場圃，把酒話桑麻。",
+          "待到重陽日，還來就菊花。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "dongtinghu",
@@ -1378,7 +1734,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "八月湖水平，涵虛混太清。",
+          "氣蒸雲夢澤，波撼岳陽城。",
+          "欲濟無舟楫，端居恥聖明。",
+          "坐觀垂釣者，空有羨魚情。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.7000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "yijiangnan",
@@ -1413,7 +1780,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "江南好，風景舊曾諳。",
+          "日出江花紅勝火，春來江水綠如藍，能不憶江南。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.49000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "qiantanghu",
@@ -1448,7 +1824,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "孤山寺北賈亭西，水面初平雲脚低。",
+          "幾處早鶯爭暖樹，誰家新燕啄春泥。",
+          "亂花漸欲迷人眼，淺草纔能沒馬蹄。",
+          "最愛湖東行不足，綠楊陰裏白沙堤。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.23000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "mujiangyin",
@@ -1483,7 +1870,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "一道殘陽鋪水中，半江瑟瑟半江紅。",
+          "可憐九月初三夜，露似真珠月似弓。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.23000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "dalinsi",
@@ -1518,7 +1914,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "人間四月芳菲盡，山寺桃花始盛開。",
+          "長恨春歸無覓處，不知轉入此中來。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.22000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "guyuan",
@@ -1553,7 +1958,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "離離原上草，一歲一枯榮。",
+          "野火燒不盡，春風吹又生。",
+          "遠芳侵古道，晴翠接荒城。",
+          "又送王孫去，萋萋滿別情。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "jiangxue",
@@ -1591,7 +2007,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "千山鳥飛絕，萬逕人蹤滅。",
+          "孤舟蓑笠翁，獨釣寒江雪。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.18000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "yuweng",
@@ -1626,7 +2051,17 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "漁翁夜傍西巖宿，曉汲清湘燃楚竹。",
+          "煙銷日出不見人，欸乃一聲山水綠。",
+          "回看天際下中流，巖上無心雲相逐。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "wangdongting",
@@ -1661,7 +2096,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "湖光秋月兩相和，潭面無風鏡未磨。",
+          "遙望洞庭山水翠，白銀盤裏一青螺。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.19000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "zhuzhici",
@@ -1696,7 +2140,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "楊柳青青江水平，聞郎江上唱歌聲。",
+          "東邊日出西邊雨，道是無晴却有晴。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.19000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "wuyixiang",
@@ -1731,7 +2184,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "朱雀橋邊野草花，烏衣巷口夕陽斜。",
+          "舊時王謝堂前燕，飛入尋常百姓家。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.19000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "langtaosha",
@@ -1766,7 +2228,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "九曲黃河萬里沙，浪淘風簸自天涯。",
+          "如今直上銀河去，同到牽牛織女家。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.2000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "fengqiao",
@@ -1801,7 +2272,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "月落烏啼霜滿天，江楓漁火對愁眠。",
+          "姑蘇城外寒山寺，夜半鐘聲到客船。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "yugezi",
@@ -1836,7 +2316,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "西塞山前白鷺飛，桃花流水鱖魚肥。",
+          "青篛笠，綠簑衣，斜風細雨不須歸。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.16000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "yongliu",
@@ -1871,7 +2360,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "碧玉妝成一樹高，萬條垂下綠絲縧。",
+          "不知細葉誰裁出，二月春風似剪刀。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.5000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "shanxing",
@@ -1906,7 +2404,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "遠上寒山石徑斜，白雲生處有人家。",
+          "停車坐愛楓林晚，霜葉紅於二月花。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.28000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "jiangnanchun",
@@ -1941,7 +2448,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "千里鶯啼綠映紅，水村山郭酒旗風。",
+          "南朝四百八十寺，多少樓臺煙雨中。"
+        ],
+        "sourcePath": "蒙学/qianjiashi.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "boqinhuai",
@@ -1976,7 +2492,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "煙籠寒水月籠沙，夜泊秦淮近酒家。",
+          "商女不知亡國恨，隔江猶唱後庭花。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "qiuxi",
@@ -2011,7 +2536,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "銀燭秋光冷畫屏，輕羅小扇撲流螢。",
+          "天階夜色涼如水，臥看牽牛織女星。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "yeyu-jibei",
@@ -2046,7 +2580,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "君問歸期未有期，巴山夜雨漲秋池。",
+          "何當共剪西窗燭，卻話巴山夜雨時。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "leyouyuan",
@@ -2081,7 +2624,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "向晚意不適，驅車登古原。",
+          "夕陽無限好，只是近黃昏。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.29000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "chusai",
@@ -2116,7 +2668,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "秦時明月漢時關，萬里長征人未還。",
+          "但使龍城飛將在，不教胡馬度陰山。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.6000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "congjunxing",
@@ -2151,7 +2712,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "青海長雲暗雪山，孤城遙望玉門關。",
+          "黃沙百戰穿金甲，不破樓蘭終不還。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.6000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "guanque",
@@ -2186,7 +2756,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "白日依山盡，黃河入海流。",
+          "欲窮千里目，更上一層樓。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "liangzhouci",
@@ -2221,7 +2800,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "黃河遠上白雲間，一片孤城萬仞山。",
+          "羌笛何須怨楊柳，春光不度玉門關。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.13000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "huanghelou",
@@ -2256,7 +2844,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "昔人已乘黃鶴去，此地空餘黃鶴樓。",
+          "黃鶴一去不復返，白雲千載空悠悠。",
+          "晴川歷歷漢陽樹，芳草萋萋鸚鵡洲。",
+          "日暮鄉關何處是？煙波江上使人愁。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "baixuege",
@@ -2291,7 +2890,23 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "北風捲地白草折，胡天八月即飛雪。",
+          "忽如一夜春風來，千樹萬樹梨花開。",
+          "散入珠簾溼羅幕，狐裘不暖錦衾薄。",
+          "將軍角弓不得控，都護鐵衣冷難着。(難着 一作：猶著)",
+          "瀚海闌干百丈冰，愁雲慘淡萬里凝。",
+          "中軍置酒飲歸客，胡琴琵琶與羌笛。",
+          "紛紛暮雪下轅門，風掣紅旗凍不翻。",
+          "輪臺東門送君去，去時雪滿天山路。",
+          "山迴路轉不見君，雪上空留馬行處。"
+        ],
+        "sourcePath": "蒙学/tangshisanbaishou.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "biedongda",
@@ -2361,7 +2976,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "獨憐幽草澗邊生，上有黃鸝深樹鳴。",
+          "春潮帶雨晚來急，野渡無人舟自橫。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.9000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "shiwuyewangyue",
@@ -2396,7 +3020,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "中庭地白樹棲鴉，冷露無聲濕桂花。",
+          "今夜月明人盡望，不知秋思在誰家。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.16000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "zaochun",
@@ -2431,7 +3064,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "天街小雨潤如酥，草色遙看近却無。",
+          "最是一年春好處，絕勝煙柳滿皇都。"
+        ],
+        "sourcePath": "全唐诗/poet.tang.18000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "wannchun",
@@ -2629,7 +3271,22 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "苏轼怀古之文学赤壁不可直接当作三国赤壁大战遗址建模。"
+      "sourceNote": "苏轼怀古之文学赤壁不可直接当作三国赤壁大战遗址建模。",
+      "transcription": {
+        "text": [
+          "大江东去，浪淘尽、千古风流人物。",
+          "故垒西边人道是，三国周郎赤壁。",
+          "乱石穿空，惊涛拍岸，卷起千堆雪。",
+          "江山如画，一时多少豪杰。",
+          "遥想公瑾当年，小乔初嫁了，雄姿英发。",
+          "羽扇纶巾谈笑间，强虏灰飞烟灭。",
+          "故国神游，多情应笑，我早生华发。",
+          "人间如梦，一尊还酹江月。"
+        ],
+        "sourcePath": "宋词/ci.song.1000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "dingfengbo",
@@ -2664,7 +3321,25 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "莫听穿林打叶声。",
+          "何妨吟啸且徐行。",
+          "竹杖芒鞋轻胜马。",
+          "谁怕。",
+          "一蓑烟雨任平生。",
+          "料峭春风吹酒醒。",
+          "微冷。",
+          "山头斜照却相迎。",
+          "回首向来潇洒处。",
+          "归去。",
+          "也无风雨也无晴。"
+        ],
+        "sourcePath": "宋词/ci.song.1000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "shuidiaogetou",
@@ -2699,7 +3374,22 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "明月几时有，把酒问青天。",
+          "不知天上宫阙，今夕是何年。",
+          "我欲乘风归去，又恐琼楼玉宇，高处不胜寒。",
+          "起舞弄清影，何似在人间。",
+          "转朱阁，低绮户，照无眠。",
+          "不应有恨，何事长向别时圆。",
+          "人有悲欢离合，月有阴晴圆缺，此事古难全。",
+          "但愿人长久，千里共婵娟。"
+        ],
+        "sourcePath": "宋词/ci.song.1000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "huanxisha-qingquansi",
@@ -2734,7 +3424,19 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "山下兰芽短浸溪。",
+          "松间沙路净无泥。",
+          "萧萧暮雨子规啼。",
+          "谁道人生无再少，门前流水尚能西。",
+          "休将白发唱黄鸡。"
+        ],
+        "sourcePath": "宋词/ci.song.1000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "xijiangyue",
@@ -2769,7 +3471,20 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "明月别枝惊鹊，清风半夜鸣蝉。",
+          "稻花香里说丰年。",
+          "听取蛙声一片。",
+          "七八个星天外，两三点雨山前。",
+          "旧时茅店社林边。",
+          "路转溪桥忽见。"
+        ],
+        "sourcePath": "宋词/ci.song.11000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "yuanxi",
@@ -2804,7 +3519,22 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "东风夜放花千树。",
+          "更吹落、星如雨。",
+          "宝马雕车香满路。",
+          "凤箫声动，玉壶光转，一夜鱼龙舞。",
+          "蛾儿雪柳黄金缕。",
+          "笑语盈盈暗香去。",
+          "众里寻他千百度。",
+          "蓦然回首，那人却在，灯火阑珊处。"
+        ],
+        "sourcePath": "宋词/ci.song.11000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "pozhenzi",
@@ -2839,7 +3569,20 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "醉里挑灯看剑，梦回吹角连营。",
+          "八百里分麾下炙，五十弦翻塞外声。",
+          "沙场秋点兵。",
+          "马作的卢飞快，弓如霹雳弦惊。",
+          "了却君王天下事，赢得生前身后名。",
+          "可怜白发生。"
+        ],
+        "sourcePath": "宋词/ci.song.11000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "pusa-man",
@@ -2909,7 +3652,21 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "茅檐低小。",
+          "溪上青青草。",
+          "醉里蛮音相媚好。",
+          "白发谁家翁媪。",
+          "大儿锄豆溪东。",
+          "中儿正织鸡笼。",
+          "最喜小儿亡赖，溪头卧剥莲蓬。"
+        ],
+        "sourcePath": "宋词/ci.song.11000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "rumengling-xiting",
@@ -2979,7 +3736,20 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "昨夜雨疏风骤。",
+          "浓睡不消残酒。",
+          "试问卷帘人，却道海棠依旧。",
+          "知否。",
+          "知否。",
+          "应是绿肥红瘦。"
+        ],
+        "sourcePath": "宋词/ci.song.6000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "shengshengman",
@@ -3014,7 +3784,23 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "寻寻觅觅，冷冷清清，凄凄惨惨戚戚。",
+          "乍暖还寒时候，最难将息。",
+          "三杯两盏淡酒，怎敌他、晚来风急。",
+          "雁过也，正伤心，却是旧时相识。",
+          "满地黄花堆积。",
+          "憔悴损，如今有谁忺摘。",
+          "守著窗儿，独自怎生得黑。",
+          "梧桐更兼细雨，到黄昏、点点滴滴。",
+          "这次第，怎一个、愁字了得。"
+        ],
+        "sourcePath": "宋词/ci.song.6000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "zuihuayin",
@@ -3084,7 +3870,20 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "欧阳修《采桑子》中的‘西湖’指颍州西湖，不是杭州西湖。"
+      "sourceNote": "欧阳修《采桑子》中的‘西湖’指颍州西湖，不是杭州西湖。",
+      "transcription": {
+        "text": [
+          "轻舟短棹西湖好，绿水逶迤。",
+          "芳草长堤。",
+          "隐隐笙歌处处随。",
+          "无风水面琉璃滑，不觉船移。",
+          "微动涟漪。",
+          "惊起沙禽掠岸飞。"
+        ],
+        "sourcePath": "宋词/ci.song.0.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "dielianhua",
@@ -3151,7 +3950,19 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "一曲新词酒一杯。",
+          "去年天气旧亭台。",
+          "夕阳西下几时回。",
+          "无可奈何花落去，似曾相识燕归来。",
+          "小园香径独徘徊。"
+        ],
+        "sourcePath": "宋词/ci.song.0.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "wanghaichao",
@@ -3186,7 +3997,25 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "东南形胜，三吴都会，钱塘自古繁华。",
+          "烟柳画桥，风帘翠幕，参差十万人家。",
+          "云树绕堤沙。",
+          "怒涛卷霜雪，天堑无涯。",
+          "市列珠玑，户盈罗绮竞豪奢。",
+          "重湖叠巘清嘉。",
+          "有三秋桂子，十里荷花。",
+          "羌管弄晴，菱歌泛夜，嬉嬉钓叟莲娃。",
+          "千骑拥高牙。",
+          "乘醉听箫鼓，吟赏烟霞。",
+          "异日图将好景，归去凤池夸。"
+        ],
+        "sourcePath": "宋词/ci.song.0.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "yulinling",
@@ -3221,7 +4050,24 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "寒蝉凄切。",
+          "对长亭晚，骤雨初歇。",
+          "都门帐饮无绪，留恋处、兰舟催发。",
+          "执手相看泪眼，竟无语凝噎。",
+          "念去去、千里烟波，暮霭沈沈楚天阔。",
+          "多情自古伤离别。",
+          "更那堪、冷落清秋节。",
+          "今宵酒醒何处，杨柳岸、晓风残月。",
+          "此去经年，应是良辰、好景虚设。",
+          "便纵有、千种风情，更与何人说。"
+        ],
+        "sourcePath": "宋词/ci.song.0.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "sumuzhe-fanzhongyan",
@@ -3256,7 +4102,22 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "碧云天，黄叶地。",
+          "秋色连波，波上寒烟翠。",
+          "山映斜阳天接水。",
+          "芳草无情，更在斜阳外。",
+          "黯乡魂，追旅思。",
+          "夜夜除非，好梦留人睡。",
+          "明月楼高休独倚。",
+          "酒入愁肠，化作相思泪。"
+        ],
+        "sourcePath": "宋词/ci.song.0.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "yujiaao",
@@ -3291,7 +4152,24 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "塞下秋来风景异。",
+          "衡阳雁去无留意。",
+          "四面边声连角起。",
+          "千嶂里。",
+          "长烟落日孤城闭。",
+          "浊酒一杯家万里。",
+          "燕然未勒归无计。",
+          "羌管悠悠霜满地。",
+          "人不寐。",
+          "将军白发征夫泪。"
+        ],
+        "sourcePath": "宋词/ci.song.0.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "yueyanglouji",
@@ -3550,7 +4428,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "驿外断桥边，寂寞开无主。",
+          "已是黄昏独自愁，更著风和雨。",
+          "无意苦争春，一任群芳妒。",
+          "零落成泥碾作尘，只有香如故。"
+        ],
+        "sourcePath": "宋词/ci.song.9000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "bochuanguazhou",
@@ -3713,7 +4602,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "半畝方塘一鑑開，天光雲影共徘徊。",
+          "問渠那得清如許，爲有源頭活水來。"
+        ],
+        "sourcePath": "蒙学/qianjiashi.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "tilinandi",
@@ -3748,7 +4646,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "山外青山樓外樓，西湖歌舞幾時休。",
+          "暖風薰得遊人醉，直把杭州作汴州。"
+        ],
+        "sourcePath": "蒙学/qianjiashi.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "youyuanbuzhi",
@@ -3879,7 +4786,18 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "纤云弄巧，飞星传恨，银汉迢迢暗度。",
+          "金风玉露一相逢，便胜却、人间无数。",
+          "柔情似水，佳期如梦，忍顾鹊桥归路。",
+          "两情若是长久时，又岂在、朝朝暮暮。"
+        ],
+        "sourcePath": "宋词/ci.song.3000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "tashaxing",
@@ -3914,7 +4832,20 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "雾失楼台，月迷津渡。",
+          "桃源望断无寻处。",
+          "可堪孤馆闭春寒，杜鹃声里斜阳暮。",
+          "驿寄梅花，鱼传尺素。",
+          "砌成此恨无重数。",
+          "郴江幸自绕郴山，为谁流下潇湘去。"
+        ],
+        "sourcePath": "宋词/ci.song.3000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "sumuzhe-zhou",
@@ -3949,7 +4880,21 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "燎沈香，消溽暑。",
+          "鸟雀呼晴，侵晓窥檐语。",
+          "叶上初阳乾宿雨，水面清圆，一一风荷举。",
+          "故乡遥，何日去。",
+          "家住吴门，久作长安旅。",
+          "五月渔郎相忆否。",
+          "小楫轻舟，梦入芙蓉浦。"
+        ],
+        "sourcePath": "宋词/ci.song.4000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "yangzhouman",
@@ -3984,7 +4929,22 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "淮左名都，竹西佳处，解鞍少驻初程。",
+          "过春风十里，尽荠麦青青。",
+          "自胡马窥江去后，废池乔木，犹厌言兵。",
+          "渐黄昏，清角吹寒，都在空城。",
+          "杜郎俊赏，算而今，重到须惊。",
+          "纵豆蔻词工，青楼梦好，难赋深情。",
+          "二十四桥仍在，波心荡、冷月无声。",
+          "念桥边红药，年年知为谁生。"
+        ],
+        "sourcePath": "宋词/ci.song.12000.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "tianjingsha",
@@ -4179,7 +5139,16 @@
         }
       ],
       "sourceStatus": "transcription-exact",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。",
+      "transcription": {
+        "text": [
+          "山一程，水一程，身向榆关那畔行，夜深千帐灯",
+          "风一更，雪一更，聒碎乡心梦不成，故园无此声"
+        ],
+        "sourcePath": "纳兰性德/纳兰性德诗集.json",
+        "mode": "digital-exact-match",
+        "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
+      }
     },
     {
       "id": "cunju",
