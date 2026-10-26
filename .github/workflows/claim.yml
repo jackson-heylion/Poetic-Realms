@@ -36,8 +36,11 @@ jobs:
             }
             try {
               await github.rest.issues.addAssignees({owner,repo,issue_number,assignees:[actor]});
-              await github.rest.issues.addLabels({owner,repo,issue_number,labels:["in-progress"]});
-              await github.rest.issues.removeLabel({owner,repo,issue_number,name:"available"});
+              const slug = s => s.toLowerCase().replace(/[^a-z0-9._-]/g,"-").slice(0,40);
+              await github.rest.issues.addLabels({owner,repo,issue_number,labels:["in-progress","model:"+slug(model),"tool:"+slug(tool)]});
+              for (const name of ["available","model:pending","tool:pending"]) {
+                if (labels.includes(name)) await github.rest.issues.removeLabel({owner,repo,issue_number,name});
+              }
               await say("已认领：@"+actor+" · Model: `"+model+"` · Tool: `"+tool+"`。请提交场景 HTML 与 PR，并记录版本与实际测试。");
             } catch(e) {
               await say("自动认领未完成：可能不允许将此 GitHub 账号设为 Assignee，或仓库权限不足。请联系维护者手动确认。错误类别："+String(e.status||"unknown"));
