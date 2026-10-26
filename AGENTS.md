@@ -19,10 +19,10 @@
 ## 工程交付
 
 - `index.html` 是 GitHub Pages 根入口。所有站内链接**使用相对路径**，适配 `/Poetic-Realms/` 子目录。项目无需构建器与后端。
-- 一个场景一个 `scenes/{id}.html`，自包含 WebGL/HTML/CSS/JS，能离线启动，禁止外部 CDN、账号令牌和未经授权的 API。
+- **一诗多境**：同篇可收录多个独立 HTML。保留旧 `scenes/{id}.html`，新交作业放 `scenes/{id}/{variant-id}.html`，在 `data/poems.json` 对应条目的 `scenes[]` 追加 `{id,title,path,model,tools,status}`，不得覆盖其他作品。每篇 `sceneStatus` 表示总体是否有可用版本。HTML 自包含 WebGL/HTML/CSS/JS，能离线启动，禁止外部 CDN、账号令牌和未经授权的 API。
 - WebGL 同名 uniform 的类型、精度在 vertex/fragment 必须一致；需要编译、链接与 context-lost 错误提示。
 - 移动端限制 DPR、粒子数与 draw calls，提供画质调节或相应降级；后台不可持续高负载渲染。
 - 提交前执行 `node scripts/validate.mjs`；在实际桌面/移动端浏览器测试交互、首帧、资源加载和控制台。不要把仅通过语法校验写成视觉验收成功。
-- 每个 PR 写明 Issue、模型/工具及版本、关键实现、改动路径、实测设备与结果、遗留问题。验证通过后才允许更新 `sceneStatus` 为 `published`。
+- 每个 PR 写明 Issue、模型/工具及版本、关键实现、改动路径、实测设备与结果、遗留问题。验证通过后才允许将单个版本的 `status` 及必要时总体 `sceneStatus` 更新为 `published`。
 
 详细工作流以 `docs/AGENT_WORKFLOW.md` 为准。
