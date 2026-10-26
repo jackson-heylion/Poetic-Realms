@@ -1795,6 +1795,27 @@
           "可怜白发生。"
         ]
       }
+    ],
+    "yangzhouman": [
+      {
+        "path": "宋词/ci.song.12000.json",
+        "matchTitle": "扬州慢",
+        "matchAuthor": "姜夔",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "淮左名都，竹西佳处，解鞍少驻初程。",
+          "过春风十里，尽荠麦青青。",
+          "自胡马窥江去后，废池乔木，犹厌言兵。",
+          "渐黄昏，清角吹寒，都在空城。",
+          "杜郎俊赏，算而今，重到须惊。",
+          "纵豆蔻词工，青楼梦好，难赋深情。",
+          "二十四桥仍在，波心荡、冷月无声。",
+          "念桥边红药，年年知为谁生。"
+        ]
+      }
     ]
   }
 }
