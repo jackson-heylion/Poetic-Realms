@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1b2a34">
+<title>江雪 · 沉浸式诗境 | Poetic Realms</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#192935;color:#f0ece3;font-family:"Songti SC","STSong",serif}canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}canvas:active{cursor:grabbing}
+#backdrop{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 73% 25%,#e0d5ca66 0,#b8bbc350 8%,transparent 31%),linear-gradient(#667b8a 0%,#9ca9ad 39%,#788f9c 64%,#2d4859 100%)}
+#hud{position:fixed;top:30px;left:35px;width:min(330px,calc(100vw - 65px));pointer-events:none;text-shadow:0 1px 8px #14232f99}#hud .brand{font:11px system-ui,sans-serif;letter-spacing:.2em;color:#e6d5bd}h1{font-size:62px;font-weight:500;letter-spacing:.26em;margin:26px 0 12px}blockquote{margin:0;font-size:17px;line-height:2;letter-spacing:.08em}#hud p{font-size:12px;line-height:2;color:#f2f1e6bc}
+#controls{position:fixed;bottom:23px;right:25px;display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% - 40px)}button,a.button{padding:10px 14px;border:1px solid #dfded4a6;color:#f1eee5;background:#203643a8;backdrop-filter:blur(8px);border-radius:2px;font:12px system-ui,sans-serif;cursor:pointer;text-decoration:none}button:hover,a.button:hover{background:#314e5c}button:focus-visible,a:focus-visible{outline:2px solid white;outline-offset:3px}
+#topright{position:fixed;right:26px;top:24px;text-align:right;color:#e8e9e0bd;font:11px/2 system-ui,sans-serif;letter-spacing:.06em}#progress{position:fixed;bottom:25px;left:35px;font:11px system-ui,sans-serif;color:#eee8dfb6;max-width:50%}#notice{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#172634ee;color:#fff;padding:20px;border:1px solid #cdb897;max-width:85vw;display:none;z-index:3}#notice.visible{display:block}
+@media(max-width:650px){#hud{top:65px;left:18px}h1{font-size:44px;margin:10px 0}blockquote{font-size:13px}#hud p{font-size:11px;max-width:230px}#topright{right:14px;top:9px}#controls{bottom:12px;right:11px;gap:5px}button,a.button{font-size:11px;padding:8px}#progress{left:12px;bottom:63px;max-width:90%}}
+</style></head>
+<body>
+<div id="backdrop"></div><canvas id="gl" aria-label="可旋转缩放的三维雪山寒江场景"></canvas>
+<div id="hud"><div class="brand">POETIC REALMS / 一诗一境</div><h1>江雪</h1><blockquote>千山鸟飞绝，万径人踪灭。<br>孤舟蓑笠翁，独钓寒江雪。</blockquote><p>唐 · 柳宗元<br>试着拖动画面，或滑动滚轮，寻找风雪中的那叶孤舟。</p></div>
+<div id="topright"><span>江雪 / WebGL 实验场景</span><br><span id="fps">— FPS</span></div>
+<div id="progress">拖动旋转 · 滚轮或双指缩放 · 可调画质</div>
+<div id="controls">
+<a href="../index.html?poem=jiangxue" class="button">← 返回诗境</a>
+<button id="reset" type="button">重置视角</button><button id="quality" type="button">画质：标准</button><button id="pause" type="button">暂停</button>
+</div><div id="notice" role="alert"></div>
+<script>
+(function(){
+"use strict";
+var canvas=document.getElementById("gl"),gl=canvas.getContext("webgl",{antialias:false,alpha:true,powerPreference:"low-power"});
+var notice=document.getElementById("notice"),fps=document.getElementById("fps"),pauseBtn=document.getElementById("pause"),qualityBtn=document.getElementById("quality");
+function error(msg){notice.textContent=msg;notice.className="visible";}
+if(!gl){error("浏览器无法创建 WebGL 上下文。请检查硬件加速设置。");return;}
+var vertex='precision highp float; attribute vec3 aPos; attribute vec3 aColor; uniform highp float uTime; uniform highp float uYaw; uniform highp float uPitch; uniform highp float uZoom; uniform highp float uAspect; uniform highp float uPoints; varying highp vec3 vColor; varying highp float vFog; varying highp float vPoints; void main(){ vec3 p=aPos; if(uPoints>0.5){p.y=mod(p.y-uTime*(0.75+p.z*0.02)+18.0,16.0)-7.5;p.x+=sin(uTime*0.6+p.y*0.7+p.z)*0.25;} float cy=cos(uYaw),sy=sin(uYaw);p.xz=mat2(cy,-sy,sy,cy)*p.xz;float cp=cos(uPitch),sp=sin(uPitch);p.yz=mat2(cp,-sp,sp,cp)*p.yz;p.z+=uZoom;float z=max(p.z,0.5);gl_Position=vec4(p.x*1.8/uAspect,p.y*1.8,z-0.14,z);gl_PointSize=uPoints>0.5?clamp(48.0/z,1.3,4.0):1.0;vColor=aColor;vFog=clamp((p.z-24.0)/48.0,0.0,0.6);vPoints=uPoints;}';
+var fragment='precision highp float; varying highp vec3 vColor; varying highp float vFog; varying highp float vPoints; void main(){if(vPoints>0.5){vec2 uv=gl_PointCoord-0.5;float r=length(uv);if(r>0.48)discard;gl_FragColor=vec4(vec3(0.98,0.99,1.0),smoothstep(0.48,0.18,r)*0.8);return;}vec3 c=mix(vColor,vec3(0.62,0.70,0.73),vFog);gl_FragColor=vec4(c,1.0);}';
+function shader(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
+var program;
+try{program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vertex));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fragment));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));}
+catch(e){error("着色器初始化失败："+e.message);return;}
+gl.useProgram(program);
+var loc={pos:gl.getAttribLocation(program,"aPos"),col:gl.getAttribLocation(program,"aColor"),time:gl.getUniformLocation(program,"uTime"),yaw:gl.getUniformLocation(program,"uYaw"),pitch:gl.getUniformLocation(program,"uPitch"),zoom:gl.getUniformLocation(program,"uZoom"),aspect:gl.getUniformLocation(program,"uAspect"),points:gl.getUniformLocation(program,"uPoints")};
+var geo=[],snow=[];
+function tri(a,b,c,color){[a,b,c].forEach(function(p){geo.push(p[0],p[1],p[2],color[0],color[1],color[2]);});}
+function quad(a,b,c,d,color){tri(a,b,c,color);tri(a,c,d,color);}
+function mountain(x,z,w,h,col){var base=-3.1;tri([x-w,base,z],[x,h,z+0.6],[x+w,base,z],col);tri([x,h,z+0.58],[x+w,base,z],[x+w*0.35,base-0.1,z+0.5],col.map(function(c){return c*0.78}));var snowH=h-(h-base)*0.26;tri([x-w*.27,snowH,z-0.1],[x,h+0.02,z-.1],[x+w*.27,snowH,z-.1],[.80,.84,.84]);}
+var far=[.48,.59,.65],mid=[.36,.48,.56],front=[.23,.35,.42];
+for(var i=-4;i<5;i++)mountain(i*11+3,33+i%3,8.8,4+((i*i+3)%5)*1.15,far);
+for(i=-3;i<4;i++)mountain(i*12-2,22+(i%2)*2,9.2,2.6+((i*i+2)%4)*1.5,mid);
+mountain(-21,10,18,7.5,front);mountain(23,11,16,6.8,front);mountain(-16,3,14,3.4,[.28,.39,.45]);mountain(18,4,13,3.1,[.26,.37,.43]);
+// 寒江与岸雪：全部作为真正 3D 三角网格
+quad([-65,-3.55,-20],[65,-3.55,-20],[65,-3.55,64],[-65,-3.55,64],[.38,.53,.61]);
+quad([-55,-3.49,-19],[-6,-3.49,-19],[-12,-3.49,9],[-39,-3.49,13],[.63,.69,.70]);
+quad([7,-3.48,-19],[55,-3.48,-19],[39,-3.48,13],[12,-3.48,11],[.59,.66,.68]);
+function strip(x,z,len,width,c){quad([x,-3.43,z],[x+len,-3.43,z+0.1],[x+len*1.1,-3.43,z+width],[x-len*.1,-3.43,z+width],c);}
+for(i=0;i<110;i++){var fx=Math.sin(i*17.13)*26, fz=(i*13.7)%43-15, len=.4+(i%5)*.45;strip(fx,fz,len,.05,[.52+(i%3)*.04,.65+(i%3)*.03,.68+(i%4)*.02]);}
+// 近景枯树和岩石
+function branch(x,y,z,dx,dy,w,col){quad([x-w,y,z],[x+w,y,z],[x+dx+w*.55,y+dy,z],[x+dx-w*.55,y+dy,z],col);}
+branch(-11,-3.1,-10,-.7,7,.26,[.16,.24,.3]);branch(-11.3,.7,-10,-2.6,2.0,.10,[.18,.26,.32]);branch(-11.1,.9,-10,2.4,1.3,.1,[.17,.25,.32]);
+branch(11,-3.1,-7,.5,5,.25,[.18,.28,.33]);branch(11.2,-.1,-7,2.0,1.7,.1,[.19,.28,.34]);
+// 小舟与蓑笠翁（手工建模）
+var bz=-7,by=-2.95;
+tri([-2.2,by,bz],[-1.72,by-.55,bz-.3],[2.0,by,bz],[.12,.21,.26]);tri([-1.72,by-.55,bz-.3],[1.45,by-.55,bz-.25],[2,by,bz],[.10,.18,.23]);
+tri([-.2,by,bz-.1],[.05,by+1.65,bz-.1],[.38,by,bz-.1],[.15,.22,.25]);tri([-.45,by+.95,bz-.1],[.05,by+1.4,bz-.1],[.48,by+.95,bz-.1],[.16,.24,.27]);
+tri([-.6,by+1.58,bz-.1],[.04,by+1.95,bz-.1],[.72,by+1.58,bz-.1],[.24,.3,.32]);
+branch(.65,by+.3,bz-.15,1.7,-.8,.035,[.27,.3,.31]);
+var seed=3978;function rand(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+for(i=0;i<390;i++){snow.push((rand()-.5)*52,rand()*16-7,(rand()-.5)*38,1,1,1);}
+function mesh(arr){var buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(arr),gl.STATIC_DRAW);return {buffer:buffer,count:arr.length/6};}
+var land=mesh(geo),flakes=mesh(snow);
+function bind(m){gl.bindBuffer(gl.ARRAY_BUFFER,m.buffer);gl.enableVertexAttribArray(loc.pos);gl.vertexAttribPointer(loc.pos,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(loc.col);gl.vertexAttribPointer(loc.col,3,gl.FLOAT,false,24,12);}
+var yaw=0.06,pitch=-0.21,zoom=24,paused=matchMedia("(prefers-reduced-motion: reduce)").matches,quality=1,qualityIndex=1;
+var qualityValues=[.75,1,1.35],qualityNames=["省电","标准","高清"],t=0,last=0,frames=0,fpsStamp=0,frameId=0,drag=null,pinch=null,alive=true;
+function resize(){var pixel=Math.min(window.devicePixelRatio||1,innerWidth<720?1.25:1.7)*quality;var w=Math.max(1,Math.round(innerWidth*pixel)),h=Math.max(1,Math.round(innerHeight*pixel));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}gl.viewport(0,0,w,h);}
+function draw(now){
+ if(!alive)return;frameId=requestAnimationFrame(draw);if(document.hidden)return;
+ if(!last)last=now;var delta=Math.min((now-last)/1000,.06);last=now;if(!paused)t+=delta;
+ resize();gl.clearColor(0,0,0,0);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);
+ gl.uniform1f(loc.time,t);gl.uniform1f(loc.yaw,yaw+Math.sin(t*.12)*.007);gl.uniform1f(loc.pitch,pitch);gl.uniform1f(loc.zoom,zoom);gl.uniform1f(loc.aspect,canvas.width/canvas.height);
+ gl.uniform1f(loc.points,0);bind(land);gl.disable(gl.BLEND);gl.drawArrays(gl.TRIANGLES,0,land.count);
+ gl.uniform1f(loc.points,1);bind(flakes);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);gl.drawArrays(gl.POINTS,0,flakes.count);gl.depthMask(true);
+ frames++;if(now-fpsStamp>1000){fps.textContent=Math.round(frames*1000/(now-fpsStamp))+" FPS";fpsStamp=now;frames=0;}
+}
+function clamp(v,a,b){return Math.min(b,Math.max(a,v));}
+canvas.addEventListener("pointerdown",function(e){canvas.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,yaw:yaw,pitch:pitch};});
+canvas.addEventListener("pointermove",function(e){if(!drag||!e.isPrimary)return;yaw=clamp(drag.yaw+(e.clientX-drag.x)*.006,-.9,.9);pitch=clamp(drag.pitch+(e.clientY-drag.y)*.004,-.5,.18);});
+["pointerup","pointercancel","lostpointercapture"].forEach(function(event){canvas.addEventListener(event,function(){drag=null;});});
+canvas.addEventListener("wheel",function(e){e.preventDefault();zoom=clamp(zoom+Math.sign(e.deltaY)*1.2,15,38);},{passive:false});
+canvas.addEventListener("touchstart",function(e){if(e.touches.length===2){pinch=Math.hypot(e.touches[0].pageX-e.touches[1].pageX,e.touches[0].pageY-e.touches[1].pageY);drag=null;}},{passive:true});
+canvas.addEventListener("touchmove",function(e){if(e.touches.length===2&&pinch){var v=Math.hypot(e.touches[0].pageX-e.touches[1].pageX,e.touches[0].pageY-e.touches[1].pageY);zoom=clamp(zoom+(pinch-v)*.035,15,38);pinch=v;}},{passive:true});
+canvas.addEventListener("touchend",function(){pinch=null;});
+document.getElementById("reset").onclick=function(){yaw=.06;pitch=-.21;zoom=24;};
+qualityBtn.onclick=function(){qualityIndex=(qualityIndex+1)%3;quality=qualityValues[qualityIndex];qualityBtn.textContent="画质："+qualityNames[qualityIndex];resize();};
+function syncPause(){pauseBtn.textContent=paused?"继续":"暂停";}
+pauseBtn.onclick=function(){paused=!paused;syncPause();};syncPause();
+canvas.addEventListener("webglcontextlost",function(e){e.preventDefault();alive=false;cancelAnimationFrame(frameId);error("WebGL 上下文已丢失。请刷新页面恢复。");});
+document.addEventListener("visibilitychange",function(){last=0;});
+requestAnimationFrame(draw);
+})();
+</script></body></html>
