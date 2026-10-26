@@ -15,7 +15,7 @@ function render(){
  const vals=Object.fromEntries(filters.map(k=>[k,$("#"+k).value.trim()]));
  const query=vals.search.toLocaleLowerCase();
  state.filtered=state.all.filter(p=>{
-  const hay=[p.title,p.author,p.dynasty,p.excerpt,p.visualBrief,p.model||"",p.hardness,...p.tools,...p.categories].join(" ").toLocaleLowerCase();
+  const hay=[p.title,p.author,p.dynasty,p.excerpt,p.visualBrief,p.model||"",p.hardness,...p.tools,...p.categories,...(p.transcription?.text||[])].join(" ").toLocaleLowerCase();
   return (!query||hay.includes(query))&&(!vals.dynasty||p.dynasty===vals.dynasty)&&(!vals.theme||p.categories.includes(vals.theme))&&(!vals.form||p.form===vals.form)&&(!vals.hardness||p.hardness===vals.hardness)&&(!vals.model||(p.model||"待分配")===vals.model)&&(!vals.tool||(p.tools.length?p.tools:["待分配"]).includes(vals.tool))&&(!vals.status||p.sceneStatus===vals.status);
  });
  const shown=state.filtered.slice(0,state.limit);
