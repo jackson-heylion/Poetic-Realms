@@ -19,3 +19,5 @@ jobs:
         run: node scripts/validate.mjs
       - name: Test all AI Agent task prompts
         run: node scripts/test-agent-prompt.mjs
+      - name: Test multi-scene version switching
+        run: node scripts/test-gallery.mjs
