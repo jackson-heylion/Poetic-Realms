@@ -7,9 +7,52 @@ const github="https://github.com/jackson-heylion/Poetic-Realms";
 function option(select,items){items.forEach(item=>{const e=document.createElement("option");e.value=item;e.textContent=item;select.append(e);});}
 function issueLink(p){return p.issueNumber?github+"/issues/"+p.issueNumber:github+"/issues/new?template=scene.yml";}
 function sceneLink(p){return p.scenePath||"";}
+function fallbackCopy(text) {
+ const field=document.createElement("textarea");
+ field.value=text;
+ field.setAttribute("readonly","");
+ field.style.cssText="position:fixed;top:0;left:-9999px;opacity:0";
+ document.body.append(field);
+ field.focus();field.select();field.setSelectionRange(0,text.length);
+ let ok=false;
+ try {ok=!!document.execCommand("copy");}catch(error){ok=false;}
+ field.remove();
+ return ok;
+}
+let feedbackTimer=null;
+function copyFeedback(message,button,success) {
+ const notice=$("#copy-status");
+ notice.textContent=message;notice.hidden=false;
+ notice.dataset.kind=success?"success":"error";
+ clearTimeout(feedbackTimer);
+ feedbackTimer=setTimeout(()=>{notice.hidden=true;},4000);
+ if(button&&success){
+  const previous=button.textContent;
+  button.textContent="✓ 已复制，可粘贴给 Agent";
+  setTimeout(()=>{if(button.isConnected)button.textContent=previous;},2600);
+ }
+}
+async function copyAgent(id,button){
+ const p=state.all.find(item=>item.id===id);
+ if(!p){copyFeedback("未找到该诗词任务，请刷新页面重试。",button,false);return;}
+ let prompt;
+ try{prompt=globalThis.PoeticRealmsAgentPrompt.buildPrompt(p);}
+ catch(err){copyFeedback("提示词生成失败："+err.message,button,false);return;}
+ let copied=false;
+ if(navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){
+  try{await navigator.clipboard.writeText(prompt);copied=true;}catch(err){/* 降级到旧浏览器复制方法 */ }
+ }
+ if(!copied)copied=fallbackCopy(prompt);
+ copyFeedback(copied?"已复制《"+p.title+"》任务提示词，请粘贴给有 GitHub 权限的 AI Agent。":"浏览器禁止了剪贴板访问。请在 HTTPS 页面授权复制后重试。",button,copied);
+}
+function handleCopyClick(event){
+ const target=event.target.closest("[data-copy-agent]");
+ if(target){event.preventDefault();copyAgent(target.dataset.copyAgent,target);}
+}
+
 function card(p,i){
  const primary=p.categories[0];const playable=!!sceneLink(p);
- return '<article class="poem-card"><div class="card-art art-'+esc(primary)+'"><span class="art-type">'+esc(primary)+' · '+esc(p.form)+'</span><span class="art-index">'+String(i+1).padStart(3,"0")+'</span>'+(playable?'<span class="scene-ready">◉ 可体验原型</span>':"")+'</div><div class="card-content"><div class="card-meta"><span>'+esc(p.dynasty)+' · '+esc(p.author)+'</span><span>'+esc(p.hardness)+'</span></div><h3>'+esc(p.title)+'</h3><p class="quote">“'+esc(p.excerpt)+'”</p><p class="visual">'+esc(p.visualBrief)+'</p><div class="tags">'+p.categories.slice(0,3).map(x=>'<span class="tag">'+esc(x)+'</span>').join("")+'<span class="tag gold">'+(playable?esc(p.model||"AI"):"模型待领")+'</span><span class="tag">'+(playable?esc(p.tools.join("/")):"工具待定")+'</span></div><div class="card-actions"><button type="button" data-view="'+esc(p.id)+'">诗境详情 ↗</button>'+(playable?'<a href="'+esc(sceneLink(p))+'">进入场景 →</a>':'<a href="'+esc(issueLink(p))+'" target="_blank" rel="noopener">领取创作 →</a>')+'</div></div></article>';
+ return '<article class="poem-card"><div class="card-art art-'+esc(primary)+'"><span class="art-type">'+esc(primary)+' · '+esc(p.form)+'</span><span class="art-index">'+String(i+1).padStart(3,"0")+'</span>'+(playable?'<span class="scene-ready">◉ 可体验原型</span>':"")+'</div><div class="card-content"><div class="card-meta"><span>'+esc(p.dynasty)+' · '+esc(p.author)+'</span><span>'+esc(p.hardness)+'</span></div><h3>'+esc(p.title)+'</h3><p class="quote">“'+esc(p.excerpt)+'”</p><p class="visual">'+esc(p.visualBrief)+'</p><div class="tags">'+p.categories.slice(0,3).map(x=>'<span class="tag">'+esc(x)+'</span>').join("")+'<span class="tag gold">'+(playable?esc(p.model||"AI"):"模型待领")+'</span><span class="tag">'+(playable?esc(p.tools.join("/")):"工具待定")+'</span></div><div class="card-actions"><button type="button" data-view="'+esc(p.id)+'">诗境详情 ↗</button>'+(playable?'<a href="'+esc(sceneLink(p))+'">进入场景 →</a>':'<a href="'+esc(issueLink(p))+'" target="_blank" rel="noopener">领取创作 →</a>')+'</div><button class="copy-agent-btn" type="button" data-copy-agent="'+esc(p.id)+'" aria-label="复制《'+esc(p.title)+'》的 Agent 任务提示词">⧉ 一键复制 Agent 任务提示词</button></div></article>';
 }
 function render(){
  const vals=Object.fromEntries(filters.map(k=>[k,$("#"+k).value.trim()]));
@@ -26,7 +69,7 @@ function render(){
 }
 function taskList(){
  const items=state.all.filter(x=>x.issueNumber).sort((a,b)=>a.issueNumber-b.issueNumber);
- $("#task-list").innerHTML=items.map(p=>'<div class="task-item"><span class="task-no">'+String(p.issueNumber).padStart(2,"0")+'</span><div class="task-summary"><strong>'+esc(p.title)+'</strong><small>'+esc(p.dynasty)+' / '+esc(p.author)+' · <span>'+esc(p.hardness)+'</span> · Model: 待领取 · Tool: '+(p.tools.length?esc(p.tools.join("/")):"未指定")+'</small></div><a href="'+esc(issueLink(p))+'" target="_blank" rel="noopener">查看题目 ↗</a></div>').join("");
+ $("#task-list").innerHTML=items.map(p=>'<div class="task-item"><span class="task-no">'+String(p.issueNumber).padStart(2,"0")+'</span><div class="task-summary"><strong>'+esc(p.title)+'</strong><small>'+esc(p.dynasty)+' / '+esc(p.author)+' · <span>'+esc(p.hardness)+'</span> · Model: 待领取 · Tool: '+(p.tools.length?esc(p.tools.join("/")):"未指定")+'</small></div><button class="task-copy" type="button" data-copy-agent="'+esc(p.id)+'">⧉ 复制 Agent 提示词</button><a href="'+esc(issueLink(p))+'" target="_blank" rel="noopener">查看题目 ↗</a></div>').join("");
 }
 function showDetail(id){
  const p=state.all.find(x=>x.id===id);if(!p)return;
@@ -34,7 +77,7 @@ function showDetail(id){
  const src=(p.sources||[]).map((s,i)=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.collection||s.source||"原文出处")+' · '+esc(s.work||p.title)+'</a><small>'+esc(s.kind==="community-transcription"?" 社区电子转录":s.kind==="wikisource-text"?" 文献数字转录":" 参考来源")+'</small></li>').join("");
  const full=p.transcription&&Array.isArray(p.transcription.text)?'<details class="fulltext" open><summary>电子全文（非校定本）</summary>'+p.transcription.text.map(t=>'<p>'+esc(t)+'</p>').join("")+'<p class="text-warning">'+esc(p.transcription.warning||"待版本校勘")+'</p></details>':'<p>该作品完整原文尚待录入。</p>';
  const evidence='<section class="text-evidence"><h3>原文、出处与校勘记录</h3><p class="detail-note">'+esc(p.sourceNote||"暂无校勘说明")+'</p>'+full+'<h4>可查来源</h4><ol>'+src+'</ol></section>';
- $("#detail-body").innerHTML='<div class="detail-inside"><p class="eyebrow">'+esc(p.dynasty)+' · '+esc(p.form)+' · '+esc(p.author)+'</p><h2 id="detail-title">'+esc(p.title)+'</h2><p class="detail-quote">“'+esc(p.excerpt)+'”</p><p class="detail-note">此处为原文摘句，不代表完整原作。场景构想：'+esc(p.visualBrief)+'</p><dl><div><dt>景观分类</dt><dd>'+esc(p.categories.join(" / "))+'</dd></div><div><dt>实现难度</dt><dd>'+esc(p.hardness)+'</dd></div><div><dt>原文校勘</dt><dd>'+esc(p.textReview)+'</dd></div><div><dt>当前状态</dt><dd>'+(playable?"可体验原型，待持续验收":"待制作")+'</dd></div><div><dt>生成模型 Model</dt><dd>'+esc(p.model||"待创作者填写")+'</dd></div><div><dt>工具 Tool</dt><dd>'+esc(p.tools.length?p.tools.join(" / "):"待创作者填写")+'</dd></div></dl><p class="detail-note">说明：场景使用文学意象进行可视化，相关建筑、地理位置与历史细节须单独引用史料，不把艺术构想当作实景复原。</p>'+evidence+'<div class="detail-links">'+(playable?'<a href="'+esc(sceneLink(p))+'">进入 3D 场景 ↗</a>':"")+'<a href="'+esc(issueLink(p))+'" target="_blank" rel="noopener">'+(p.issueNumber?"查看任务与认领 ↗":"发起场景任务 ↗")+'</a></div></div>';
+ $("#detail-body").innerHTML='<div class="detail-inside"><p class="eyebrow">'+esc(p.dynasty)+' · '+esc(p.form)+' · '+esc(p.author)+'</p><h2 id="detail-title">'+esc(p.title)+'</h2><p class="detail-quote">“'+esc(p.excerpt)+'”</p><p class="detail-note">此处为原文摘句，不代表完整原作。场景构想：'+esc(p.visualBrief)+'</p><dl><div><dt>景观分类</dt><dd>'+esc(p.categories.join(" / "))+'</dd></div><div><dt>实现难度</dt><dd>'+esc(p.hardness)+'</dd></div><div><dt>原文校勘</dt><dd>'+esc(p.textReview)+'</dd></div><div><dt>当前状态</dt><dd>'+(playable?"可体验原型，待持续验收":"待制作")+'</dd></div><div><dt>生成模型 Model</dt><dd>'+esc(p.model||"待创作者填写")+'</dd></div><div><dt>工具 Tool</dt><dd>'+esc(p.tools.length?p.tools.join(" / "):"待创作者填写")+'</dd></div></dl><p class="detail-note">说明：场景使用文学意象进行可视化，相关建筑、地理位置与历史细节须单独引用史料，不把艺术构想当作实景复原。</p>'+evidence+'<div class="detail-links"><button class="detail-copy" type="button" data-copy-agent="'+esc(p.id)+'">⧉ 复制 Agent 任务提示词</button>'+(playable?'<a href="'+esc(sceneLink(p))+'">进入 3D 场景 ↗</a>':"")+'<a href="'+esc(issueLink(p))+'" target="_blank" rel="noopener">'+(p.issueNumber?"查看任务与认领 ↗":"发起场景任务 ↗")+'</a></div></div>';
  const dialog=$("#detail");if(typeof dialog.showModal==="function")dialog.showModal();else dialog.setAttribute("open","");
  const url=new URL(location.href);url.searchParams.set("poem",p.id);history.replaceState(null,"",url);
 }
@@ -53,6 +96,9 @@ async function start(){
   $("#more").addEventListener("click",()=>{state.limit+=18;render();});
   $("#popular").addEventListener("click",e=>{const b=e.target.closest("[data-theme]");if(!b)return;$("#theme").value=$("#theme").value===b.dataset.theme?"":b.dataset.theme;state.limit=18;render();});
   $("#catalog-grid").addEventListener("click",e=>{const b=e.target.closest("[data-view]");if(b)showDetail(b.dataset.view);});
+  $("#catalog-grid").addEventListener("click",handleCopyClick);
+  $("#task-list").addEventListener("click",handleCopyClick);
+  $("#detail-body").addEventListener("click",handleCopyClick);
   $("#close-detail").addEventListener("click",closeDetail);
   $("#detail").addEventListener("click",e=>{if(e.target===$("#detail"))closeDetail();});
   $("#detail").addEventListener("close",()=>{const u=new URL(location.href);if(u.searchParams.has("poem")){u.searchParams.delete("poem");history.replaceState(null,"",u);}});
