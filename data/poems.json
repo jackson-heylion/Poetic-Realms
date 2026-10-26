@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 2,
-  "notes": "126条逐首来源字段已建；sourceStatus 表示来源线索与文本对照程度，不表示原典校勘完成。全部 textReview=待版本校勘；不得把电子文本校验冒称权威定本。",
+  "schemaVersion": 3,
+  "notes": "126条逐首来源字段已建；sourceStatus 表示来源线索与文本对照程度，不表示原典校勘完成。全部 textReview=待版本校勘；不得把电子文本校验冒称权威定本。 同一篇作品可收录多个自包含 HTML；每篇 scenes[] 是场景清单，scenePath 是过渡期兼容旧字段。",
   "sourceCandidates": [
     "https://github.com/chinese-poetry/chinese-poetry",
     "https://github.com/open-chinese/poetry-collection"
@@ -49,7 +49,8 @@
         "sourcePath": "诗经/shijing.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "shijing-taoyao",
@@ -94,7 +95,8 @@
         "sourcePath": "诗经/shijing.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "chuci-xiangfuren",
@@ -156,7 +158,8 @@
         "sourcePath": "楚辞/chuci.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "jiangnan-cailian",
@@ -197,7 +200,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%B1%9F%E5%8D%97_(%E6%BC%A2%E6%A8%82%E5%BA%9C)",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "guan-canghai",
@@ -246,7 +250,8 @@
         "sourcePath": "曹操诗集/caocao.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "guiyuan-tianju",
@@ -295,7 +300,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%AD%B8%E5%9C%92%E7%94%B0%E5%B1%85",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yinjiu-wu",
@@ -339,7 +345,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E9%A3%B2%E9%85%92%E4%BA%8C%E5%8D%81%E9%A6%96",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "chile-ge",
@@ -382,7 +389,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%95%95%E5%8B%92%E6%AD%8C",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "shanzhong-zashi",
@@ -423,7 +431,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E5%90%B3%E6%9C%9D%E8%AB%8B%E9%9B%86",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "deng-chishanglou",
@@ -473,7 +482,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E7%99%BB%E6%B1%A0%E4%B8%8A%E6%A8%93",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "tengwangge",
@@ -523,7 +533,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/滕王閣序",
         "mode": "online-text-reviewed",
         "warning": "正文录通行文字，不含逐句异文；网上《文苑英华》卷718与707年正仓院抄本存在差异，未经纸本逐字校勘。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "wanglushan",
@@ -567,7 +578,8 @@
         "sourcePath": "全唐诗/poet.tang.8000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "baidicheng",
@@ -611,7 +623,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "huanghelou-songbie",
@@ -655,7 +668,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "jingtingshan",
@@ -699,7 +713,8 @@
         "sourcePath": "全唐诗/poet.tang.8000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "dujingmen",
@@ -745,7 +760,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "emeishan-yue",
@@ -789,7 +805,8 @@
         "sourcePath": "全唐诗/poet.tang.8000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "ye-su-shansi",
@@ -831,7 +848,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E5%A4%9C%E5%AE%BF%E5%B1%B1%E5%AF%BA",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "tianmu",
@@ -895,7 +913,8 @@
         "sourcePath": "全唐诗/唐诗三百首.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "shudao",
@@ -957,7 +976,8 @@
         "sourcePath": "全唐诗/poet.tang.1000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "jueju-huangli",
@@ -1001,7 +1021,8 @@
         "sourcePath": "全唐诗/poet.tang.11000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "jueju-chiri",
@@ -1045,7 +1066,8 @@
         "sourcePath": "全唐诗/poet.tang.11000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "chunyu",
@@ -1091,7 +1113,8 @@
         "sourcePath": "全唐诗/poet.tang.11000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "denggao",
@@ -1137,7 +1160,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "wangyue",
@@ -1183,7 +1207,8 @@
         "sourcePath": "全唐诗/poet.tang.10000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "jiangpan-xunhua",
@@ -1227,7 +1252,8 @@
         "sourcePath": "全唐诗/poet.tang.11000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "lyuye",
@@ -1273,7 +1299,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "deng-yueyanglou",
@@ -1319,7 +1346,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "shanju-qiuyu",
@@ -1365,7 +1393,8 @@
         "sourcePath": "全唐诗/poet.tang.6000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "luzhai",
@@ -1409,7 +1438,8 @@
         "sourcePath": "全唐诗/poet.tang.6000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "zhuliguan",
@@ -1453,7 +1483,8 @@
         "sourcePath": "全唐诗/poet.tang.6000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "niaomingjian",
@@ -1497,7 +1528,8 @@
         "sourcePath": "全唐诗/poet.tang.6000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "damo-guyan",
@@ -1543,7 +1575,8 @@
         "sourcePath": "全唐诗/poet.tang.6000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "zhongnanshan",
@@ -1589,7 +1622,8 @@
         "sourcePath": "全唐诗/poet.tang.6000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "weichen",
@@ -1630,7 +1664,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%B8%AD%E5%9F%8E%E6%9B%B2",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "weichuan-tianjia",
@@ -1677,7 +1712,8 @@
         "sourcePath": "全唐诗/poet.tang.5000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "chunxiao",
@@ -1721,7 +1757,8 @@
         "sourcePath": "全唐诗/poet.tang.7000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "jiandejiang",
@@ -1765,7 +1802,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "guogurenzhuang",
@@ -1811,7 +1849,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "dongtinghu",
@@ -1857,7 +1896,8 @@
         "sourcePath": "全唐诗/poet.tang.7000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yijiangnan",
@@ -1901,7 +1941,8 @@
         "sourcePath": "全唐诗/poet.tang.49000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "qiantanghu",
@@ -1947,7 +1988,8 @@
         "sourcePath": "全唐诗/poet.tang.23000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "mujiangyin",
@@ -1991,7 +2033,8 @@
         "sourcePath": "全唐诗/poet.tang.23000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "dalinsi",
@@ -2035,7 +2078,8 @@
         "sourcePath": "全唐诗/poet.tang.22000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "guyuan",
@@ -2081,7 +2125,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "jiangxue",
@@ -2128,7 +2173,20 @@
         "sourcePath": "全唐诗/poet.tang.18000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": [
+        {
+          "id": "original",
+          "title": "初版 · 江雪",
+          "path": "scenes/jiangxue.html",
+          "model": "GPT-6",
+          "tools": [
+            "WebGL1",
+            "Vanilla JS"
+          ],
+          "status": "prototype"
+        }
+      ]
     },
     {
       "id": "yuweng",
@@ -2173,7 +2231,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "wangdongting",
@@ -2217,7 +2276,8 @@
         "sourcePath": "全唐诗/poet.tang.19000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "zhuzhici",
@@ -2261,7 +2321,8 @@
         "sourcePath": "全唐诗/poet.tang.19000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "wuyixiang",
@@ -2305,7 +2366,8 @@
         "sourcePath": "全唐诗/poet.tang.19000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "langtaosha",
@@ -2349,7 +2411,8 @@
         "sourcePath": "全唐诗/poet.tang.2000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "fengqiao",
@@ -2393,7 +2456,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yugezi",
@@ -2437,7 +2501,8 @@
         "sourcePath": "全唐诗/poet.tang.16000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yongliu",
@@ -2481,7 +2546,8 @@
         "sourcePath": "全唐诗/poet.tang.5000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "shanxing",
@@ -2525,7 +2591,8 @@
         "sourcePath": "全唐诗/poet.tang.28000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "jiangnanchun",
@@ -2569,7 +2636,8 @@
         "sourcePath": "蒙学/qianjiashi.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "boqinhuai",
@@ -2613,7 +2681,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "qiuxi",
@@ -2657,7 +2726,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yeyu-jibei",
@@ -2701,7 +2771,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "leyouyuan",
@@ -2745,7 +2816,8 @@
         "sourcePath": "全唐诗/poet.tang.29000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "chusai",
@@ -2789,7 +2861,8 @@
         "sourcePath": "全唐诗/poet.tang.6000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "congjunxing",
@@ -2833,7 +2906,8 @@
         "sourcePath": "全唐诗/poet.tang.6000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "guanque",
@@ -2877,7 +2951,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "liangzhouci",
@@ -2921,7 +2996,8 @@
         "sourcePath": "全唐诗/poet.tang.13000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "huanghelou",
@@ -2967,7 +3043,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "baixuege",
@@ -3018,7 +3095,8 @@
         "sourcePath": "蒙学/tangshisanbaishou.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "biedongda",
@@ -3070,7 +3148,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/別董大",
         "mode": "online-text-reviewed",
         "warning": "依据可查的在线电子文本核对，未与权威纸本古籍逐字校勘；异文见 sourceNote。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "chuzhouxijian",
@@ -3114,7 +3193,8 @@
         "sourcePath": "全唐诗/poet.tang.9000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "shiwuyewangyue",
@@ -3158,7 +3238,8 @@
         "sourcePath": "全唐诗/poet.tang.16000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "zaochun",
@@ -3202,7 +3283,8 @@
         "sourcePath": "全唐诗/poet.tang.18000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "wannchun",
@@ -3254,7 +3336,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/晚春_(韓愈)",
         "mode": "online-text-reviewed",
         "warning": "依据可查的在线电子文本核对，未与权威纸本古籍逐字校勘；异文见 sourceNote。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "wanghuchunyu",
@@ -3295,7 +3378,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%9D%B1%E5%9D%A1%E5%85%A8%E9%9B%86/%E5%8D%B7004",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "tixilinbi",
@@ -3336,7 +3420,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E9%A1%8C%E8%A5%BF%E6%9E%97%E5%A3%81_(%E8%98%87%E8%BB%BE)",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "huichong",
@@ -3377,7 +3462,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%83%A0%E5%B4%87%E6%98%A5%E6%B1%9F%E6%99%9A%E6%99%AF",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "wanghulou",
@@ -3418,7 +3504,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%9D%B1%E5%9D%A1%E5%85%A8%E9%9B%86/%E5%8D%B7003",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "chibi",
@@ -3468,7 +3555,8 @@
         "sourcePath": "宋词/ci.song.1000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "dingfengbo",
@@ -3521,7 +3609,8 @@
         "sourcePath": "宋词/ci.song.1000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "shuidiaogetou",
@@ -3571,7 +3660,8 @@
         "sourcePath": "宋词/ci.song.1000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "huanxisha-qingquansi",
@@ -3618,7 +3708,8 @@
         "sourcePath": "宋词/ci.song.1000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "xijiangyue",
@@ -3666,7 +3757,8 @@
         "sourcePath": "宋词/ci.song.11000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yuanxi",
@@ -3716,7 +3808,8 @@
         "sourcePath": "宋词/ci.song.11000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "pozhenzi",
@@ -3764,7 +3857,8 @@
         "sourcePath": "宋词/ci.song.11000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "pusa-man",
@@ -3818,7 +3912,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/菩薩蠻_(辛棄疾)/書江西造口壁",
         "mode": "online-text-reviewed",
         "warning": "依据可查的在线电子文本核对，未与权威纸本古籍逐字校勘；异文见 sourceNote。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "qingpingle-cunju",
@@ -3867,7 +3962,8 @@
         "sourcePath": "宋词/ci.song.11000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "rumengling-xiting",
@@ -3920,7 +4016,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/如夢令_(李清照)/如夢令_(常記溪亭日暮)",
         "mode": "online-text-reviewed",
         "warning": "依据可查的在线电子文本核对，未与权威纸本古籍逐字校勘；异文见 sourceNote。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "rumengling-yushu",
@@ -3968,7 +4065,8 @@
         "sourcePath": "宋词/ci.song.6000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "shengshengman",
@@ -4019,7 +4117,8 @@
         "sourcePath": "宋词/ci.song.6000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "zuihuayin",
@@ -4073,7 +4172,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/醉花陰_(李清照)",
         "mode": "online-text-reviewed",
         "warning": "依据可查的在线电子文本核对，未与权威纸本古籍逐字校勘；异文见 sourceNote。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "caisangzi-xihu",
@@ -4121,7 +4221,8 @@
         "sourcePath": "宋词/ci.song.0.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "dielianhua",
@@ -4162,7 +4263,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%AD%90%E9%99%BD%E4%BF%AE%E9%9B%86/%E5%8D%B7131",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "huanxisha-yanshu",
@@ -4209,7 +4311,8 @@
         "sourcePath": "宋词/ci.song.0.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "wanghaichao",
@@ -4262,7 +4365,8 @@
         "sourcePath": "宋词/ci.song.0.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yulinling",
@@ -4314,7 +4418,8 @@
         "sourcePath": "宋词/ci.song.0.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "sumuzhe-fanzhongyan",
@@ -4364,7 +4469,8 @@
         "sourcePath": "宋词/ci.song.0.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yujiaao",
@@ -4416,7 +4522,8 @@
         "sourcePath": "宋词/ci.song.0.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yueyanglouji",
@@ -4461,7 +4568,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E8%8C%83%E6%96%87%E6%AD%A3%E5%85%AC%E9%9B%86/%E5%8D%B707",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "xiao-jingci",
@@ -4502,7 +4610,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%9B%89%E5%87%BA%E6%B7%A8%E6%85%88%E5%AF%BA%E9%80%81%E6%9E%97%E5%AD%90%E6%96%B9",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "xiaochi",
@@ -4543,7 +4652,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E5%B0%8F%E6%B1%A0",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "xinxu",
@@ -4584,7 +4694,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E5%AE%BF%E6%96%B0%E5%B8%82%E5%BE%90%E5%85%AC%E5%BA%97%E4%BA%8C%E9%A6%96",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "zhouguo-anren",
@@ -4625,7 +4736,8 @@
         "sourcePath": "https://www.arteducation.com.tw/shiwenv_975bf39b1456.html",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "youshanxicun",
@@ -4668,7 +4780,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E9%81%8A%E5%B1%B1%E8%A5%BF%E6%9D%91",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "linan-chunyu",
@@ -4711,7 +4824,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E8%87%A8%E5%AE%89%E6%98%A5%E9%9B%A8%E5%88%9D%E9%9C%BD",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "bushuazi-yongmei",
@@ -4757,7 +4871,8 @@
         "sourcePath": "宋词/ci.song.9000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "bochuanguazhou",
@@ -4798,7 +4913,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%B3%8A%E8%88%B9%E7%93%9C%E6%B4%B2",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "shuhuyin",
@@ -4839,7 +4955,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%9B%B8%E6%B9%96%E9%99%B0%E5%85%88%E7%94%9F%E5%A3%81",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "meihua",
@@ -4880,7 +4997,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%A2%85%E8%8A%B1_(%E7%8E%8B%E5%AE%89%E7%9F%B3)",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "chunri",
@@ -4921,7 +5039,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%98%A5%E6%97%A5_(%E6%9C%B1%E7%86%B9)",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "guanshu",
@@ -4965,7 +5084,8 @@
         "sourcePath": "蒙学/qianjiashi.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "tilinandi",
@@ -5009,7 +5129,8 @@
         "sourcePath": "蒙学/qianjiashi.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "youyuanbuzhi",
@@ -5050,7 +5171,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E9%81%8A%E5%9C%92%E4%B8%8D%E5%80%BC",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "xiangcun-siyue",
@@ -5091,7 +5213,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E9%84%89%E6%9D%91%E5%9B%9B%E6%9C%88",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yueke",
@@ -5132,7 +5255,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E7%B4%84%E5%AE%A2",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "queqiaoxian",
@@ -5178,7 +5302,8 @@
         "sourcePath": "宋词/ci.song.3000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "tashaxing",
@@ -5226,7 +5351,8 @@
         "sourcePath": "宋词/ci.song.3000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "sumuzhe-zhou",
@@ -5275,7 +5401,8 @@
         "sourcePath": "宋词/ci.song.4000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "yangzhouman",
@@ -5325,7 +5452,8 @@
         "sourcePath": "宋词/ci.song.12000.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "tianjingsha",
@@ -5368,7 +5496,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E5%A4%A9%E6%B7%A8%E6%B2%99%C2%B7%E7%A7%8B%E6%80%9D",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "tianjingsha-qiu",
@@ -5409,7 +5538,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E5%A4%A9%E6%B7%A8%E6%B2%99_(%E7%99%BD%E6%A8%B8)",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "tongguan",
@@ -5451,7 +5581,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E5%B1%B1%E5%9D%A1%E7%BE%8A_%E6%BD%BC%E9%97%9C%E6%87%B7%E5%8F%A4",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "taohuange",
@@ -5500,7 +5631,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%A1%83%E8%8A%B1%E5%BA%B5%E6%AD%8C",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "linjiangxian-yangshen",
@@ -5541,7 +5673,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E8%87%A8%E6%B1%9F%E4%BB%99_(%E6%A5%8A%E6%85%8E)",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "changxiangsi",
@@ -5585,7 +5718,8 @@
         "sourcePath": "纳兰性德/纳兰性德诗集.json",
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "cunju",
@@ -5626,7 +5760,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%9D%91%E5%B1%85_(%E9%AB%98%E9%BC%8E)",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "suojian",
@@ -5667,7 +5802,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E6%89%80%E8%A6%8B(%E8%A2%81%E6%9E%9A)",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "zhushi",
@@ -5708,7 +5844,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E7%AB%B9%E7%9F%B3",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     },
     {
       "id": "jihai",
@@ -5749,7 +5886,8 @@
         "sourcePath": "https://zh.wikisource.org/wiki/%E5%B7%B1%E4%BA%A5%E9%9B%9C%E8%A9%A9",
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
-      }
+      },
+      "scenes": []
     }
   ]
 }
