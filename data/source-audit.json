@@ -282,6 +282,21 @@
         "similarity": 0.7,
         "titleSimilarity": 0.71,
         "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/poet.tang.22000.json",
+        "matchTitle": "賦得古原草送別",
+        "matchAuthor": "白居易",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "離離原上草，一歲一枯榮。",
+          "野火燒不盡，春風吹又生。",
+          "遠芳侵古道，晴翠接荒城。",
+          "又送王孫去，萋萋滿別情。"
+        ]
       }
     ],
     "boqinhuai": [
@@ -308,6 +323,19 @@
         "similarity": 0.786,
         "titleSimilarity": 1,
         "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/poet.tang.28000.json",
+        "matchTitle": "泊秦淮",
+        "matchAuthor": "杜牧",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "煙籠寒水月籠沙，夜泊秦淮近酒家。",
+          "商女不知亡國恨，隔江猶唱後庭花。"
+        ]
       }
     ],
     "yeyu-jibei": [
@@ -326,6 +354,19 @@
         "similarity": 0.786,
         "titleSimilarity": 1,
         "authorSimilarity": 0.67
+      },
+      {
+        "path": "全唐诗/poet.tang.29000.json",
+        "matchTitle": "夜雨寄北",
+        "matchAuthor": "李商隱",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "君問歸期未有期，巴山夜雨漲秋池。",
+          "何當共剪西窗燭，却話巴山夜雨時。"
+        ]
       }
     ],
     "guanque": [
@@ -375,6 +416,19 @@
         "similarity": 0.714,
         "titleSimilarity": 1,
         "authorSimilarity": 1
+      },
+      {
+        "path": "全唐诗/poet.tang.28000.json",
+        "matchTitle": "江南春絕句",
+        "matchAuthor": "杜牧",
+        "similarity": 0.929,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-near",
+        "poemText": [
+          "千里鶯啼綠映江，水村山郭酒旗風。",
+          "南朝四百八十寺，多少樓臺煙雨中。"
+        ]
       }
     ],
     "guanshu": [
@@ -579,12 +633,38 @@
           "楊柳青青江水平，聞郎江上唱歌聲。",
           "東邊日出西邊雨，道是無情還有情。"
         ]
+      },
+      {
+        "path": "全唐诗/poet.tang.19000.json",
+        "matchTitle": "竹枝詞二首 一",
+        "matchAuthor": "劉禹錫",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "楊柳青青江水平，聞郎江上唱歌聲。",
+          "東邊日出西邊雨，道是無晴却有晴。"
+        ]
       }
     ],
     "langtaosha": [
       {
         "path": "全唐诗/poet.tang.2000.json",
         "matchTitle": "雜曲歌辭 浪淘沙 一",
+        "matchAuthor": "劉禹錫",
+        "similarity": 1,
+        "titleSimilarity": 0.8,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "九曲黃河萬里沙，浪淘風簸自天涯。",
+          "如今直上銀河去，同到牽牛織女家。"
+        ]
+      },
+      {
+        "path": "全唐诗/poet.tang.19000.json",
+        "matchTitle": "浪淘沙九首 一",
         "matchAuthor": "劉禹錫",
         "similarity": 1,
         "titleSimilarity": 0.8,
@@ -1009,6 +1089,219 @@
         "poemText": [
           "黃河遠上白雲間，一片孤城萬仞山。",
           "羌笛何須怨楊柳，春光不度玉門關。"
+        ]
+      }
+    ],
+    "shiwuyewangyue": [
+      {
+        "path": "全唐诗/poet.tang.16000.json",
+        "matchTitle": "十五夜望月寄杜郎中",
+        "matchAuthor": "王建",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "中庭地白樹棲鴉，冷露無聲濕桂花。",
+          "今夜月明人盡望，不知秋思在誰家。"
+        ]
+      }
+    ],
+    "yugezi": [
+      {
+        "path": "全唐诗/poet.tang.16000.json",
+        "matchTitle": "漁父歌 一",
+        "matchAuthor": "張志和",
+        "similarity": 1,
+        "titleSimilarity": 0.5,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "西塞山前白鷺飛，桃花流水鱖魚肥。",
+          "青篛笠，綠簑衣，斜風細雨不須歸。"
+        ]
+      }
+    ],
+    "wannchun": [
+      {
+        "path": "全唐诗/poet.tang.18000.json",
+        "matchTitle": "遊城南十六首 晚春",
+        "matchAuthor": "韓愈",
+        "similarity": 0.929,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-near",
+        "poemText": [
+          "草樹知春不久歸，百般紅紫鬬芳菲。",
+          "楊花榆莢無才思，惟解漫天作雪飛。"
+        ]
+      }
+    ],
+    "zaochun": [
+      {
+        "path": "全唐诗/poet.tang.18000.json",
+        "matchTitle": "早春呈水部張十八員外二首 一",
+        "matchAuthor": "韓愈",
+        "similarity": 1,
+        "titleSimilarity": 0.92,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "天街小雨潤如酥，草色遙看近却無。",
+          "最是一年春好處，絕勝煙柳滿皇都。"
+        ]
+      }
+    ],
+    "jiangxue": [
+      {
+        "path": "全唐诗/poet.tang.18000.json",
+        "matchTitle": "江雪",
+        "matchAuthor": "柳宗元",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "千山鳥飛絕，萬逕人蹤滅。",
+          "孤舟蓑笠翁，獨釣寒江雪。"
+        ]
+      }
+    ],
+    "yuweng": [
+      {
+        "path": "全唐诗/poet.tang.18000.json",
+        "matchTitle": "漁翁",
+        "matchAuthor": "柳宗元",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "漁翁夜傍西巖宿，曉汲清湘燃楚竹。",
+          "煙銷日出不見人，[欸]乃一聲山水綠。",
+          "迴看天際下中流，巖上無心雲相逐。"
+        ]
+      }
+    ],
+    "wuyixiang": [
+      {
+        "path": "全唐诗/poet.tang.19000.json",
+        "matchTitle": "金陵五題 烏衣巷",
+        "matchAuthor": "劉禹錫",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "朱雀橋邊野草花，烏衣巷口夕陽斜。",
+          "舊時王謝堂前燕，飛入尋常百姓家。"
+        ]
+      }
+    ],
+    "wangdongting": [
+      {
+        "path": "全唐诗/poet.tang.19000.json",
+        "matchTitle": "望洞庭",
+        "matchAuthor": "劉禹錫",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "湖光秋月兩相和，潭面無風鏡未磨。",
+          "遙望洞庭山水翠，白銀盤裏一青螺。"
+        ]
+      }
+    ],
+    "dalinsi": [
+      {
+        "path": "全唐诗/poet.tang.22000.json",
+        "matchTitle": "大林寺桃花",
+        "matchAuthor": "白居易",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "人間四月芳菲盡，山寺桃花始盛開。",
+          "長恨春歸無覓處，不知轉入此中來。"
+        ]
+      }
+    ],
+    "mujiangyin": [
+      {
+        "path": "全唐诗/poet.tang.23000.json",
+        "matchTitle": "暮江吟",
+        "matchAuthor": "白居易",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "一道殘陽鋪水中，半江瑟瑟半江紅。",
+          "可憐九月初三夜，露似真珠月似弓。"
+        ]
+      }
+    ],
+    "qiantanghu": [
+      {
+        "path": "全唐诗/poet.tang.23000.json",
+        "matchTitle": "錢唐湖春行",
+        "matchAuthor": "白居易",
+        "similarity": 1,
+        "titleSimilarity": 0.8,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "孤山寺北賈亭西，水面初平雲脚低。",
+          "幾處早鶯爭暖樹，誰家新燕啄春泥。",
+          "亂花漸欲迷人眼，淺草纔能沒馬蹄。",
+          "最愛湖東行不足，綠楊陰裏白沙堤。"
+        ]
+      }
+    ],
+    "shanxing": [
+      {
+        "path": "全唐诗/poet.tang.28000.json",
+        "matchTitle": "山行",
+        "matchAuthor": "杜牧",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "遠上寒山石徑斜，白雲生處有人家。",
+          "停車坐愛楓林晚，霜葉紅於二月花。"
+        ]
+      }
+    ],
+    "qiuxi": [
+      {
+        "path": "全唐诗/poet.tang.28000.json",
+        "matchTitle": "秋夕",
+        "matchAuthor": "杜牧",
+        "similarity": 0.929,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-near",
+        "poemText": [
+          "紅燭秋光冷畫屏，輕羅小扇撲流螢。",
+          "天階夜色涼如水，坐看牽牛織女星。"
+        ]
+      }
+    ],
+    "leyouyuan": [
+      {
+        "path": "全唐诗/poet.tang.29000.json",
+        "matchTitle": "樂遊原",
+        "matchAuthor": "李商隱",
+        "similarity": 1,
+        "titleSimilarity": 1,
+        "authorSimilarity": 1,
+        "method": "normalized-excerpt-exact",
+        "poemText": [
+          "向晚意不適，驅車登古原。",
+          "夕陽無限好，只是近黃昏。"
         ]
       }
     ]
