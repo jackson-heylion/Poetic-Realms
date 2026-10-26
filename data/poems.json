@@ -3024,6 +3024,14 @@
       "issueNumber": null,
       "sources": [
         {
+          "kind": "wikisource-text",
+          "source": "Wikisource",
+          "work": "别董大二首·其一",
+          "collection": "《全唐诗》卷二一四（电子转录）",
+          "url": "https://zh.wikisource.org/wiki/別董大",
+          "excerptMatch": "manually-located"
+        },
+        {
           "kind": "community-transcription",
           "source": "chinese-poetry/chinese-poetry",
           "work": "別董大二首 一",
@@ -3034,8 +3042,17 @@
           "matchScore": 0.929
         }
       ],
-      "sourceStatus": "transcription-near",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "所查在线文本作“千里黄云”，社区《全唐诗》数据该首作“十里黄云”，存在重要异文；此处采用“千里”通行本，不宣称已完成版本校定。",
+      "transcription": {
+        "text": [
+          "千里黄云白日曛，北风吹雁雪纷纷。",
+          "莫愁前路无知己，天下谁人不识君。"
+        ],
+        "sourcePath": "https://zh.wikisource.org/wiki/別董大",
+        "mode": "online-text-reviewed",
+        "warning": "依据可查的在线电子文本核对，未与权威纸本古籍逐字校勘；异文见 sourceNote。"
+      }
     },
     {
       "id": "chuzhouxijian",
@@ -3191,6 +3208,14 @@
       "issueNumber": null,
       "sources": [
         {
+          "kind": "wikisource-text",
+          "source": "Wikisource",
+          "work": "游城南十六首·晚春",
+          "collection": "《全唐诗》韩愈诗（电子转录）",
+          "url": "https://zh.wikisource.org/wiki/晚春_(韓愈)",
+          "excerptMatch": "manually-located"
+        },
+        {
           "kind": "community-transcription",
           "source": "chinese-poetry/chinese-poetry",
           "work": "遊城南十六首 晚春",
@@ -3201,8 +3226,17 @@
           "matchScore": 0.929
         }
       ],
-      "sourceStatus": "transcription-near",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "《游城南十六首》中的《晚春》（其二）。社区《千家诗》有“草木知春”，《全唐诗》电子转录作“草树知春”；采用后者。",
+      "transcription": {
+        "text": [
+          "草树知春不久归，百般红紫斗芳菲。",
+          "杨花榆荚无才思，惟解漫天作雪飞。"
+        ],
+        "sourcePath": "https://zh.wikisource.org/wiki/晚春_(韓愈)",
+        "mode": "online-text-reviewed",
+        "warning": "依据可查的在线电子文本核对，未与权威纸本古籍逐字校勘；异文见 sourceNote。"
+      }
     },
     {
       "id": "wanghuchunyu",
@@ -3736,6 +3770,14 @@
       "issueNumber": null,
       "sources": [
         {
+          "kind": "wikisource-text",
+          "source": "Wikisource",
+          "work": "菩萨蛮·书江西造口壁",
+          "collection": "《稼轩长短句》系统传本（电子转录）",
+          "url": "https://zh.wikisource.org/wiki/菩薩蠻_(辛棄疾)/書江西造口壁",
+          "excerptMatch": "manually-located"
+        },
+        {
           "kind": "community-transcription",
           "source": "chinese-poetry/chinese-poetry",
           "work": "菩萨蛮",
@@ -3746,8 +3788,19 @@
           "matchScore": 0.9
         }
       ],
-      "sourceStatus": "transcription-near",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "社区宋词数据此句作“毕竟江流去”，与本页取用的“毕竟东流去”不同；记录为待核异文。",
+      "transcription": {
+        "text": [
+          "郁孤台下清江水，中间多少行人泪。",
+          "西北望长安，可怜无数山。",
+          "青山遮不住，毕竟东流去。",
+          "江晚正愁余，山深闻鹧鸪。"
+        ],
+        "sourcePath": "https://zh.wikisource.org/wiki/菩薩蠻_(辛棄疾)/書江西造口壁",
+        "mode": "online-text-reviewed",
+        "warning": "依据可查的在线电子文本核对，未与权威纸本古籍逐字校勘；异文见 sourceNote。"
+      }
     },
     {
       "id": "qingpingle-cunju",
@@ -3820,6 +3873,14 @@
       "issueNumber": null,
       "sources": [
         {
+          "kind": "wikisource-text",
+          "source": "Wikisource",
+          "work": "如梦令·常记溪亭日暮",
+          "collection": "《漱玉词》系统传本（电子转录）",
+          "url": "https://zh.wikisource.org/wiki/如夢令_(李清照)/如夢令_(常記溪亭日暮)",
+          "excerptMatch": "manually-located"
+        },
+        {
           "kind": "community-transcription",
           "source": "chinese-poetry/chinese-poetry",
           "work": "如梦令",
@@ -3830,8 +3891,18 @@
           "matchScore": 0.917
         }
       ],
-      "sourceStatus": "transcription-near",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "社区词库首句作“沈醉不知归路”，本页采用“沉醉不知归路”，两者应按底本处理。",
+      "transcription": {
+        "text": [
+          "常记溪亭日暮，沉醉不知归路。",
+          "兴尽晚回舟，误入藕花深处。",
+          "争渡，争渡，惊起一滩鸥鹭。"
+        ],
+        "sourcePath": "https://zh.wikisource.org/wiki/如夢令_(李清照)/如夢令_(常記溪亭日暮)",
+        "mode": "online-text-reviewed",
+        "warning": "依据可查的在线电子文本核对，未与权威纸本古籍逐字校勘；异文见 sourceNote。"
+      }
     },
     {
       "id": "rumengling-yushu",
@@ -3954,6 +4025,14 @@
       "issueNumber": null,
       "sources": [
         {
+          "kind": "wikisource-text",
+          "source": "Wikisource",
+          "work": "醉花阴·薄雾浓云愁永昼",
+          "collection": "《漱玉词》系统传本（电子转录）",
+          "url": "https://zh.wikisource.org/wiki/醉花陰_(李清照)",
+          "excerptMatch": "manually-located"
+        },
+        {
           "kind": "community-transcription",
           "source": "chinese-poetry/chinese-poetry",
           "work": "醉花阴",
@@ -3964,8 +4043,19 @@
           "matchScore": 0.917
         }
       ],
-      "sourceStatus": "transcription-near",
-      "sourceNote": "已建出处线索；需继续对照具名古籍版本的正文、篇次与异文，不将网络电子转录视为校定本。"
+      "sourceStatus": "reference-reviewed",
+      "sourceNote": "社区词库载“东篱把洒”“人似黄花瘦”等文字，疑有讹误和异文。此处据另一在线文本录“把酒”“人比黄花瘦”，尚待纸本文献校验。",
+      "transcription": {
+        "text": [
+          "薄雾浓云愁永昼，瑞脑销金兽。",
+          "佳节又重阳，玉枕纱厨，半夜凉初透。",
+          "东篱把酒黄昏后，有暗香盈袖。",
+          "莫道不销魂，帘卷西风，人比黄花瘦。"
+        ],
+        "sourcePath": "https://zh.wikisource.org/wiki/醉花陰_(李清照)",
+        "mode": "online-text-reviewed",
+        "warning": "依据可查的在线电子文本核对，未与权威纸本古籍逐字校勘；异文见 sourceNote。"
+      }
     },
     {
       "id": "caisangzi-xihu",
