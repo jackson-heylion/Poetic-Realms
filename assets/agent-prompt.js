@@ -9,5 +9,22 @@
     return "根据以下诗句自由发挥，用单个 HTML 文件生成一个 3D 动态场景：\n\n" + poem.excerpt.trim();
   }
 
-  root.PoeticRealmsAgentPrompt = Object.freeze({ buildPrompt });
+  function buildSubmissionPrompt(poem) {
+    if (!poem || !/^[a-z0-9-]+$/.test(String(poem.id || ""))) {
+      throw new TypeError("缺少有效作品 ID");
+    }
+    return [
+      "请把刚完成的《" + poem.title + "》3D 动态场景 HTML 交到这个 GitHub 仓库：",
+      "https://github.com/jackson-heylion/Poetic-Realms",
+      "",
+      "作品 ID：" + poem.id,
+      "诗句：" + poem.excerpt,
+      "",
+      "保留已有作品，将本次 HTML 存为 scenes/" + poem.id + "/<作品英文名>.html；",
+      "在 data/poems.json 对应作品的 scenes 数组追加一项（id、title、path、model、tools、status），让网站可以切换浏览多个版本。",
+      "请提交 Pull Request 并返回链接。若没有 GitHub 写入权限，说明原因并提供文件和提交步骤。"
+    ].join("\n");
+  }
+
+  root.PoeticRealmsAgentPrompt = Object.freeze({ buildPrompt, buildSubmissionPrompt });
 })(globalThis);
