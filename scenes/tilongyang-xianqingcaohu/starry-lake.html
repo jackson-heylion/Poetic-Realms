@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#04060d">
+<meta name="description" content="醉后不知天在水，满船清梦压星河 —— 夜泊青草湖，银河低垂及水，天与水不可分辨的三维场景。">
+<title>醉后不知天在水 · 满船清梦压星河</title>
+<style>
+  :root { color-scheme: dark; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #04060d; }
+  body { font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif; cursor: grab; }
+  body.dragging { cursor: grabbing; }
+  #gl { position: fixed; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+  .vignette {
+    position: fixed; inset: 0; pointer-events: none; z-index: 2;
+    background: radial-gradient(ellipse 78% 62% at 50% 52%, rgba(0,0,0,0) 42%, rgba(2,4,10,.40) 78%, rgba(2,3,8,.80) 100%);
+  }
+  #hud {
+    position: fixed; left: 4.2vw; bottom: 6.5vh; z-index: 3; pointer-events: none;
+    writing-mode: vertical-rl; letter-spacing: .40em;
+    font-size: clamp(12px, 1.45vw, 19px); line-height: 1.95;
+    color: #e3d8b8; text-shadow: 0 0 20px rgba(180,150,92,.30), 0 0 56px rgba(120,110,170,.20);
+  }
+  #hud .l2 { color: #b9bedb; margin-right: .85em; opacity: .86; }
+  #hud .by {
+    writing-mode: horizontal-tb; letter-spacing: .3em;
+    font-size: clamp(9px, .8vw, 12px); color: rgba(200,190,170,.45);
+    margin-top: 1.6em; text-shadow: none;
+  }
+  #meta {
+    position: fixed; right: 4.5vw; top: 4.5vh; z-index: 3; text-align: right;
+    font: 11px/2 -apple-system, "PingFang SC", sans-serif; letter-spacing: .1em;
+    color: rgba(214,206,186,.52); pointer-events: none;
+  }
+  #ctrl { position: fixed; right: 4.5vw; bottom: 4.5vh; z-index: 4; display: flex; gap: 6px; }
+  #ctrl button {
+    padding: 8px 12px; border: 1px solid rgba(223,222,212,.28);
+    background: rgba(20,32,43,.55); color: #e9e4d6; border-radius: 2px;
+    font: 11px -apple-system, "PingFang SC", sans-serif; cursor: pointer;
+    backdrop-filter: blur(8px); transition: background .15s, border-color .15s;
+  }
+  #ctrl button:hover { background: rgba(44,66,80,.8); border-color: rgba(223,222,212,.5); }
+  #ctrl button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  #notice {
+    position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 9;
+    max-width: min(420px, 84vw); padding: 22px 24px; display: none;
+    background: rgba(14,22,30,.96); border: 1px solid rgba(205,184,151,.5);
+    color: #eee7db; font: 13px/1.9 -apple-system, "PingFang SC", sans-serif; text-align: center;
+  }
+  #notice.visible { display: block; }
+  #loading {
+    position: fixed; inset: 0; z-index: 8; display: grid; place-items: center;
+    background: #04060d; color: rgba(214,202,176,.6);
+    font-size: 13px; letter-spacing: .6em; transition: opacity .4s;
+  }
+  #loading.gone { opacity: 0; pointer-events: none; }
+  @media (max-width: 720px) {
+    #hud { left: 7vw; bottom: 12vh; font-size: 15px; letter-spacing: .3em; }
+    #meta { display: none; }
+    #ctrl { right: 3vw; bottom: 3vh; }
+    #ctrl button { padding: 7px 9px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="gl" aria-label="夜泊青草湖的三维场景，可拖动旋转、滚轮缩放"></canvas>
+<div class="vignette"></div>
+<div id="hud">
+  <p>醉后不知天在水</p>
+  <p class="l2">满船清梦压星河</p>
+  <p class="by">元 · 唐珙《题龙阳县青草湖》</p>
+</div>
+<div id="meta"><span id="fps">— FPS</span><br>拖动环视 · 滚轮远近</div>
+<div id="ctrl">
+  <button id="btn-reset" type="button">重置视角</button>
+  <button id="btn-quality" type="button">画质：标准</button>
+  <button id="btn-pause" type="button">暂停</button>
+</div>
+<div id="notice" role="alert"></div>
+<div id="loading">夜 泊</div>
+<script>
+(function () {
+"use strict";
+
+/* ─────────────────────────  工具  ───────────────────────── */
+var V = {
+  sub: function (a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; },
+  add: function (a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; },
+  mul: function (a, s) { return [a[0] * s, a[1] * s, a[2] * s]; },
+  dot: function (a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; },
+  cross: function (a, b) {
+    return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  },
+  norm: function (a) {
+    var l = Math.sqrt(V.dot(a, a)) || 1;
+    return [a[0] / l, a[1] / l, a[2] / l];
+  }
+};
+
+function perspective(fovy, aspect, near, far) {
+  var f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far);
+  return new Float32Array([
+    f / aspect, 0, 0, 0,
+    0, f, 0, 0,
+    0, 0, (far + near) * nf, -1,
+    0, 0, 2 * far * near * nf, 0
+  ]);
+}
+
+function lookAt(eye, target, up) {
+  var z = V.norm(V.sub(eye, target));
+  var x = V.norm(V.cross(up, z));
+  var y = V.cross(z, x);
+  return new Float32Array([
+    x[0], y[0], z[0], 0,
+    x[1], y[1], z[1], 0,
+    x[2], y[2], z[2], 0,
+    -V.dot(x, eye), -V.dot(y, eye), -V.dot(z, eye), 1
+  ]);
+}
+
+function mulMat(a, b) {
+  var o = new Float32Array(16);
+  for (var i = 0; i < 4; i++) {
+    for (var j = 0; j < 4; j++) {
+      var s = 0;
+      for (var k = 0; k < 4; k++) s += a[k * 4 + j] * b[i * 4 + k];
+      o[i * 4 + j] = s;
+    }
+  }
+  return o;
+}
+
+var noticeEl = document.getElementById("notice");
+function fail(msg) {
+  noticeEl.textContent = msg;
+  noticeEl.className = "visible";
+  var ld = document.getElementById("loading");
+  if (ld) ld.className = "gone";
+}
+
+/* ─────────────────────────  天空纹理（等距柱状投影）  ───────────────────────── */
+var SPINE = 0.478;
+function spineAt(x, W, H) {
+  return H * SPINE +
+    Math.sin((x / W) * Math.PI * 2 + 1.05) * H * 0.030 +
+    Math.sin((x / W) * Math.PI * 4 + 0.4) * H * 0.011;
+}
+
+function buildSkyTexture() {
+  var W = 2048, H = 1024;
+  var cv = document.createElement("canvas");
+  cv.width = W; cv.height = H;
+  var g = cv.getContext("2d");
+
+  var bg = g.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0.00, "#010205");
+  bg.addColorStop(0.18, "#02030a");
+  bg.addColorStop(0.31, "#040714");
+  bg.addColorStop(0.42, "#060a18");
+  bg.addColorStop(0.470, "#09101f");
+  bg.addColorStop(0.500, "#0e1727");
+  bg.addColorStop(0.532, "#070c16");
+  bg.addColorStop(0.64, "#04070e");
+  bg.addColorStop(1.00, "#02040a");
+  g.fillStyle = bg;
+  g.fillRect(0, 0, W, H);
+
+  // 银河：在 1/4 尺寸上画，再放大，避免大半径模糊拖死主线程
+  var BW = 512, BH = 256;
+  var bc = document.createElement("canvas");
+  bc.width = BW; bc.height = BH;
+  var b = bc.getContext("2d");
+  var band = function (w, blur, style) {
+    b.filter = "blur(" + blur + "px)";
+    b.strokeStyle = style;
+    b.lineWidth = w;
+    b.lineCap = "round";
+    b.beginPath();
+    for (var x = -BW; x <= BW * 2; x += 4) {
+      var y = spineAt(x, BW, BH);
+      if (x === -BW) b.moveTo(x, y); else b.lineTo(x, y);
+    }
+    b.stroke();
+  };
+  b.globalCompositeOperation = "lighter";
+  band(16, 5.5, "rgba(58,74,138,0.062)");
+  band(9, 2.6, "rgba(98,118,186,0.068)");
+  band(4.4, 1.1, "rgba(158,170,224,0.058)");
+  band(1.6, 0.5, "rgba(218,216,244,0.042)");
+
+  var rr = function (c, x, y, r, stops) {
+    var rg = c.createRadialGradient(x, y, 0, x, y, r);
+    for (var i = 0; i < stops.length; i++) rg.addColorStop(stops[i][0], stops[i][1]);
+    c.fillStyle = rg;
+    c.fillRect(x - r, y - r, r * 2, r * 2);
+  };
+  var gauss = function () { return (Math.random() + Math.random() + Math.random() - 1.5) * 0.82; };
+
+  b.filter = "blur(3px)";
+  for (var i = 0; i < 260; i++) {
+    var x = Math.random() * BW;
+    var y = spineAt(x, BW, BH) + gauss() * BH * 0.048;
+    var r = 4 + Math.random() * 14;
+    rr(b, x, y, r, [[0, Math.random() < 0.4 ? "rgba(228,212,224,0.038)" : "rgba(176,188,236,0.044)"],
+      [0.55, "rgba(150,162,214,0.018)"], [1, "rgba(120,140,200,0)"]]);
+  }
+  b.filter = "blur(5px)";
+  for (var j = 0; j < 120; j++) {
+    var x2 = BW * 0.29 + (Math.random() - 0.5) * BW * 0.3;
+    var y2 = spineAt(x2, BW, BH) + (Math.random() - 0.5) * BH * 0.07;
+    rr(b, x2, y2, 8 + Math.random() * 22, [[0, "rgba(246,234,212,0.014)"],
+      [0.5, "rgba(214,192,196,0.010)"], [1, "rgba(180,170,200,0)"]]);
+  }
+
+  g.imageSmoothingEnabled = true;
+  g.drawImage(bc, 0, 0, W, H);
+
+  // 暗尘带：单独画好再合成，压在星光之上
+  var dc = document.createElement("canvas");
+  dc.width = BW; dc.height = BH;
+  var d = dc.getContext("2d");
+  d.filter = "blur(1.4px)";
+  d.strokeStyle = "rgba(2,4,10,0.46)";
+  d.lineCap = "round";
+  for (var k = 0; k < 14; k++) {
+    var x0 = ((k / 14 + Math.random() * 0.05) * BW) - BW * 0.1;
+    var len = BW * (0.05 + Math.random() * 0.08);
+    d.lineWidth = 0.8 + Math.random() * 2.0;
+    d.beginPath();
+    for (var x3 = x0; x3 <= x0 + len; x3 += 3) {
+      var y3 = spineAt(x3, BW, BH) + BH * 0.004 + Math.sin(x3 * 0.05 + k) * BH * 0.004;
+      if (x3 === x0) d.moveTo(x3, y3); else d.lineTo(x3, y3);
+    }
+    d.stroke();
+  }
+
+  g.globalCompositeOperation = "lighter";
+  var TINT = ["255,255,255", "255,255,255", "208,222,255", "255,240,214", "176,202,255", "255,206,168"];
+  var dot = function (px, py, pr, pa, pc) {
+    g.fillStyle = "rgba(" + pc + "," + pa + ")";
+    if (pr < 0.9) g.fillRect(px - pr, py - pr, pr * 2, pr * 2);
+    else { g.beginPath(); g.arc(px, py, pr, 0, 6.2832); g.fill(); }
+  };
+  for (var m = 0; m < 11000; m++) {
+    var sx = Math.random() * W;
+    var off = Math.abs(gauss()) * H * 0.021;
+    var sy = spineAt(sx, W, H) + (Math.random() < 0.5 ? -off : off);
+    if (sy < 0 || sy > H) continue;
+    var sr = 0.14 + Math.pow(Math.random(), 3.2) * 0.8;
+    var sa = (0.036 + Math.random() * 0.30) * (1 - off / (H * 0.052));
+    dot(sx, sy, sr, Math.max(sa, 0.012), TINT[(Math.random() * TINT.length) | 0]);
+  }
+  for (var n = 0; n < 2400; n++) {
+    var ax = Math.random() * W;
+    var ay = H * (0.015 + Math.random() * 0.46);
+    dot(ax, ay, 0.14 + Math.pow(Math.random(), 3.4) * 0.45, 0.022 + Math.random() * 0.16,
+      TINT[(Math.random() * TINT.length) | 0]);
+  }
+  g.globalCompositeOperation = "source-over";
+  g.drawImage(dc, 0, 0, W, H);
+
+  // 少量亮星：带一点柔晕，肉眼可见的层次
+  g.globalCompositeOperation = "lighter";
+  for (var q = 0; q < 42; q++) {
+    var bx = Math.random() * W;
+    var by = spineAt(bx, W, H) + gauss() * H * 0.07;
+    if (by < H * 0.02 || by > H) continue;
+    var br = 0.9 + Math.pow(Math.random(), 2) * 1.9;
+    rr(g, bx, by, br * 2.6, [[0, "rgba(255,252,246,0.78)"], [0.16, "rgba(236,238,255,0.34)"],
+      [0.5, "rgba(190,205,255,0.09)"], [1, "rgba(160,180,255,0)"]]);
+  }
+  return cv;
+}
+
+/* ─────────────────────────  船体几何  ───────────────────────── */
+var HULL = { LEN: 5.2, HW: 0.72, DRAFT: 0.26, RISE: 0.15, SIDE: 0.18 };
+var BOAT = { pos: [2.45, 0.06, 0.15], yaw: -0.32 };
+var LAMP_LOCAL = [1.72, 0.66, 0.14];
+
+function hwAt(t) { return HULL.HW * (Math.pow(Math.sin(Math.PI * t), 0.42) * 0.86 + 0.14); }
+function draftAt(t) { return HULL.DRAFT * Math.pow(Math.sin(Math.PI * t), 0.32); }
+function riseAt(t) { return HULL.RISE * Math.pow(Math.abs(t - 0.5) * 2, 2.8); }
+
+function boatToWorld(p) {
+  var c = Math.cos(BOAT.yaw), s = Math.sin(BOAT.yaw);
+  return [p[0] * c + p[2] * s + BOAT.pos[0],
+    p[1] + BOAT.pos[1],
+    -p[0] * s + p[2] * c + BOAT.pos[2]];
+}
+
+function Builder() { this.p = []; this.n = []; this.c = []; this.i = []; this.v = 0; }
+Builder.prototype.tri = function (a, b, c, col) {
+  a = boatToWorld(a); b = boatToWorld(b); c = boatToWorld(c);
+  var ab = V.sub(b, a), ac = V.sub(c, a);
+  var nn = V.norm(V.cross(ab, ac));
+  var pts = [a, b, c];
+  for (var i = 0; i < 3; i++) {
+    this.p.push(pts[i][0], pts[i][1], pts[i][2]);
+    this.n.push(nn[0], nn[1], nn[2]);
+    this.c.push(col[0], col[1], col[2]);
+  }
+  this.v += 3;
+};
+Builder.prototype.quad = function (a, b, c, d, col) {
+  this.tri(a, b, c, col); this.tri(a, c, d, col);
+};
+Builder.prototype.grid = function (rows, cols, fn, col) {
+  for (var i = 0; i < rows; i++) {
+    for (var j = 0; j < cols; j++) {
+      var a = fn(i, j), b = fn(i + 1, j), c = fn(i + 1, j + 1), d = fn(i, j + 1);
+      this.quad(a, b, c, d, col);
+    }
+  }
+};
+
+function buildBoat() {
+  var B = new Builder();
+  var WOOD = [0.048, 0.034, 0.022];
+  var DECK = [0.024, 0.018, 0.013];
+  var CANOPY = [0.062, 0.046, 0.027];
+  var CLOTH = [0.020, 0.015, 0.011];
+  var NL = 34, NA = 12;
+
+  var hullPoint = function (i, j) {
+    var t = i / NL, a = (j / NA - 0.5) * Math.PI;
+    var w = hwAt(t), d = draftAt(t), rise = riseAt(t), s = Math.abs(Math.sin(a));
+    return [(t - 0.5) * HULL.LEN,
+      -d * Math.pow(Math.cos(a), 1.05) + rise + HULL.SIDE * Math.pow(s, 6),
+      w * Math.sin(a)];
+  };
+  B.grid(NL, NA, hullPoint, WOOD);
+
+  // 甲板
+  for (var i = 0; i < NL; i++) {
+    var t0 = i / NL, t1 = (i + 1) / NL;
+    B.quad(
+      [(t0 - 0.5) * HULL.LEN, riseAt(t0) - 0.14, -hwAt(t0) * 0.97],
+      [(t1 - 0.5) * HULL.LEN, riseAt(t1) - 0.14, -hwAt(t1) * 0.97],
+      [(t1 - 0.5) * HULL.LEN, riseAt(t1) - 0.14, hwAt(t1) * 0.97],
+      [(t0 - 0.5) * HULL.LEN, riseAt(t0) - 0.14, hwAt(t0) * 0.97],
+      DECK);
+  }
+
+  // 乌篷：半圆拱，两端收拢
+  var CR = 0.42, CLEN = 2.0, CS = 16, CRG = 8;
+  var canopyPoint = function (i, j) {
+    var t = i / CRG, a = (j / CS - 0.5) * Math.PI * 0.96;
+    var taper = 0.18 + 0.82 * Math.pow(Math.sin(Math.PI * t), 0.55);
+    var r = CR * taper;
+    return [(t - 0.5) * CLEN - 0.62, r * Math.cos(a) - 0.04 + 0.09, r * Math.sin(a) * 1.04];
+  };
+  B.grid(CRG, CS, canopyPoint, CANOPY);
+
+  // 醉卧的人：一具裹着长衫的轮廓 + 斗笠
+  var capsule = function (cx, cy, cz, r, len, col) {
+    var SEG = 10, RING = 8;
+    for (var i = 0; i < SEG; i++) {
+      for (var j = 0; j < RING; j++) {
+        var a0 = i / SEG * Math.PI * 2, a1 = (i + 1) / SEG * Math.PI * 2;
+        var b0 = j / RING * Math.PI, b1 = (j + 1) / RING * Math.PI;
+        var pt = function (a, b) {
+          return [cx + Math.cos(a) * r * Math.sin(b) * 0.95 + (b < Math.PI / 2 ? len / 2 : -len / 2),
+            cy + Math.cos(b) * r, cz + Math.sin(a) * r * Math.sin(b) * 1.15];
+        };
+        B.quad(pt(a0, b0), pt(a1, b0), pt(a1, b1), pt(a0, b1), col);
+      }
+    }
+  };
+  capsule(0.68, 0.005, 0.02, 0.145, 0.70, CLOTH);
+
+  var sphere = function (cx, cy, cz, r, col) {
+    var SEG = 10, RING = 7;
+    for (var i = 0; i < SEG; i++) {
+      for (var j = 0; j < RING; j++) {
+        var a0 = i / SEG * Math.PI * 2, a1 = (i + 1) / SEG * Math.PI * 2;
+        var b0 = j / RING * Math.PI, b1 = (j + 1) / RING * Math.PI;
+        var pt = function (a, b) {
+          return [cx + Math.cos(a) * r * Math.sin(b), cy + Math.cos(b) * r, cz + Math.sin(a) * r * Math.sin(b)];
+        };
+        B.quad(pt(a0, b0), pt(a1, b0), pt(a1, b1), pt(a0, b1), col);
+      }
+    }
+  };
+  sphere(0.22, 0.105, 0.03, 0.115, CLOTH);
+
+  // 斗笠：圆锥
+  var hatR = 0.26, hatH = 0.145, HS = 14;
+  for (var hs = 0; hs < HS; hs++) {
+    var ha0 = hs / HS * Math.PI * 2, ha1 = (hs + 1) / HS * Math.PI * 2;
+    B.tri([0.175, 0.19 + hatH, 0.03],
+      [0.175 + Math.cos(ha0) * hatR, 0.19, 0.03 + Math.sin(ha0) * hatR],
+      [0.175 + Math.cos(ha1) * hatR, 0.19, 0.03 + Math.sin(ha1) * hatR], [0.020, 0.016, 0.010]);
+  }
+
+  // 船头挑杆
+  var pr = 0.018, ph = 0.80, PS = 6;
+  for (var ps = 0; ps < PS; ps++) {
+    var pa0 = ps / PS * Math.PI * 2, pa1 = (ps + 1) / PS * Math.PI * 2;
+    B.quad(
+      [LAMP_LOCAL[0] + Math.cos(pa0) * pr, -0.14, LAMP_LOCAL[2] + Math.sin(pa0) * pr],
+      [LAMP_LOCAL[0] + Math.cos(pa1) * pr, -0.14, LAMP_LOCAL[2] + Math.sin(pa1) * pr],
+      [LAMP_LOCAL[0] + Math.cos(pa1) * pr, 0.66, LAMP_LOCAL[2] + Math.sin(pa1) * pr],
+      [LAMP_LOCAL[0] + Math.cos(pa0) * pr, 0.66, LAMP_LOCAL[2] + Math.sin(pa0) * pr],
+      [0.010, 0.008, 0.006]);
+  }
+
+  return { pos: new Float32Array(B.p), nrm: new Float32Array(B.n), col: new Float32Array(B.c), count: B.v };
+}
+
+/* ─────────────────────────  Shader  ───────────────────────── */
+var DIR_UV = [
+  "vec2 dirToUV(vec3 d){",
+  "  float u = atan(d.z, d.x) / 6.283185307 + 0.5;",
+  "  float v = acos(clamp(d.y, -1.0, 1.0)) / 3.141592653;",
+  "  return vec2(u, v);",
+  "}"
+].join("\n");
+
+var SKY_VS = [
+  "attribute vec2 aPos;",
+  "varying vec2 vUv;",
+  "void main(){ vUv = aPos * 0.5 + 0.5; gl_Position = vec4(aPos, 1.0, 1.0); }"
+].join("\n");
+
+var SKY_FS = [
+  "precision highp float;",
+  "varying vec2 vUv;",
+  "uniform vec3 uRight, uUp, uFwd;",
+  "uniform float uTanHalf, uAspect;",
+  "uniform sampler2D uSky;",
+  DIR_UV,
+  "void main(){",
+  "  vec3 dir = normalize(uRight * (vUv.x * 2.0 - 1.0) * uTanHalf * uAspect",
+  "                     + uUp * (vUv.y * 2.0 - 1.0) * uTanHalf + uFwd);",
+  "  vec3 c = pow(texture2D(uSky, dirToUV(dir)).rgb, vec3(2.2));",
+  "  gl_FragColor = vec4(pow(c, vec3(1.0 / 2.2)), 1.0);",
+  "}"
+].join("\n");
+
+var WATER_VS = [
+  "attribute vec3 aPos;",
+  "uniform mat4 uMVP;",
+  "varying vec3 vWorld;",
+  "void main(){ vWorld = aPos; gl_Position = uMVP * vec4(aPos, 1.0); }"
+].join("\n");
+
+var WATER_FS = [
+  "precision highp float;",
+  "varying vec3 vWorld;",
+  "uniform float uTime;",
+  "uniform vec3 uEye, uLamp;",
+  "uniform sampler2D uSky;",
+  DIR_UV,
+  "vec2 waveGrad(vec2 p, float t){",
+  "  vec2 g = vec2(0.0);",
+  "  float warp = sin(p.x * 0.083 + p.y * 0.127) * 1.9",
+  "             + sin(p.x * 0.041 - p.y * 0.067) * 2.6",
+  "             + sin(p.x * 0.019 + p.y * 0.023) * 3.4;",
+  "  vec2 d; float k, w, a, ph;",
+  "  d = normalize(vec2( 1.00, 0.38)); k = 0.74; w = 0.92; a = 0.0125;",
+  "  ph = dot(p, d) * k - t * w + warp; g += a * k * d * cos(ph);",
+  "  d = normalize(vec2(-0.42, 0.90)); k = 1.31; w = 1.24; a = 0.0105;",
+  "  ph = dot(p, d) * k - t * w + 1.7 + warp * 0.8; g += a * k * d * cos(ph);",
+  "  d = normalize(vec2( 0.66,-0.75)); k = 2.55; w = 1.78; a = 0.0062;",
+  "  ph = dot(p, d) * k - t * w + 3.1 + warp * 0.6; g += a * k * d * cos(ph);",
+  "  d = normalize(vec2(-0.88,-0.47)); k = 4.90; w = 2.45; a = 0.0032;",
+  "  ph = dot(p, d) * k - t * w + 0.6 + warp * 0.45; g += a * k * d * cos(ph);",
+  "  d = normalize(vec2( 0.22, 0.97)); k = 8.20; w = 3.20; a = 0.0017;",
+  "  ph = dot(p, d) * k - t * w + 2.2 + warp * 0.35; g += a * k * d * cos(ph);",
+  "  return g;",
+  "}",
+  "float hullMask(vec2 p){",
+  "  vec2 d = p - vec2(2.45, 0.15);",
+  "  float c = cos(0.32), s = sin(0.32);",
+  "  vec2 q = vec2(c * d.x - s * d.y, s * d.x + c * d.y);",
+  "  return 1.0 - smoothstep(0.72, 1.18, length(q / vec2(2.55, 1.05)));",
+  "}",
+  "void main(){",
+  "  vec3 P = vWorld;",
+  "  vec3 Vv = normalize(uEye - P);",
+  "  float dist = length(uEye - P);",
+  "  float damp = 1.0 / (1.0 + dist * 0.034);",
+  "  vec2 grad = waveGrad(P.xz, uTime) * damp;",
+  "  vec3 N = normalize(vec3(-grad.x, 1.0, -grad.y));",
+  "  float fres = pow(1.0 - max(dot(N, Vv), 0.0), 5.0);",
+  "  fres = mix(0.020, 1.0, fres);",
+  "  vec3 R = reflect(-Vv, N);",
+  "  R.y = max(R.y, 0.0);",
+  "  vec3 refl = pow(texture2D(uSky, dirToUV(R)).rgb, vec3(2.2));",
+  "  vec3 deep = vec3(0.0034, 0.0062, 0.0118);",
+  "  vec3 col = mix(deep, refl, clamp(fres * 1.04, 0.0, 1.0));",
+  "  col *= mix(1.0, 0.26, hullMask(P.xz));",
+  "  float hd = length(uLamp.xz - P.xz);",
+  "  col += vec3(1.0, 0.58, 0.22) * 0.010 / (1.0 + hd * hd * 2.2);",
+  "  vec3 toL = uLamp - P;",
+  "  float dL = max(length(toL), 0.001);",
+  "  float ndl = max(dot(R, toL / dL), 0.0);",
+  "  col += vec3(1.0, 0.58, 0.22) * pow(ndl, 420.0) * 3.2 / (1.0 + dL * dL * 0.05);",
+  "  float nearness = max(dot(N, Vv), 0.0);",
+  "  col += vec3(0.0032, 0.0052, 0.0092) * pow(nearness, 3.5);",
+  "  float fog = smoothstep(500.0, 3200.0, dist);",
+  "  vec2 huv = dirToUV(vec3(R.x, 0.0, R.z));",
+  "  vec3 hcol = pow(texture2D(uSky, vec2(huv.x, 0.5)).rgb, vec3(2.2));",
+  "  col = mix(col, hcol, fog * 0.96);",
+  "  gl_FragColor = vec4(pow(col, vec3(1.0 / 2.2)), 1.0);",
+  "}"
+].join("\n");
+
+var MESH_VS = [
+  "attribute vec3 aPos, aNrm, aCol;",
+  "uniform mat4 uMVP;",
+  "varying vec3 vN, vC, vW;",
+  "void main(){",
+  "  vN = aNrm; vC = aCol; vW = aPos;",
+  "  gl_Position = uMVP * vec4(aPos, 1.0);",
+  "}"
+].join("\n");
+
+var MESH_FS = [
+  "precision highp float;",
+  "varying vec3 vN, vC, vW;",
+  "uniform vec3 uEye, uLamp;",
+  "void main(){",
+  "  vec3 N = normalize(vN);",
+  "  if (dot(N, uEye - vW) < 0.0) N = -N;",
+  "  vec3 Ld = uLamp - vW;",
+  "  float dL = length(Ld);",
+  "  Ld /= max(dL, 0.001);",
+  "  float diff = max(dot(N, Ld), 0.0) * 3.4 / (1.0 + dL * dL * 1.05);",
+  "  vec3 warm = vec3(1.0, 0.62, 0.30) * diff;",
+  "  vec3 sky = vec3(0.055, 0.072, 0.115) * (0.5 + 0.5 * N.y);",
+  "  vec3 rim = vec3(0.125, 0.150, 0.215) * pow(1.0 - max(dot(N, normalize(uEye - vW)), 0.0), 3.0);",
+  "  vec3 col = vC * (warm + sky) + vC * rim * 2.0;",
+  "  col *= 0.92;",
+  "  gl_FragColor = vec4(pow(max(col, 0.0), vec3(1.0 / 2.2)), 1.0);",
+  "}"
+].join("\n");
+
+var PT_VS = [
+  "attribute vec3 aPos;",
+  "attribute float aSize, aPhase;",
+  "uniform mat4 uMVP;",
+  "uniform float uTime, uPR;",
+  "varying float vTw;",
+  "void main(){",
+  "  vTw = 0.42 + 0.58 * (0.5 + 0.5 * sin(uTime * (1.1 + aPhase) + aPhase * 43.0));",
+  "  gl_Position = uMVP * vec4(aPos, 1.0);",
+  "  gl_PointSize = aSize * uPR * (0.72 + vTw * 0.5);",
+  "}"
+].join("\n");
+
+var PT_FS = [
+  "precision highp float;",
+  "varying float vTw;",
+  "void main(){",
+  "  vec2 p = gl_PointCoord - 0.5;",
+  "  float d = length(p);",
+  "  if (d > 0.5) discard;",
+  "  float a = pow(smoothstep(0.5, 0.02, d), 2.4);",
+  "  gl_FragColor = vec4(vec3(0.86, 0.90, 1.0) * (0.55 + vTw * 1.35), a * vTw * 0.85);",
+  "}"
+].join("\n");
+
+var GLOW_VS = [
+  "attribute vec3 aPos;",
+  "attribute vec3 aGlow;",
+  "uniform mat4 uMVP;",
+  "uniform float uPR;",
+  "varying vec3 vColor;",
+  "varying float vAlpha;",
+  "void main(){",
+  "  vColor = aGlow;",
+  "  vAlpha = aGlow.x > 2.0 ? 1.0 : 0.26;",
+  "  gl_Position = uMVP * vec4(aPos, 1.0);",
+  "  gl_PointSize = aGlow.x * uPR;",
+  "}"
+].join("\n");
+
+var GLOW_FS = [
+  "precision highp float;",
+  "uniform float uFlick;",
+  "varying vec3 vColor;",
+  "varying float vAlpha;",
+  "void main(){",
+  "  float d = length(gl_PointCoord - 0.5) * 2.0;",
+  "  if (d > 1.0) discard;",
+  "  float core = vColor.x > 2.0 ? 1.0 : 0.0;",
+  "  float a = pow(1.0 - d, core > 0.5 ? 0.9 : 2.6) * vAlpha * uFlick;",
+  "  vec3 c = core > 0.5 ? vec3(1.0, 0.86, 0.62) : vec3(1.0, 0.62, 0.28);",
+  "  gl_FragColor = vec4(c, a);",
+  "}"
+].join("\n");
+
+/* ─────────────────────────  GL 初始化  ───────────────────────── */
+var canvas = document.getElementById("gl");
+var gl = canvas.getContext("webgl", { antialias: true, alpha: false, powerPreference: "high-performance" })
+      || canvas.getContext("experimental-webgl", { antialias: true, alpha: false });
+if (!gl) { fail("当前浏览器无法创建 WebGL 上下文，无法显示三维场景。请开启硬件加速后重试。"); return; }
+
+function compile(type, src) {
+  var s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+    var log = gl.getShaderInfoLog(s);
+    gl.deleteShader(s);
+    throw new Error("着色器编译失败：" + log);
+  }
+  return s;
+}
+
+function program(vsSrc, fsSrc) {
+  var p = gl.createProgram();
+  gl.attachShader(p, compile(gl.VERTEX_SHADER, vsSrc));
+  gl.attachShader(p, compile(gl.FRAGMENT_SHADER, fsSrc));
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+    throw new Error("着色器链接失败：" + gl.getProgramInfoLog(p));
+  }
+  return p;
+}
+
+var P_SKY, P_WATER, P_MESH, P_PT, P_GLOW;
+try {
+  P_SKY = program(SKY_VS, SKY_FS);
+  P_WATER = program(WATER_VS, WATER_FS);
+  P_MESH = program(MESH_VS, MESH_FS);
+  P_PT = program(PT_VS, PT_FS);
+  P_GLOW = program(GLOW_VS, GLOW_FS);
+} catch (e) {
+  fail(e.message);
+  return;
+}
+
+function uniforms(p, names) {
+  var o = {};
+  for (var i = 0; i < names.length; i++) o[names[i]] = gl.getUniformLocation(p, names[i]);
+  return o;
+}
+function attribs(p, names) {
+  var o = {};
+  for (var i = 0; i < names.length; i++) o[names[i]] = gl.getAttribLocation(p, names[i]);
+  return o;
+}
+
+var U_SKY = uniforms(P_SKY, ["uRight", "uUp", "uFwd", "uTanHalf", "uAspect", "uSky"]);
+var A_SKY = attribs(P_SKY, ["aPos"]);
+var U_WATER = uniforms(P_WATER, ["uMVP", "uTime", "uEye", "uLamp", "uSky"]);
+var A_WATER = attribs(P_WATER, ["aPos"]);
+var U_MESH = uniforms(P_MESH, ["uMVP", "uEye", "uLamp"]);
+var A_MESH = attribs(P_MESH, ["aPos", "aNrm", "aCol"]);
+var U_PT = uniforms(P_PT, ["uMVP", "uTime", "uPR"]);
+var A_PT = attribs(P_PT, ["aPos", "aSize", "aPhase"]);
+var U_GLOW = uniforms(P_GLOW, ["uMVP", "uPR", "uFlick"]);
+var A_GLOW = attribs(P_GLOW, ["aPos", "aGlow"]);
+
+/* ── 天空纹理 ── */
+var skyCanvas = buildSkyTexture();
+var skyTex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, skyTex);
+gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, skyCanvas);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+gl.generateMipmap(gl.TEXTURE_2D);
+
+/* ── 全屏 quad ── */
+var quadBuf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+
+/* ── 水面：两个三角形，覆盖到地平线 ── */
+var S = 20000;
+var waterBuf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, waterBuf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+  -S, 0, -S, S, 0, -S, S, 0, S,
+  -S, 0, -S, S, 0, S, -S, 0, S
+]), gl.STATIC_DRAW);
+
+/* ── 船 ── */
+var boatData = buildBoat();
+var boatPos = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, boatPos);
+gl.bufferData(gl.ARRAY_BUFFER, boatData.pos, gl.STATIC_DRAW);
+var boatNrm = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, boatNrm);
+gl.bufferData(gl.ARRAY_BUFFER, boatData.nrm, gl.STATIC_DRAW);
+var boatCol = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, boatCol);
+gl.bufferData(gl.ARRAY_BUFFER, boatData.col, gl.STATIC_DRAW);
+
+/* ── 星星 ── */
+var STAR_COUNT = 1200;
+var starPos = new Float32Array(STAR_COUNT * 3);
+var starSize = new Float32Array(STAR_COUNT);
+var starPhase = new Float32Array(STAR_COUNT);
+(function () {
+  for (var i = 0; i < STAR_COUNT; i++) {
+    var u = Math.random();
+    var v = 1 - (spineAt(u * 2048, 2048, 1024) / 1024 + (Math.random() + Math.random() + Math.random() - 1.5) * 0.042);
+    if (Math.random() < 0.45) v = 0.52 + Math.random() * 0.47;
+    v = Math.min(0.995, Math.max(0.505, v));
+    var th = v * Math.PI, ph = u * Math.PI * 2, r = 4200;
+    starPos[i * 3] = r * Math.sin(th) * Math.cos(ph);
+    starPos[i * 3 + 1] = r * Math.cos(th);
+    starPos[i * 3 + 2] = r * Math.sin(th) * Math.sin(ph);
+    starSize[i] = 1.0 + Math.pow(Math.random(), 3.6) * 2.8;
+    starPhase[i] = Math.random();
+  }
+})();
+var starPosBuf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, starPosBuf);
+gl.bufferData(gl.ARRAY_BUFFER, starPos, gl.STATIC_DRAW);
+var starSizeBuf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, starSizeBuf);
+gl.bufferData(gl.ARRAY_BUFFER, starSize, gl.STATIC_DRAW);
+var starPhaseBuf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, starPhaseBuf);
+gl.bufferData(gl.ARRAY_BUFFER, starPhase, gl.STATIC_DRAW);
+
+/* ── 灯笼位置 ── */
+var lampWorld = boatToWorld(LAMP_LOCAL);
+var glowBuf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, glowBuf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+  lampWorld[0], lampWorld[1], lampWorld[2], 18.0, 0, 0,
+  lampWorld[0], lampWorld[1], lampWorld[2], 96.0, 0, 0
+]), gl.STATIC_DRAW);
+
+/* ─────────────────────────  相机与状态  ───────────────────────── */
+var TARGET = [0.18, 0.42, 0];
+var cam = { yaw: 0, pitch: 0.129, dist: 7.3, distGoal: 7.3, dpr: 1 };
+var state = { paused: false, low: false, time: 0, start: performance.now() };
+
+function resize() {
+  var dpr = Math.min(window.devicePixelRatio || 1, state.low ? 1 : 1.75);
+  cam.dpr = dpr;
+  var w = Math.floor(canvas.clientWidth * dpr);
+  var h = Math.floor(canvas.clientHeight * dpr);
+  if (canvas.width !== w || canvas.height !== h) {
+    canvas.width = w; canvas.height = h;
+  }
+  gl.viewport(0, 0, w, h);
+}
+
+function camBasis() {
+  var cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+  var eye = [
+    TARGET[0] + cam.dist * cp * Math.sin(cam.yaw),
+    TARGET[1] + cam.dist * sp,
+    TARGET[2] + cam.dist * cp * Math.cos(cam.yaw)
+  ];
+  var fwd = V.norm(V.sub(TARGET, eye));
+  var right = V.norm(V.cross(fwd, [0, 1, 0]));
+  var up = V.cross(right, fwd);
+  return { eye: eye, fwd: fwd, right: right, up: up };
+}
+
+/* ─────────────────────────  交互  ───────────────────────── */
+var drag = { on: false, x: 0, y: 0 };
+canvas.addEventListener("pointerdown", function (e) {
+  drag.on = true; drag.x = e.clientX; drag.y = e.clientY;
+  document.body.classList.add("dragging");
+  if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener("pointermove", function (e) {
+  if (!drag.on) return;
+  cam.yaw -= (e.clientX - drag.x) / window.innerWidth * 1.6;
+  cam.pitch = Math.max(-0.05, Math.min(0.42, cam.pitch + (e.clientY - drag.y) / window.innerHeight * 0.7));
+  drag.x = e.clientX; drag.y = e.clientY;
+});
+var endDrag = function () { drag.on = false; document.body.classList.remove("dragging"); };
+canvas.addEventListener("pointerup", endDrag);
+canvas.addEventListener("pointercancel", endDrag);
+canvas.addEventListener("wheel", function (e) {
+  e.preventDefault();
+  cam.distGoal = Math.max(4.2, Math.min(13, cam.distGoal + e.deltaY * 0.006));
+}, { passive: false });
+
+document.getElementById("btn-reset").addEventListener("click", function () {
+  cam.yaw = 0; cam.pitch = 0.129; cam.distGoal = 7.3;
+});
+document.getElementById("btn-quality").addEventListener("click", function () {
+  state.low = !state.low;
+  this.textContent = "画质：" + (state.low ? "流畅" : "标准");
+  resize();
+});
+var pauseBtn = document.getElementById("btn-pause");
+pauseBtn.addEventListener("click", function () {
+  state.paused = !state.paused;
+  pauseBtn.textContent = state.paused ? "继续" : "暂停";
+  if (!state.paused) { state.start = performance.now() - state.time * 1000; loop(); }
+});
+
+/* ─────────────────────────  渲染  ───────────────────────── */
+var fpsEl = document.getElementById("fps");
+var fpsAcc = 0, fpsN = 0, fpsLast = 0;
+var skyCanvasEl = null;
+
+function draw(now) {
+  if (state.paused) return;
+  state.time = (now - state.start) / 1000;
+  var t = state.time;
+
+  var camData = camBasis();
+  var eye = camData.eye;
+  var aspect = canvas.width / Math.max(canvas.height, 1);
+  var proj = perspective(55 * Math.PI / 180, aspect, 0.1, 20000);
+  var view = lookAt(eye, TARGET, [0, 1, 0]);
+  var mvp = mulMat(proj, view);
+
+  cam.dist += (cam.distGoal - cam.dist) * 0.08;
+
+  gl.clearColor(0.008, 0.011, 0.020, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  /* 天空 */
+  gl.disable(gl.DEPTH_TEST);
+  gl.depthMask(false);
+  gl.useProgram(P_SKY);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, skyTex);
+  gl.uniform1i(U_SKY.uSky, 0);
+  gl.uniform3fv(U_SKY.uRight, camData.right);
+  gl.uniform3fv(U_SKY.uUp, camData.up);
+  gl.uniform3fv(U_SKY.uFwd, camData.fwd);
+  gl.uniform1f(U_SKY.uTanHalf, Math.tan(55 * Math.PI / 360));
+  gl.uniform1f(U_SKY.uAspect, aspect);
+  gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+  gl.enableVertexAttribArray(A_SKY.aPos);
+  gl.vertexAttribPointer(A_SKY.aPos, 2, gl.FLOAT, false, 0, 0);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+  /* 水面 + 船 */
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthMask(true);
+  gl.depthFunc(gl.LEQUAL);
+
+  gl.useProgram(P_WATER);
+  gl.uniformMatrix4fv(U_WATER.uMVP, false, mvp);
+  gl.uniform1f(U_WATER.uTime, t);
+  gl.uniform3fv(U_WATER.uEye, eye);
+  gl.uniform3fv(U_WATER.uLamp, lampWorld);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, skyTex);
+  gl.uniform1i(U_WATER.uSky, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, waterBuf);
+  gl.enableVertexAttribArray(A_WATER.aPos);
+  gl.vertexAttribPointer(A_WATER.aPos, 3, gl.FLOAT, false, 0, 0);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+  gl.disableVertexAttribArray(A_WATER.aPos);
+
+  gl.useProgram(P_MESH);
+  gl.uniformMatrix4fv(U_MESH.uMVP, false, mvp);
+  gl.uniform3fv(U_MESH.uEye, eye);
+  gl.uniform3fv(U_MESH.uLamp, lampWorld);
+  gl.bindBuffer(gl.ARRAY_BUFFER, boatPos);
+  gl.enableVertexAttribArray(A_MESH.aPos);
+  gl.vertexAttribPointer(A_MESH.aPos, 3, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, boatNrm);
+  gl.enableVertexAttribArray(A_MESH.aNrm);
+  gl.vertexAttribPointer(A_MESH.aNrm, 3, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, boatCol);
+  gl.enableVertexAttribArray(A_MESH.aCol);
+  gl.vertexAttribPointer(A_MESH.aCol, 3, gl.FLOAT, false, 0, 0);
+  gl.drawArrays(gl.TRIANGLES, 0, boatData.count);
+  gl.disableVertexAttribArray(A_MESH.aPos);
+  gl.disableVertexAttribArray(A_MESH.aNrm);
+  gl.disableVertexAttribArray(A_MESH.aCol);
+
+  /* 星星：加法混合，不写深度 */
+  gl.depthMask(false);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+  gl.useProgram(P_PT);
+  gl.uniformMatrix4fv(U_PT.uMVP, false, mvp);
+  gl.uniform1f(U_PT.uTime, t);
+  gl.uniform1f(U_PT.uPR, cam.dpr);
+  gl.bindBuffer(gl.ARRAY_BUFFER, starPosBuf);
+  gl.enableVertexAttribArray(A_PT.aPos);
+  gl.vertexAttribPointer(A_PT.aPos, 3, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, starSizeBuf);
+  gl.enableVertexAttribArray(A_PT.aSize);
+  gl.vertexAttribPointer(A_PT.aSize, 1, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, starPhaseBuf);
+  gl.enableVertexAttribArray(A_PT.aPhase);
+  gl.vertexAttribPointer(A_PT.aPhase, 1, gl.FLOAT, false, 0, 0);
+  gl.drawArrays(gl.POINTS, 0, STAR_COUNT);
+
+  /* 灯笼光晕 */
+  var flick = 0.86 + 0.14 * Math.sin(t * 7.3) * Math.sin(t * 3.1 + 1.7) + 0.06 * Math.sin(t * 13.7);
+  gl.useProgram(P_GLOW);
+  gl.uniformMatrix4fv(U_GLOW.uMVP, false, mvp);
+  gl.uniform1f(U_GLOW.uPR, cam.dpr);
+  gl.uniform1f(U_GLOW.uFlick, flick);
+  gl.bindBuffer(gl.ARRAY_BUFFER, glowBuf);
+  gl.enableVertexAttribArray(A_GLOW.aPos);
+  gl.vertexAttribPointer(A_GLOW.aPos, 3, gl.FLOAT, false, 24, 0);
+  gl.enableVertexAttribArray(A_GLOW.aGlow);
+  gl.vertexAttribPointer(A_GLOW.aGlow, 3, gl.FLOAT, false, 24, 12);
+  gl.drawArrays(gl.POINTS, 0, 2);
+
+  gl.disableVertexAttribArray(A_PT.aPos);
+  gl.disableVertexAttribArray(A_PT.aSize);
+  gl.disableVertexAttribArray(A_PT.aPhase);
+  gl.disableVertexAttribArray(A_GLOW.aPos);
+  gl.disableVertexAttribArray(A_GLOW.aGlow);
+  gl.disable(gl.BLEND);
+  gl.depthMask(true);
+
+  var el = now - fpsLast;
+  fpsLast = now;
+  fpsAcc += el; fpsN++;
+  if (fpsAcc > 500) {
+    fpsEl.textContent = Math.round(1000 / (fpsAcc / fpsN)) + " FPS";
+    fpsAcc = 0; fpsN = 0;
+  }
+}
+
+function loop(now) {
+  if (state.paused) return;
+  draw(now || performance.now());
+  requestAnimationFrame(loop);
+}
+
+/* ─────────────────────────  启动  ───────────────────────── */
+window.addEventListener("resize", resize);
+document.addEventListener("visibilitychange", function () {
+  if (document.hidden) {
+    state.paused = true;
+    pauseBtn.textContent = "继续";
+  }
+});
+
+canvas.addEventListener("webglcontextlost", function (e) {
+  e.preventDefault();
+  state.paused = true;
+  fail("WebGL 上下文已丢失（显卡驱动或内存压力）。请刷新页面恢复场景。");
+});
+canvas.addEventListener("webglcontextrestored", function () {
+  location.reload();
+});
+
+try {
+  resize();
+  state.start = performance.now();
+  requestAnimationFrame(function (t) {
+    loop(t);
+    setTimeout(function () {
+      var ld = document.getElementById("loading");
+      if (ld && ld.parentNode) ld.parentNode.removeChild(ld);
+    }, 420);
+  });
+} catch (e) {
+  fail("场景初始化失败：" + e.message);
+}
+})();
+</script>
+</body>
+</html>
