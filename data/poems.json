@@ -318,7 +318,7 @@
       "hardness": "H2",
       "visualBrief": "秋菊篱笆、南山远景与缓慢云影",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -346,7 +346,20 @@
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "east-fence-nanshan",
+          "title": "东篱菊影 · 悠见南山",
+          "path": "scenes/yinjiu-wu/east-fence-nanshan.html",
+          "model": "GLM-5.3-Flash",
+          "tools": [
+            "three.js r160",
+            "Canvas2D procedural textures",
+            "Vanilla JS"
+          ],
+          "status": "prototype"
+        }
+      ]
     },
     {
       "id": "chile-ge",
