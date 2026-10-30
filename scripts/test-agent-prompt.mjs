@@ -31,6 +31,7 @@ for (const poem of works) {
     assert(prompt.includes(token), poem.id + " prompt missing: " + token);
   }
   assert(!prompt.includes("/claim"), poem.id + " prompt should not impose issue claim workflow");
+  assert(!/WebGL|Shader|Canvas 必须|three\.js/i.test(prompt), poem.id + " prompt must not pin a tech stack");
   assert(Array.isArray(poem.scenes), poem.id + " scene list missing");
 }
 assert.throws(() => build({}), /诗句/, "missing excerpt must fail");
