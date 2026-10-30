@@ -87,8 +87,8 @@ function boot(THREE){
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(48, window.innerWidth/window.innerHeight, 0.1, 8000);
 
-  scene.add(new THREE.HemisphereLight(0x2b3a55, 0x05070c, 0.55));
-  const moon = new THREE.DirectionalLight(0xbfd0ee, 0.35);
+  scene.add(new THREE.HemisphereLight(0x33486b, 0x060a12, 1.10));
+  const moon = new THREE.DirectionalLight(0xbfd0ee, 1.55);
   moon.position.set(0.4, 0.8, -0.3);
   scene.add(moon);
 
@@ -236,6 +236,7 @@ function boot(THREE){
         #include <colorspace_fragment>
       }`
   });
+  waterMat.depthWrite = false;
   const water = new THREE.Mesh(new THREE.PlaneGeometry(5000, 5000, 1, 1), waterMat);
   water.rotation.x = -Math.PI/2;
   water.renderOrder = -30;
@@ -267,51 +268,266 @@ function boot(THREE){
   shoreLine(-900, -1, 26, 19);
 
   /* ---------- 渔舟 · 醉卧 ---------- */
+  renderer.localClippingEnabled = true;
   const boat = new THREE.Group();
-  const dark = new THREE.MeshStandardMaterial({ color:0x0a0f18, roughness:0.95 });
-  const hull = new THREE.Mesh(new THREE.CapsuleGeometry(0.62, 3.4, 6, 14), dark);
-  hull.rotation.z = Math.PI/2; hull.scale.set(1, 1, 0.40); hull.position.y = 0.18;
-  boat.add(hull);
-  const deck = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.08, 1.0), dark);
-  deck.position.y = 0.42; boat.add(deck);
-  const canopy = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.66, 1.9, 14, 1, true, 0, Math.PI), dark);
-  canopy.rotation.z = Math.PI/2; canopy.rotation.y = Math.PI/2; canopy.position.set(0.35, 0.46, 0);
-  canopy.material = dark.clone(); canopy.material.side = THREE.DoubleSide;
-  boat.add(canopy);
-  const sleeper = new THREE.Mesh(new THREE.CapsuleGeometry(0.19, 0.9, 4, 8), dark);
-  sleeper.rotation.z = Math.PI/2; sleeper.position.set(-0.9, 0.60, 0.1);
-  boat.add(sleeper);
-  const oar = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.6, 6), dark);
-  oar.position.set(1.6, 0.55, 0.2); oar.rotation.z = 1.15; oar.rotation.x = 0.2;
-  boat.add(oar);
-  boat.position.set(-7.5, 0.0, -23.0);
-  boat.rotation.y = 0.55;
-  boat.scale.setScalar(1.0);
+  const BL = 4.6, BB = 1.52, BD = 0.54;
+  const U_STERN = 0.038, U_BOW = 0.966;
+  const sheerAt = u => 0.255
+    + 0.310*Math.pow(Math.max(0, 2*u-1), 2.6)
+    + 0.120*Math.pow(Math.max(0, 1-2*u), 3.4);
+  const halfBeam = u => {
+    const sn = Math.pow(Math.max(Math.sin(Math.PI*u), 0.0001), u < 0.5 ? 0.70 : 0.86);
+    return BB*0.5*sn;
+  };
+  const keelAt = u => -BD*Math.pow(Math.max(Math.sin(Math.PI*u), 0.0001), 0.32);
+  function hullPt(u, a, inset, lift){
+    const ang = a*Math.PI*0.5;
+    const sy = sheerAt(u), ky = keelAt(u);
+    const y = ky + (sy - ky - (inset||0)*0.62)*Math.pow(1-Math.cos(ang), 0.86) + (lift||0);
+    const z = Math.max(halfBeam(u) - (inset||0), 0)*Math.pow(Math.sin(ang), 0.58);
+    return [(u-0.5)*BL, y, z];
+  }
+  const NA = 9;
+  function buildSkin(inset, lift){
+    const NU = 46, pos = [], uvs = [], idx = [];
+    let vbase = 0;
+    for (const sgn of [1, -1]){
+      for (let i=0;i<=NU;i++){
+        const u = U_STERN + (U_BOW-U_STERN)*(i/NU);
+        for (let j=0;j<=NA;j++){
+          const p = hullPt(u, j/NA, inset, lift);
+          pos.push(p[0], p[1], p[2]*sgn);
+          uvs.push(u*1.34, (j/NA)*1.05);
+        }
+      }
+      for (let i=0;i<NU;i++){
+        for (let j=0;j<NA;j++){
+          const a0 = vbase + i*(NA+1) + j, b0 = vbase + (i+1)*(NA+1) + j;
+          if (sgn > 0) idx.push(a0, b0, a0+1, b0, b0+1, a0+1);
+          else         idx.push(a0, a0+1, b0, b0, a0+1, b0+1);
+        }
+      }
+      vbase += (NU+1)*(NA+1);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function buildRim(){
+    const NU = 46, pos = [], idx = [];
+    for (const sgn of [1, -1]){
+      const base = pos.length/3;
+      for (let i=0;i<=NU;i++){
+        const u = U_STERN + (U_BOW-U_STERN)*(i/NU);
+        const o = hullPt(u, 1, 0, 0), n = hullPt(u, 1, 0.080, -0.032);
+        pos.push(o[0], o[1], o[2]*sgn, n[0], n[1], n[2]*sgn);
+      }
+      for (let i=0;i<NU;i++){
+        const a0 = base + i*2, b0 = base + (i+1)*2;
+        idx.push(a0, b0, a0+1, b0, b0+1, a0+1);
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function buildCap(uEnd){
+    const pts = [];
+    for (let j=0;j<=NA;j++) pts.push(hullPt(uEnd, j/NA, 0, 0));
+    for (let j=NA;j>=0;j--){ const p = hullPt(uEnd, j/NA, 0, 0); pts.push([p[0], p[1], -p[2]]); }
+    const cx = pts.reduce((a,p)=>a+p[0],0)/pts.length;
+    const cy = pts.reduce((a,p)=>a+p[1],0)/pts.length;
+    const pos = [cx, cy, 0], idx = [];
+    pts.forEach(p=>pos.push(p[0], p[1], p[2]));
+    for (let i=0;i<pts.length;i++) idx.push(0, 1+i, 1+((i+1)%pts.length));
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+
+  const hullMat = new THREE.MeshStandardMaterial({ color:0x36424f, roughness:0.56, metalness:0.12, side:THREE.DoubleSide });
+  const railMat = new THREE.MeshStandardMaterial({ color:0x55647a, roughness:0.48, metalness:0.10 });
+  const deckMat = new THREE.MeshStandardMaterial({ color:0x1d2733, roughness:0.86 });
+  const matMat  = new THREE.MeshStandardMaterial({ color:0x3c4757, roughness:0.86, side:THREE.DoubleSide });
+  const clothMat= new THREE.MeshStandardMaterial({ color:0x222c38, roughness:0.98 });
+
+  boat.add(new THREE.Mesh(buildSkin(0, 0), hullMat));
+  boat.add(new THREE.Mesh(buildSkin(0.072, 0.030), deckMat));
+  boat.add(new THREE.Mesh(buildRim(), railMat));
+  boat.add(new THREE.Mesh(buildCap(U_STERN), deckMat));
+  boat.add(new THREE.Mesh(buildCap(U_BOW), deckMat));
+
+  /* 舱底 */
+  {
+    const NU = 26, pos = [], idx = [];
+    const DECK_Y = 0.055;
+    for (let i=0;i<=NU;i++){
+      const u = 0.135 + (0.945-0.135)*(i/NU);
+      const hb = halfBeam(u)*0.80 + 0.012;
+      pos.push((u-0.5)*BL, DECK_Y - 0.016, -hb,
+               (u-0.5)*BL, DECK_Y, 0,
+               (u-0.5)*BL, DECK_Y - 0.016, hb);
+    }
+    for (let i=0;i<NU;i++){
+      const a0 = i*3, b0 = (i+1)*3;
+      idx.push(a0, b0, a0+1, b0, b0+1, a0+1);
+      idx.push(a0+1, b0+1, a0+2, b0+1, b0+2, a0+2);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    boat.add(new THREE.Mesh(g, deckMat));
+  }
+  /* 坐板 */
+  for (const u of [0.34, 0.86]){
+    const w = halfBeam(u)*1.78;
+    const th = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.045, w), railMat);
+    th.position.set((u-0.5)*BL, sheerAt(u)-0.125, 0);
+    boat.add(th);
+  }
+  /* 竹篷：半圆拱顶 + 两端封板，一次建成 */
+  function vaultGeometry(r, len, segs){
+    const pos = [], idx = [];
+    const half = len/2;
+    for (let i=0;i<=segs;i++){
+      const a = Math.PI*i/segs;
+      const y = Math.sin(a)*r, z = Math.cos(a)*r;
+      pos.push(-half, y, z, half, y, z);
+    }
+    for (let i=0;i<segs;i++){
+      const a0 = i*2, b0 = (i+1)*2;
+      idx.push(a0, b0, a0+1, b0, b0+1, a0+1);
+    }
+    for (const sx of [-half, half]){
+      const c = pos.length/3;
+      pos.push(sx, 0, 0);
+      for (let i=0;i<=segs;i++){
+        const a = Math.PI*i/segs;
+        pos.push(sx, Math.sin(a)*r, Math.cos(a)*r);
+      }
+      for (let i=0;i<segs;i++){
+        if (sx < 0) idx.push(c, c+1+i, c+2+i);
+        else        idx.push(c, c+2+i, c+1+i);
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  {
+    const aw = new THREE.Mesh(vaultGeometry(0.46, 1.32, 16), matMat);
+    aw.position.set(0.92, 0.215, 0);
+    aw.scale.set(1, 0.66, 1);
+    boat.add(aw);
+  }
+  /* 醉卧的人：一团盖着旧袍的身体，斗笠扣在脸上 */
+  {
+    const body = new THREE.Mesh(new THREE.SphereGeometry(0.44, 14, 10), clothMat);
+    body.scale.set(1.85, 0.46, 0.56);
+    body.position.set(-0.30, 0.235, 0.03);
+    boat.add(body);
+
+    const chest = new THREE.Mesh(new THREE.SphereGeometry(0.30, 12, 9), clothMat);
+    chest.scale.set(1.05, 0.72, 0.85);
+    chest.position.set(-1.02, 0.30, 0.0);
+    boat.add(chest);
+
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.098, 10, 8), clothMat);
+    head.position.set(-1.30, 0.345, 0.0);
+    boat.add(head);
+
+    /* 斗笠扣在脸上 */
+    const hatProf = [
+      new THREE.Vector2(0.250, -0.018),
+      new THREE.Vector2(0.228, 0.000),
+      new THREE.Vector2(0.184, 0.026),
+      new THREE.Vector2(0.130, 0.052),
+      new THREE.Vector2(0.078, 0.076),
+      new THREE.Vector2(0.033, 0.094),
+      new THREE.Vector2(0.000, 0.101)
+    ];
+    const hat = new THREE.Mesh(new THREE.LatheGeometry(hatProf, 22),
+      new THREE.MeshStandardMaterial({ color:0x505a66, roughness:0.92 }));
+    hat.position.set(-1.30, 0.360, 0);
+    hat.rotation.z = 0.16;
+    boat.add(hat);
+
+    /* 垂在船外的手 */
+    const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.034, 0.40, 6), clothMat);
+    arm.position.set(-0.62, 0.20, 0.30);
+    arm.rotation.set(0.10, 0.0, 1.52);
+    boat.add(arm);
+  }
+
+  /* 桨：搁在舱里，斜靠船帮 */
+  {
+    const oar = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.020, 2.5, 6), railMat);
+    oar.position.set(0.05, 0.30, -0.42);
+    oar.rotation.set(Math.PI/2 - 0.12, 0.0, 0.10);
+    boat.add(oar);
+    const blade = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.020, 0.15), railMat);
+    blade.position.set(1.28, 0.335, -0.40);
+    blade.rotation.set(0, 0.02, 0.10);
+    boat.add(blade);
+  }
+
+  /* 船体只在水面以上绘制，水面不写深度，倒影再按真实深度遮挡 */
+  const aboveWater = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0.0);
+  boat.traverse(o=>{
+    if (o.isMesh){
+      o.material = o.material.clone();
+      o.material.clippingPlanes = [aboveWater];
+    }
+  });
+
+  boat.position.set(-4.55, 0.0, -10.4);
+  boat.rotation.y = 0.68;
   scene.add(boat);
 
-  /* 船影：翻转一份，压低不透明度，直接叠在水面上 */
+  /* 倒影 */
   const boatRefl = boat.clone(true);
-  boatRefl.scale.y *= -1;
-  boatRefl.position.y = -0.02;
-  boatRefl.renderOrder = 6;
+  const belowWater = new THREE.Plane(new THREE.Vector3(0, -1, 0), -0.002);
   boatRefl.traverse(o=>{
     if (o.isMesh || o.isLine){
       o.material = o.material.clone();
       o.material.transparent = true;
-      o.material.opacity = 0.15;
+      o.material.opacity = (o.material.opacity != null ? o.material.opacity : 1) * 0.26;
       o.material.depthWrite = false;
-      o.material.depthTest = false;
+      o.material.depthTest = true;
+      o.material.side = THREE.DoubleSide;
+      o.material.clippingPlanes = [belowWater];
     }
   });
-  boatRefl.children = boatRefl.children.filter(c => !(c.isPointLight));
+  boatRefl.scale.set(1, -1, 1);
+  boatRefl.position.set(-4.55, 0.0, -10.4);
+  boatRefl.renderOrder = 6;
   scene.add(boatRefl);
 
-  /* 渔火：极淡 */
-  const flame = new THREE.PointLight(0xffb060, 0.55, 9, 2);
-  flame.position.set(0.4, 0.75, 0);
+  /* 渔火：船头一盏灯笼 */
+  {
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.020, 0.026, 0.86, 6), railMat);
+    pole.position.set(1.72, sheerAt(0.90)-0.10, 0.0);
+    pole.rotation.z = -0.16;
+    boat.add(pole);
+    const hook = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.020, 0.020), railMat);
+    hook.position.set(1.66, sheerAt(0.90)+0.22, 0.0);
+    boat.add(hook);
+  }
+  const flame = new THREE.PointLight(0xffb060, 0.30, 4.5, 2);
+  flame.position.set(1.62, sheerAt(0.90)+0.12, 0.18);
   boat.add(flame);
-  const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 6), new THREE.MeshBasicMaterial({ color:0xffc98a }));
-  lamp.position.set(0.4, 0.75, 0);
+  const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 6), new THREE.MeshBasicMaterial({ color:0xffc98a }));
+  lamp.position.set(1.62, sheerAt(0.90)+0.12, 0.18);
   boat.add(lamp);
 
   /* ---------- 水面上的银河碎光 ---------- */
@@ -367,9 +583,9 @@ function boot(THREE){
     cam.my = lerp(cam.my, cam.tmy, 0.04);
     const dx = Math.sin(t*0.043)*0.7;
     const narrow = window.innerWidth/window.innerHeight < 0.85;
-    camera.position.set(dx + cam.mx*1.1, 1.55 + Math.sin(t*0.061+0.8)*0.05 - cam.my*0.22, 0.6 + Math.sin(t*0.027)*0.8);
+    camera.position.set((narrow ? -2.3 : 0) + dx + cam.mx*1.1, (narrow ? 1.35 : 1.55) + Math.sin(t*0.061+0.8)*0.05 - cam.my*0.22, 0.6 + Math.sin(t*0.027)*0.8);
     /* 竖屏：视线左移并抬高，船与银河同框 */
-    camera.lookAt(dx*0.8 + cam.mx*2.6 + (narrow ? -12 : 0), (narrow ? 3.3 : 2.55) - cam.my*0.8, -70);
+    camera.lookAt(dx*0.8 + cam.mx*2.6 + (narrow ? -15 : 0), (narrow ? 2.95 : 2.55) - cam.my*0.8, narrow ? -62 : -70);
   }
 
   let qScale = 1;
@@ -408,9 +624,11 @@ function boot(THREE){
     waterU.uTime.value = t;
     sparkMat.uniforms.uTime.value = t;
 
-    boat.position.y = Math.sin(t*0.42)*0.035;
-    boat.rotation.z = Math.sin(t*0.37+1.0)*0.012;
-    flame.intensity = 0.45 + 0.12*Math.sin(t*3.1) + 0.06*Math.sin(t*7.7);
+    boat.position.y = Math.sin(t*0.42)*0.030;
+    boat.rotation.z = Math.sin(t*0.37+1.0)*0.010;
+    boatRefl.position.y = -boat.position.y;
+    boatRefl.rotation.z = boat.rotation.z;
+    flame.intensity = 0.26 + 0.07*Math.sin(t*3.1) + 0.04*Math.sin(t*7.7);
 
     renderer.render(scene, camera);
 
