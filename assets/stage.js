@@ -1,183 +1,162 @@
 "use strict";
-
-const $ = (s) => document.querySelector(s);
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => (
-  { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
-));
-
-const state = { order: [], cursor: -1, current: null, switching: false };
-const stageRoot = $("#stage");
+const $ = (selector) => document.querySelector(selector);
+const stage = $("#stage");
 const frame = $("#stage-frame");
-const pad = (n) => String(n).padStart(2, "0");
+const toggle = $("#stage-toggle");
+/** @type {import('./types').Exhibit[]} */
+let order = [];
+let cursor = -1;
+let loadTimer = 0;
 
-/* ---------- 随机顺序：洗牌成一副牌，抽完再洗 ---------- */
-function shuffled(items, avoidFirst) {
-  const list = items.slice();
-  for (let i = list.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [list[i], list[j]] = [list[j], list[i]];
+function shuffled(items) {
+  const result = items.slice();
+  for (let index = result.length - 1; index > 0; index--) {
+    const pick = Math.floor(Math.random() * (index + 1));
+    [result[index], result[pick]] = [result[pick], result[index]];
   }
-  if (avoidFirst && list.length > 1 && list[0] === avoidFirst) {
-    [list[0], list[1]] = [list[1], list[0]];
-  }
-  return list;
+  return result;
 }
 
-/* ---------- 面板 ---------- */
-function paint(item) {
-  const p = item.poem;
-  $("#stage-scene").textContent = item.scene.title;
-  $("#stage-title").textContent = p.title;
-  $("#stage-meta").textContent = [p.dynasty, p.author, p.form].filter(Boolean).join(" · ");
-  $("#stage-verse").textContent = p.excerpt;
-  $("#stage-tags").innerHTML = (p.categories || []).slice(0, 3)
-    .map((c) => '<span class="stage-tag">' + esc(c) + "</span>").join("");
-  $("#stage-enter").href = "gallery.html?poem=" + encodeURIComponent(p.id)
-    + "&scene=" + encodeURIComponent(item.scene.id);
-  $("#stage-copy").dataset.copy = p.id;
-  $("#stage-copy").disabled = false;
-  $("#stage-count").textContent = pad(state.cursor + 1) + " / " + pad(state.order.length);
-  frame.title = "《" + p.title + "》· " + item.scene.title + "（三维场景）";
-  document.title = "《" + p.title + "》 · 诗境";
+function setQuiet(quiet) {
+  stage.classList.toggle("is-quiet", quiet);
+  toggle.setAttribute("aria-pressed", String(quiet));
+  toggle.setAttribute("aria-label", quiet ? "显示界面" : "隐藏界面");
+  toggle.title = quiet ? "显示界面（H 或 Esc）" : "隐藏界面（H）";
+  toggle.querySelector(".stage-toggle-label").textContent = quiet
+    ? "返境"
+    : "静观";
+  if (quiet && $("#stage-panel").contains(document.activeElement))
+    toggle.focus();
 }
 
-function swapSource(item) {
-  const target = new URL(item.scene.path, location.href).href;
-  state.switching = true;
-  window.clearTimeout(swapSource.timer);
-  if (frame.src === target) {
-    // 深链直接命中 HTML 里预置的那个场景，不必再重载一次。
-    stageRoot.classList.remove("is-switching");
-    state.switching = false;
-    return;
-  }
-  stageRoot.classList.add("is-switching");
-  swapSource.timer = window.setTimeout(() => {
-    stageRoot.classList.remove("is-switching");
-    state.switching = false;
-  }, 9000);
-  frame.src = item.scene.path;
+function setLoaded() {
+  clearTimeout(loadTimer);
+  $("#stage-loading").hidden = true;
+  frame.removeAttribute("aria-busy");
 }
 
-frame.addEventListener("load", () => {
-  window.clearTimeout(swapSource.timer);
-  stageRoot.classList.remove("is-switching");
-  state.switching = false;
-});
-
-/* ---------- 切换 ---------- */
-function show(item, updateUrl) {
-  if (!item) return;
-  state.current = item;
-  paint(item);
-  swapSource(item);
-  if (updateUrl !== false) {
+function show(index, updateUrl = true) {
+  if (!order.length) return;
+  cursor = (index + order.length) % order.length;
+  const { poem, scene } = order[cursor];
+  $("#stage-title").textContent = poem.title.split("·")[0];
+  $("#stage-meta").textContent = poem.dynasty + " · " + poem.author;
+  $("#stage-scene").textContent = scene.title;
+  $("#stage-verse").textContent = poem.excerpt;
+  $("#stage-count").textContent =
+    String(cursor + 1).padStart(2, "0") +
+    " / " +
+    String(order.length).padStart(2, "0");
+  $("#stage-enter").href =
+    "gallery.html?poem=" +
+    encodeURIComponent(poem.id) +
+    "&scene=" +
+    encodeURIComponent(scene.id);
+  $("#stage-copy").dataset.copy = poem.id;
+  frame.title = "《" + poem.title + "》· " + scene.title;
+  document.title = poem.title + " · 诗境";
+  const target = new URL(scene.path, location.href).href;
+  if (frame.src !== target) {
+    clearTimeout(loadTimer);
+    frame.setAttribute("aria-busy", "true");
+    $("#stage-loading").hidden = false;
+    loadTimer = window.setTimeout(() => {
+      setLoaded();
+      PoeticRealmsClipboard.toast(
+        "画卷仍在准备，可点击「读诗 · 入境」独立查看。",
+        false,
+      );
+    }, 15000);
+    frame.src = scene.path;
+  } else setLoaded();
+  if (updateUrl) {
     const url = new URL(location.href);
-    url.searchParams.set("poem", item.poem.id);
-    url.searchParams.set("scene", item.scene.id);
+    url.searchParams.set("poem", poem.id);
+    url.searchParams.set("scene", scene.id);
     history.replaceState(null, "", url);
   }
 }
 
-function step(delta) {
-  if (!state.order.length) return;
-  let next = state.cursor + delta;
-  if (next >= state.order.length) {
-    state.order = shuffled(state.order, state.current);
-    next = 0;
-  } else if (next < 0) {
-    next = state.order.length - 1;
+function onKey(event) {
+  const target = event.target;
+  if (target?.closest?.("input, textarea, select, [contenteditable=true]"))
+    return;
+  if (event.key.toLowerCase() === "h") {
+    event.preventDefault();
+    setQuiet(!stage.classList.contains("is-quiet"));
   }
-  state.cursor = next;
-  show(state.order[next], true);
+  if (event.key === "Escape") setQuiet(false);
+  if (event.altKey || event.metaKey || event.ctrlKey) return;
+  if (event.key === "ArrowRight") {
+    event.preventDefault();
+    show(cursor + 1);
+  }
+  if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    show(cursor - 1);
+  }
 }
 
-/* ---------- 一键隐藏界面 ---------- */
-const toggle = $("#stage-toggle");
-
-function setQuiet(quiet) {
-  stageRoot.classList.toggle("is-quiet", quiet);
-  toggle.setAttribute("aria-pressed", String(quiet));
-  toggle.setAttribute("aria-label", quiet ? "显示界面" : "隐藏界面");
-  toggle.title = quiet ? "显示界面（H）" : "隐藏界面（H）";
-  toggle.querySelector(".stage-toggle-label").textContent = quiet ? "显示界面" : "隐藏界面";
-}
-
-const isQuiet = () => stageRoot.classList.contains("is-quiet");
-
-/* ---------- 启动 ---------- */
-async function start() {
-  document.body.addEventListener("click", PoeticRealmsClipboard.handleCopyClick);
-  $("#stage-next").addEventListener("click", () => step(1));
-  $("#stage-prev").addEventListener("click", () => step(-1));
-  toggle.addEventListener("click", () => setQuiet(!isQuiet()));
-  document.addEventListener("keydown", (e) => {
-    const tag = document.activeElement.tagName;
-    if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
-    if (e.key === "h" || e.key === "H") {
-      e.preventDefault();
-      setQuiet(!isQuiet());
-      return;
-    }
-    if (e.key === "Escape" && isQuiet()) {
-      e.preventDefault();
-      setQuiet(false);
-      return;
-    }
-    // 焦点在按钮/链接上时，空格留给它们自己触发，避免「点完下一个又跳一格」
-    if (e.key === " " && /^(BUTTON|A)$/.test(tag)) return;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " " || e.key === "PageDown") {
-      e.preventDefault();
-      step(1);
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "PageUp") {
-      e.preventDefault();
-      step(-1);
-    }
-  });
-
-  let poems;
+frame.addEventListener("load", () => {
+  setLoaded();
+  // 画面获得焦点后，漫游快捷键仍可用；空格保留给独立场景的暂停交互。
   try {
-    poems = await PoeticRealmsData.load();
-  } catch (err) {
-    // 目录拉不到时保留 HTML 里的内置原型，只把失败讲清楚，不假装成别的场景。
-    PoeticRealmsClipboard.toast("馆藏目录加载失败：" + err.message, false);
-    $("#stage-copy").disabled = true;
-    $("#stage-count").textContent = "内置原型";
-    console.error(err);
-    return;
+    const document = frame.contentDocument;
+    const style = document.createElement("style");
+    // 放映厅已有诗文与漫游控件，避免独立作品的字幕和工具栏重叠。
+    style.textContent = ".poem,#bar,#fps,.hint{display:none!important}";
+    document.head.append(style);
+    document.addEventListener("keydown", onKey);
+  } catch {
+    /* 单独打开作品仍可操作。 */
   }
+});
+document.addEventListener("keydown", onKey);
+document.body.addEventListener("click", PoeticRealmsClipboard.handleCopyClick);
+toggle.addEventListener("click", () =>
+  setQuiet(!stage.classList.contains("is-quiet")),
+);
+$("#stage-next").addEventListener("click", () => show(cursor + 1));
+$("#stage-prev").addEventListener("click", () => show(cursor - 1));
 
-  const items = [];
-  for (const p of poems) {
-    for (const s of (Array.isArray(p.scenes) ? p.scenes : [])) items.push({ poem: p, scene: s });
-  }
-  if (!items.length) {
-    stageRoot.classList.add("is-empty");
-    $("#stage-panel").hidden = true;
-    $("#stage-empty").hidden = false;
-    return;
-  }
-
-  state.order = shuffled(items);
-
-  // 深链：?poem=id&scene=id 锁定某个已建场景；诗存在但没有场景则退回馆藏。
-  const params = new URL(location.href).searchParams;
-  const wantPoem = params.get("poem");
-  const wantScene = params.get("scene");
-  if (wantPoem) {
-    const picked = items.find((x) => x.poem.id === wantPoem && (!wantScene || x.scene.id === wantScene))
-      || items.find((x) => x.poem.id === wantPoem);
-    if (picked) {
-      state.cursor = state.order.indexOf(picked);
-      show(picked, false);
+async function start() {
+  try {
+    const poems = await PoeticRealmsData.load();
+    order = shuffled(
+      poems.flatMap((poem) => poem.scenes.map((scene) => ({ poem, scene }))),
+    );
+    if (!order.length) {
+      frame.src = "about:blank";
+      frame.hidden = true;
+      $("#stage-panel").hidden = true;
+      $("#stage-empty").hidden = false;
       return;
     }
-    location.replace("catalog.html?poem=" + encodeURIComponent(wantPoem));
-    return;
+    const params = new URLSearchParams(location.search);
+    const poemId = params.get("poem");
+    const sceneId = params.get("scene");
+    let index = order.findIndex(
+      (item) =>
+        item.poem.id === poemId && (!sceneId || item.scene.id === sceneId),
+    );
+    if (index < 0 && poemId)
+      index = order.findIndex((item) => item.poem.id === poemId);
+    if (poemId && index < 0) {
+      location.replace("catalog.html?poem=" + encodeURIComponent(poemId));
+      return;
+    }
+    show(index < 0 ? 0 : index);
+  } catch (error) {
+    $("#stage-copy").disabled = true;
+    $("#stage-next").disabled = true;
+    $("#stage-prev").disabled = true;
+    $("#stage-count").textContent = "江雪 · 内置诗境";
+    $("#stage-scene").textContent = "寒江独钓";
+    PoeticRealmsClipboard.toast(
+      "馆藏暂未送达，先为你留一江雪景。刷新页面可重试。",
+      false,
+    );
+    console.error("馆藏加载失败", error);
   }
-
-  state.cursor = 0;
-  show(state.order[0], false);
 }
-
 start();

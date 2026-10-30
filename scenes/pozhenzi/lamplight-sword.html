@@ -1,0 +1,3251 @@
+<!doctype html>
+<!-- 此成品由 src/ 源码自动拼装；维护职责文件后运行 node scripts/pack-pozhenzi.mjs，勿直接编辑成品。 -->
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#151c26" />
+    <meta
+      name="description"
+      content="醉里挑灯看剑，梦回吹角连营。辛弃疾《破阵子》的独立三维夜营诗境。"
+    />
+    <title>破阵子 · 灯下看剑，梦回连营</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%239d4036'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-size='22' fill='%23f5f3ed'%3E境%3C/text%3E%3C/svg%3E"
+    />
+    <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #080b12;
+}
+body {
+  font-family:
+    "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC",
+    "Times New Roman", serif;
+  -webkit-font-smoothing: antialiased;
+  color: #e6dfcf;
+  font-kerning: normal;
+}
+#stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+#stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.grade {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(30, 48, 78, 0.16) 0%,
+    rgba(0, 0, 0, 0) 42%,
+    rgba(46, 26, 14, 0.12) 100%
+  );
+  mix-blend-mode: soft-light;
+}
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      126% 92% at 44% 46%,
+      rgba(0, 0, 0, 0) 36%,
+      rgba(3, 5, 9, 0.52) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(4, 7, 12, 0.42) 0%,
+      rgba(0, 0, 0, 0) 22%,
+      rgba(0, 0, 0, 0) 72%,
+      rgba(4, 6, 10, 0.46) 100%
+    );
+}
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.055;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.poem {
+  position: fixed;
+  top: 6.8vh;
+  right: clamp(18px, 3.6vw, 60px);
+  z-index: 4;
+  pointer-events: none;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  white-space: nowrap;
+  height: 80vh;
+  font-size: clamp(17px, 1.52vw, 25px);
+  letter-spacing: 0.26em;
+  line-height: 1.72;
+  color: rgba(238, 231, 213, 0.93);
+  text-shadow:
+    0 0 26px rgba(3, 6, 12, 0.95),
+    0 0 7px rgba(3, 6, 12, 0.8),
+    0 0 2px rgba(0, 0, 0, 0.9);
+  opacity: 1;
+  animation: rise 450ms ease-out both;
+}
+.poem .title {
+  display: block;
+  font-size: 1em;
+  letter-spacing: 0.3em;
+  color: rgba(246, 224, 182, 0.96);
+  margin-block-end: 0.6em;
+}
+.poem .sub {
+  display: block;
+  font-size: 0.5em;
+  letter-spacing: 0.28em;
+  color: rgba(216, 205, 182, 0.72);
+  margin-block-end: 1.5em;
+}
+.poem .verse {
+  display: block;
+  font-size: 1.04em;
+  letter-spacing: 0.24em;
+  margin-block-end: 0.34em;
+}
+.poem .src {
+  display: block;
+  font-size: 0.46em;
+  letter-spacing: 0.3em;
+  color: rgba(206, 199, 180, 0.64);
+  margin-block-end: 1.6em;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hint {
+  position: fixed;
+  left: 50%;
+  bottom: 4.4vh;
+  transform: translateX(-50%);
+  z-index: 4;
+  pointer-events: none;
+  font-size: 11px;
+  letter-spacing: 0.44em;
+  color: rgba(224, 216, 198, 0.4);
+  text-indent: 0.44em;
+  white-space: nowrap;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  animation:
+    hintIn 2.4s 3.4s cubic-bezier(0.2, 0.7, 0.2, 1) forwards,
+    hintOut 2.6s 13s forwards;
+}
+@keyframes hintIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes hintOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+#fps {
+  position: fixed;
+  right: clamp(14px, 2.6vw, 30px);
+  bottom: clamp(14px, 2.4vh, 24px);
+  z-index: 6;
+  font:
+    10px/1.9 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    sans-serif;
+  letter-spacing: 0.14em;
+  color: rgba(216, 208, 190, 0.42);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+}
+#bar {
+  position: fixed;
+  left: clamp(14px, 2.4vw, 28px);
+  bottom: clamp(14px, 2.4vh, 24px);
+  z-index: 6;
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  max-width: calc(100vw - 32px);
+}
+#bar .btn {
+  font:
+    11px/1 -apple-system,
+    "PingFang SC",
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.05em;
+  padding: 8px 11px;
+  color: rgba(232, 224, 206, 0.86);
+  text-decoration: none;
+  cursor: pointer;
+  background: rgba(14, 18, 26, 0.46);
+  border: 1px solid rgba(196, 178, 140, 0.24);
+  border-radius: 2px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition:
+    background 0.18s,
+    border-color 0.18s;
+}
+#bar .btn:hover {
+  background: rgba(26, 32, 44, 0.74);
+  border-color: rgba(214, 190, 142, 0.5);
+}
+#bar .btn:focus-visible {
+  outline: 2px solid rgba(226, 198, 142, 0.8);
+  outline-offset: 2px;
+}
+.embed #bar .back,
+.embed #fps {
+  display: none;
+}
+.embed #bar {
+  bottom: 16px;
+  left: 16px;
+}
+#bar .btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+#bar .btn[aria-pressed="true"] {
+  background: rgba(226, 198, 142, 0.16);
+  border-color: rgba(226, 198, 142, 0.6);
+}
+#retry {
+  padding: 12px 20px;
+  border: 1px solid #cdbb90;
+  background: transparent;
+  color: #e6dfcf;
+  cursor: pointer;
+}
+[hidden] {
+  display: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .poem,
+  .hint {
+    animation: none;
+    opacity: 1;
+  }
+  #veil {
+    transition: none;
+  }
+  .t {
+    animation: none !important;
+  }
+}
+
+#veil {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(
+    120% 90% at 50% 58%,
+    #10141c 0%,
+    #080b12 58%,
+    #04060a 100%
+  );
+  transition: opacity 350ms ease;
+}
+#veil.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+#veil .inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+#veil .t {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-size: 12px;
+  letter-spacing: 0.62em;
+  color: rgba(220, 206, 178, 0.62);
+  animation: breathe 3s ease-in-out infinite;
+}
+#veil .line {
+  width: 1px;
+  height: 46px;
+  background: linear-gradient(
+    to bottom,
+    rgba(210, 190, 150, 0.03),
+    rgba(210, 190, 150, 0.42),
+    rgba(210, 190, 150, 0.03)
+  );
+}
+#veil .err {
+  display: none;
+  max-width: 74vw;
+  text-align: center;
+  font-size: 13px;
+  line-height: 2.1;
+  letter-spacing: 0.12em;
+  color: rgba(226, 214, 188, 0.86);
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.38;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (max-aspect-ratio: 4/5) {
+  .poem {
+    top: 5.4vh;
+    right: 16px;
+    height: 72vh;
+    font-size: 16px;
+    letter-spacing: 0.2em;
+  }
+  .poem .sub {
+    display: none;
+  }
+  .poem .title {
+    font-size: 1.08em;
+  }
+  .poem .verse {
+    font-size: 1.16em;
+  }
+  #fps {
+    display: none;
+  }
+  .hint {
+    font-size: 9.5px;
+    letter-spacing: 0.3em;
+  }
+  #bar {
+    left: 16px;
+    right: 16px;
+    gap: 8px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  #bar .btn {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+}
+@media (max-height: 520px) {
+  .poem {
+    font-size: 14px;
+    height: 84vh;
+  }
+  .poem .sub {
+    display: none;
+  }
+}
+</style>
+  </head>
+  <body>
+    <main id="stage" aria-label="可轻移视角的三维夜营"></main>
+    <div class="grade" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div
+      class="poem"
+      aria-label="破阵子，宋，辛弃疾。醉里挑灯看剑，梦回吹角连营。"
+    >
+      <span class="title">破阵子</span
+      ><span class="sub">为陈同甫赋壮词以寄之</span>
+      <span class="verse">醉里挑灯看剑</span
+      ><span class="verse">梦回吹角连营</span
+      ><span class="src">宋 · 辛弃疾</span>
+    </div>
+    <div class="hint">轻移视点 · 灯下看剑，梦回连营</div>
+    <div id="fps" aria-hidden="true">— FPS</div>
+    <nav id="bar" aria-label="场景控制">
+      <a class="btn back" href="../../catalog.html?poem=pozhenzi" target="_top"
+        >← 返回诗境</a
+      >
+      <button class="btn" id="btnView" type="button" aria-pressed="false">
+        梦回连营 ↗
+      </button>
+      <button class="btn" id="btnPause" type="button" aria-pressed="false">
+        暂停
+      </button>
+      <button class="btn" id="btnQuality" type="button">画质：标准</button>
+      <button class="btn" id="btnReset" type="button">归位</button>
+    </nav>
+    <div id="veil" role="status">
+      <div class="inner">
+        <div class="line"></div>
+        <div class="t">夜半挑灯</div>
+        <div class="err" id="err"></div>
+        <button id="retry" type="button" hidden>重新入境</button>
+      </div>
+    </div>
+    <script>
+(function () {
+"use strict";
+
+/* 源码：src/math.js */
+/* ---------------------------------------------------------------- 数学 */
+function clamp(v, a, b) {
+  return v < a ? a : v > b ? b : v;
+}
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+function smoothstep(a, b, x) {
+  var t = clamp((x - a) / (b - a), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+var DEG = Math.PI / 180;
+
+function mulberry32(a) {
+  return function () {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    var t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function m4mul(out, a, b) {
+  var a00 = a[0],
+    a01 = a[1],
+    a02 = a[2],
+    a03 = a[3],
+    a10 = a[4],
+    a11 = a[5],
+    a12 = a[6],
+    a13 = a[7];
+  var a20 = a[8],
+    a21 = a[9],
+    a22 = a[10],
+    a23 = a[11],
+    a30 = a[12],
+    a31 = a[13],
+    a32 = a[14],
+    a33 = a[15];
+  for (var i = 0; i < 4; i++) {
+    var b0 = b[i * 4],
+      b1 = b[i * 4 + 1],
+      b2 = b[i * 4 + 2],
+      b3 = b[i * 4 + 3];
+    out[i * 4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+    out[i * 4 + 1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+    out[i * 4 + 2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+    out[i * 4 + 3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+  }
+  return out;
+}
+
+function m4perspective(fovy, aspect, near, far) {
+  var f = 1 / Math.tan(fovy * 0.5),
+    nf = 1 / (near - far);
+  return new Float32Array([
+    f / aspect,
+    0,
+    0,
+    0,
+    0,
+    f,
+    0,
+    0,
+    0,
+    0,
+    (far + near) * nf,
+    -1,
+    0,
+    0,
+    2 * far * near * nf,
+    0,
+  ]);
+}
+
+function m4lookAt(eye, center, up) {
+  var zx = eye[0] - center[0],
+    zy = eye[1] - center[1],
+    zz = eye[2] - center[2];
+  var zl = Math.hypot(zx, zy, zz) || 1;
+  zx /= zl;
+  zy /= zl;
+  zz /= zl;
+  var xx = up[1] * zz - up[2] * zy,
+    xy = up[2] * zx - up[0] * zz,
+    xz = up[0] * zy - up[1] * zx;
+  var xl = Math.hypot(xx, xy, xz) || 1;
+  xx /= xl;
+  xy /= xl;
+  xz /= xl;
+  var yx = zy * xz - zz * xy,
+    yy = zz * xx - zx * xz,
+    yz = zx * xy - zy * xx;
+  return new Float32Array([
+    xx,
+    yx,
+    zx,
+    0,
+    xy,
+    yy,
+    zy,
+    0,
+    xz,
+    yz,
+    zz,
+    0,
+    -(xx * eye[0] + xy * eye[1] + xz * eye[2]),
+    -(yx * eye[0] + yy * eye[1] + yz * eye[2]),
+    -(zx * eye[0] + zy * eye[1] + zz * eye[2]),
+    1,
+  ]);
+}
+
+function basisFrom(eye, center) {
+  var f = [center[0] - eye[0], center[1] - eye[1], center[2] - eye[2]];
+  var fl = Math.hypot(f[0], f[1], f[2]) || 1;
+  f[0] /= fl;
+  f[1] /= fl;
+  f[2] /= fl;
+  var r = [f[2], 0, -f[0]];
+  var rl = Math.hypot(r[0], r[2]) || 1;
+  r[0] /= rl;
+  r[2] /= rl;
+  var u = [
+    r[1] * f[2] - r[2] * f[1],
+    r[2] * f[0] - r[0] * f[2],
+    r[0] * f[1] - r[1] * f[0],
+  ];
+  return { fwd: f, right: r, up: u };
+}
+
+function m4model(tx, ty, tz, ry, s) {
+  var c = Math.cos(ry) * s,
+    n = Math.sin(ry) * s;
+  return new Float32Array([c, 0, -n, 0, 0, s, 0, 0, n, 0, c, 0, tx, ty, tz, 1]);
+}
+
+/* 以 +Y 为局部主轴构造旋转矩阵（用于剑、旗杆等斜置物件） */
+function m4axis(pos, dir, upHint, scale) {
+  var y = [dir[0], dir[1], dir[2]];
+  var yl = Math.hypot(y[0], y[1], y[2]) || 1;
+  y[0] /= yl;
+  y[1] /= yl;
+  y[2] /= yl;
+  var x = [
+    upHint[1] * y[2] - upHint[2] * y[1],
+    upHint[2] * y[0] - upHint[0] * y[2],
+    upHint[0] * y[1] - upHint[1] * y[0],
+  ];
+  var xl = Math.hypot(x[0], x[1], x[2]) || 1;
+  x[0] /= xl;
+  x[1] /= xl;
+  x[2] /= xl;
+  var z = [
+    x[1] * y[2] - x[2] * y[1],
+    x[2] * y[0] - x[0] * y[2],
+    x[0] * y[1] - x[1] * y[0],
+  ];
+  var s = scale || 1;
+  return new Float32Array([
+    x[0] * s,
+    x[1] * s,
+    x[2] * s,
+    0,
+    y[0] * s,
+    y[1] * s,
+    y[2] * s,
+    0,
+    z[0] * s,
+    z[1] * s,
+    z[2] * s,
+    0,
+    pos[0],
+    pos[1],
+    pos[2],
+    1,
+  ]);
+}
+function xf(M, p) {
+  return [
+    M[0] * p[0] + M[4] * p[1] + M[8] * p[2] + M[12],
+    M[1] * p[0] + M[5] * p[1] + M[9] * p[2] + M[13],
+    M[2] * p[0] + M[6] * p[1] + M[10] * p[2] + M[14],
+  ];
+}
+
+/* ---------------------------------------------------------------- 噪声 */
+function makeNoise(seed) {
+  var perm = new Uint8Array(256),
+    p = new Uint8Array(512),
+    i,
+    j,
+    t,
+    s = seed >>> 0;
+  function rnd() {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 4294967296;
+  }
+  for (i = 0; i < 256; i++) perm[i] = i;
+  for (i = 255; i > 0; i--) {
+    j = (rnd() * (i + 1)) | 0;
+    t = perm[i];
+    perm[i] = perm[j];
+    perm[j] = t;
+  }
+  for (i = 0; i < 512; i++) p[i] = perm[i & 255];
+  function noise(x, y) {
+    var xi = Math.floor(x),
+      yi = Math.floor(y),
+      xf = x - xi,
+      yf = y - yi;
+    var u = xf * xf * (3 - 2 * xf),
+      v = yf * yf * (3 - 2 * yf);
+    var X = xi & 255,
+      Y = yi & 255;
+    var aa = p[(p[X] + Y) & 255] / 255,
+      ba = p[(p[(X + 1) & 255] + Y) & 255] / 255;
+    var ab = p[(p[X] + ((Y + 1) & 255)) & 255] / 255,
+      bb = p[(p[(X + 1) & 255] + ((Y + 1) & 255)) & 255] / 255;
+    var m1 = aa + (ba - aa) * u,
+      m2 = ab + (bb - ab) * u;
+    return m1 + (m2 - m1) * v;
+  }
+  function fbm(x, y, oct) {
+    var a = 0.5,
+      sum = 0;
+    for (var k = 0; k < oct; k++) {
+      sum += a * noise(x, y);
+      x *= 2.03;
+      y *= 2.03;
+      a *= 0.5;
+    }
+    return sum;
+  }
+  return { noise: noise, fbm: fbm };
+}
+var N1 = makeNoise(112358);
+var N2 = makeNoise(271828);
+var RND = mulberry32(19880); /* 布景随机，固定种子保证每次一致 */
+
+
+/* 源码：src/webgl.js */
+var veil = document.getElementById("veil");
+var errEl = document.getElementById("err");
+
+function fail(msg) {
+  var t = document.querySelector("#veil .t");
+  var l = document.querySelector("#veil .line");
+  if (t) t.style.display = "none";
+  if (l) l.style.display = "none";
+  errEl.style.display = "block";
+  errEl.textContent = msg;
+  veil.classList.remove("hide");
+  document.getElementById("retry").hidden = false;
+}
+if (window.self !== window.top) document.documentElement.classList.add("embed");
+document.getElementById("retry").addEventListener("click", function () {
+  location.reload();
+});
+window.addEventListener(
+  "error",
+  function (e) {
+    fail("场景初始化失败：" + (e && e.message ? e.message : "未知错误"));
+  },
+  false,
+);
+
+/* ---------------------------------------------------------------- WebGL */
+var canvas = document.createElement("canvas");
+canvas.setAttribute("aria-label", "灯下长剑、月色军帐与随风旌旗的三维夜景");
+document.getElementById("stage").appendChild(canvas);
+var drawCallCount = 0;
+
+var glOpts = {
+  antialias: false,
+  alpha: false,
+  depth: true,
+  stencil: false,
+  premultipliedAlpha: false,
+  powerPreference: "high-performance",
+};
+var gl =
+  canvas.getContext("webgl2", glOpts) ||
+  canvas.getContext("webgl", glOpts) ||
+  canvas.getContext("experimental-webgl", glOpts);
+if (!gl) {
+  fail(
+    "这台设备的浏览器没有可用的 WebGL，场景无法启动。请换用新版 Chrome / Safari / Edge，或在设置里开启硬件加速。",
+  );
+  return;
+}
+
+var isGL2 =
+  typeof WebGL2RenderingContext !== "undefined" &&
+  gl instanceof WebGL2RenderingContext;
+var canU32 = isGL2 || !!gl.getExtension("OES_element_index_uint");
+var IDX_TYPE = canU32 ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
+
+canvas.addEventListener(
+  "webglcontextlost",
+  function (e) {
+    e.preventDefault();
+    running = false;
+    fail(
+      "图形上下文丢失（切换显卡或系统休眠可能导致）。请刷新页面重新载入夜营。",
+    );
+  },
+  false,
+);
+canvas.addEventListener("webglcontextrestored", function () {
+  location.reload();
+});
+
+function compileShader(type, src, tag) {
+  var sh = gl.createShader(type);
+  gl.shaderSource(sh, src);
+  gl.compileShader(sh);
+  if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+    throw new Error(tag + " 着色器编译失败：" + gl.getShaderInfoLog(sh));
+  }
+  return sh;
+}
+
+function makeProgram(vsSrc, fsSrc, tag) {
+  var p = gl.createProgram();
+  gl.attachShader(p, compileShader(gl.VERTEX_SHADER, vsSrc, tag + "/vs"));
+  gl.attachShader(p, compileShader(gl.FRAGMENT_SHADER, fsSrc, tag + "/fs"));
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+    throw new Error(tag + " 程序链接失败：" + gl.getProgramInfoLog(p));
+  }
+  var u = {},
+    a = {},
+    i,
+    info;
+  var nu = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+  for (i = 0; i < nu; i++) {
+    info = gl.getActiveUniform(p, i);
+    u[info.name.replace(/\[0\]$/, "")] = gl.getUniformLocation(p, info.name);
+  }
+  var na = gl.getProgramParameter(p, gl.ACTIVE_ATTRIBUTES);
+  for (i = 0; i < na; i++) {
+    info = gl.getActiveAttrib(p, i);
+    a[info.name] = gl.getAttribLocation(p, info.name);
+  }
+  return { prog: p, u: u, a: a, tag: tag };
+}
+
+function bind(prog) {
+  gl.useProgram(prog.prog);
+}
+
+function setU(prog, obj) {
+  for (var k in obj) {
+    var loc = prog.u[k];
+    if (!loc) continue;
+    var v = obj[k];
+    if (typeof v === "number") gl.uniform1f(loc, v);
+    else if (v.length === 2) gl.uniform2fv(loc, v);
+    else if (v.length === 3) gl.uniform3fv(loc, v);
+    else if (v.length === 4) gl.uniform4fv(loc, v);
+    else if (v.length === 16) gl.uniformMatrix4fv(loc, false, v);
+  }
+}
+
+
+/* 源码：src/shaders-environment.js */
+/* ---------------------------------------------------------- 共享 GLSL */
+var GLSL_NOISE = [
+  "float hash21(vec2 p){ p = fract(p*vec2(123.34,456.21)); p += dot(p,p+45.32); return fract(p.x*p.y); }",
+  "float vnoise(vec2 p){",
+  "  vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f);",
+  "  float a=hash21(i), b=hash21(i+vec2(1.0,0.0)), c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));",
+  "  return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);",
+  "}",
+  "float fbm2(vec2 p){ float s=0.0,a=0.56; for(int i=0;i<2;i++){ s+=a*vnoise(p); p*=2.07; a*=0.5; } return s; }",
+  "float fbm3(vec2 p){ float s=0.0,a=0.5; for(int i=0;i<3;i++){ s+=a*vnoise(p); p*=2.03; a*=0.5; } return s; }",
+  "float fbm4(vec2 p){ float s=0.0,a=0.5; for(int i=0;i<4;i++){ s+=a*vnoise(p); p*=2.05; a*=0.5; } return s; }",
+].join("\n");
+
+var GLSL_TONE = [
+  "float lum(vec3 c){ return dot(c, vec3(0.2126,0.7152,0.0722)); }",
+  "vec3 aces(vec3 x){ return clamp((x*(2.51*x+0.03))/(x*(2.43*x+0.59)+0.14), 0.0, 1.0); }",
+  "vec3 grade(vec3 c){",
+  "  c = aces(c);",
+  "  c = pow(c, vec3(0.4545));",
+  "  c = mix(c, c*vec3(0.92,1.00,1.12), 0.32*(1.0-lum(c)));",
+  "  return c;",
+  "}",
+].join("\n");
+
+/* ---------------------------------------------------------- 天空程序 */
+var progSky = makeProgram(
+  "precision highp float;\n" +
+    "attribute vec3 aPos;\n" +
+    "varying vec2 vUv;\n" +
+    "void main(){ vUv = aPos.xy*0.5+0.5; gl_Position = vec4(aPos.xy, 0.0, 1.0); }",
+
+  "precision highp float;\n" +
+    "varying vec2 vUv;\n" +
+    "uniform vec3 uRight;\n" +
+    "uniform vec3 uUp;\n" +
+    "uniform vec3 uFwd;\n" +
+    "uniform vec2 uTan;\n" +
+    "uniform float uTime;\n" +
+    "uniform vec3 uZenith;\n" +
+    "uniform vec3 uHorizon;\n" +
+    "uniform vec3 uHaze;\n" +
+    "uniform vec3 uMoonDir;\n" +
+    "uniform vec3 uMoonCol;\n" +
+    GLSL_NOISE +
+    "\n" +
+    GLSL_TONE +
+    "\n" +
+    "void main(){\n" +
+    "  vec2 s = vUv*2.0-1.0;\n" +
+    "  vec3 d = normalize(uFwd + uRight*(s.x*uTan.x) + uUp*(s.y*uTan.y));\n" +
+    "  float h = d.y;\n" +
+    "  vec3 col = mix(uHorizon, uZenith, pow(clamp(h,0.0,1.0),0.62));\n" +
+    "  float az = max(dot(normalize(vec3(d.x,0.001,d.z)), vec3(0.0,0.0,-1.0)), 0.0);\n" +
+    "  col += uHaze*pow(1.0-clamp(h,0.0,1.0),7.0)*(0.30+0.70*az);\n" +
+    "  vec2 sp = vec2(atan(d.z,d.x)*57.2958, asin(clamp(h,-1.0,1.0))*57.2958);\n" +
+    "  vec2 g = sp*1.62;\n" +
+    "  vec2 gi = floor(g), gf = fract(g);\n" +
+    "  float r = hash21(gi);\n" +
+    "  float star = 0.0;\n" +
+    "  if (r > 0.978 && h > 0.015){\n" +
+    "    vec2 c = vec2(hash21(gi+1.73), hash21(gi+9.17))*0.72+0.14;\n" +
+    "    float dd = length(gf-c);\n" +
+    "    float tw = 0.55+0.45*sin(uTime*(0.7+r*2.4)+r*41.0);\n" +
+    "    star = smoothstep(0.085,0.0,dd)*tw*(0.35+0.65*hash21(gi+3.31));\n" +
+    "    star *= smoothstep(0.015,0.16,h);\n" +
+    "  }\n" +
+    "  float band = smoothstep(0.46,0.0,abs(d.y*0.9 - d.x*0.5 - 0.28));\n" +
+    "  float mw = band*band*0.055*fbm3(d.xz*7.0+4.0);\n" +
+    "  col += (star*1.35+mw)*vec3(0.80,0.86,1.0);\n" +
+    "  float ang = acos(clamp(dot(d,uMoonDir),-1.0,1.0));\n" +
+    "  float R = 0.0265;\n" +
+    "  float disc = smoothstep(R, R*0.90, ang);\n" +
+    "  float maria = fbm3(d.xy*210.0+13.0);\n" +
+    "  float limb = smoothstep(R, R*0.55, ang);\n" +
+    "  vec3 mc = uMoonCol*(0.62+0.46*maria)*(0.72+0.32*limb);\n" +
+    "  col = mix(col, mc, disc);\n" +
+    "  col += uMoonCol*smoothstep(0.24,0.0,ang)*0.075;\n" +
+    "  float cy = max(h,0.022);\n" +
+    "  vec2 cp = d.xz/cy*0.62 + vec2(uTime*0.0035, uTime*0.0016);\n" +
+    "  float c1 = fbm4(cp*1.25);\n" +
+    "  float c2 = fbm3(cp*4.1+7.0);\n" +
+    "  float dens = smoothstep(0.50,0.84,c1*0.80+c2*0.30)*smoothstep(0.005,0.20,h);\n" +
+    "  vec3 cloudCol = mix(vec3(0.030,0.038,0.055), uMoonCol*0.34, 0.30+0.55*smoothstep(0.15,0.9,dens));\n" +
+    "  cloudCol += uHaze*0.16*smoothstep(0.25,0.0,h);\n" +
+    "  col = mix(col, cloudCol, dens*0.62);\n" +
+    "  gl_FragColor = vec4(grade(col), 1.0);\n" +
+    "}",
+  "sky",
+);
+
+
+/* 源码：src/shaders-solid.js */
+/* ------------------------------------------------------ 实体着色程序 */
+var progSolid = makeProgram(
+  "precision highp float;\n" +
+    "attribute vec3 aPos;\n" +
+    "attribute vec3 aNrm;\n" +
+    "attribute vec3 aCol;\n" +
+    "attribute vec2 aUv;\n" +
+    "uniform mat4 uViewProj;\n" +
+    "uniform mat4 uModel;\n" +
+    "varying vec3 vWorld;\n" +
+    "varying vec3 vNrm;\n" +
+    "varying vec3 vCol;\n" +
+    "varying vec2 vUv;\n" +
+    "void main(){\n" +
+    "  vec4 wp = uModel*vec4(aPos,1.0);\n" +
+    "  vWorld = wp.xyz;\n" +
+    "  vNrm = normalize(mat3(uModel)*aNrm);\n" +
+    "  vCol = aCol;\n" +
+    "  vUv = aUv;\n" +
+    "  gl_Position = uViewProj*wp;\n" +
+    "}",
+
+  "precision highp float;\n" +
+    "varying vec3 vWorld;\n" +
+    "varying vec3 vNrm;\n" +
+    "varying vec3 vCol;\n" +
+    "varying vec2 vUv;\n" +
+    "uniform vec3 uCamPos;\n" +
+    "uniform vec3 uMoonDir;\n" +
+    "uniform vec3 uMoonCol;\n" +
+    "uniform vec3 uAmbSky;\n" +
+    "uniform vec3 uAmbGround;\n" +
+    "uniform vec3 uFogColor;\n" +
+    "uniform float uFogK;\n" +
+    "uniform float uExposure;\n" +
+    "uniform float uSpec;\n" +
+    "uniform float uShine;\n" +
+    "uniform float uEmissive;\n" +
+    "uniform float uGrain;\n" +
+    "uniform float uTime;\n" +
+    "uniform vec4 uLPos[4];\n" +
+    "uniform vec3 uLCol[4];\n" +
+    "uniform float uLInt[4];\n" +
+    GLSL_NOISE +
+    "\n" +
+    GLSL_TONE +
+    "\n" +
+    "void main(){\n" +
+    "  vec3 N = normalize(vNrm);\n" +
+    "  vec3 V = normalize(uCamPos - vWorld);\n" +
+    "  vec3 albedo = vCol;\n" +
+    "  if (uEmissive > 0.5){\n" +
+    "    float g = 0.55+0.45*vUv.y;\n" +
+    "    gl_FragColor = vec4(albedo*g*1.5, 1.0);\n" +
+    "    return;\n" +
+    "  }\n" +
+    "  float ndlMoon = max(dot(N, uMoonDir), 0.0);\n" +
+    "  vec3 amb = mix(uAmbGround, uAmbSky, 0.5+0.5*N.y);\n" +
+    "  vec3 diff = amb + uMoonCol*ndlMoon;\n" +
+    "  vec3 specC = vec3(0.0);\n" +
+    "  for (int i=0;i<4;i++){\n" +
+    "    vec3 L = uLPos[i].xyz - vWorld;\n" +
+    "    float d2 = dot(L,L);\n" +
+    "    float rad = max(uLPos[i].w, 0.001);\n" +
+    "    float att = 1.0/(1.0 + d2/(rad*rad));\n" +
+    "    vec3 ldir = L*inversesqrt(d2+1e-4);\n" +
+    "    float ndl = max(dot(N,ldir), 0.0);\n" +
+    "    diff += uLCol[i]*uLInt[i]*att*(ndl*0.82+0.18);\n" +
+    "    vec3 H = normalize(ldir+V);\n" +
+    "    specC += uLCol[i]*uLInt[i]*att*pow(max(dot(N,H),0.0), uShine);\n" +
+    "  }\n" +
+    "  vec3 col = albedo*diff + specC*uSpec;\n" +
+    "  if (uSpec > 0.3){\n" +
+    "    vec3 R = reflect(-V,N);\n" +
+    "    vec3 env = mix(uAmbGround*2.2, uAmbSky*2.6, smoothstep(-0.5,0.8,R.y));\n" +
+    "    float fres = pow(1.0-max(dot(N,V),0.0),3.0);\n" +
+    "    col += env*(0.18+0.82*fres)*uSpec*1.1;\n" +
+    "    col += uMoonCol*pow(max(dot(R,uMoonDir),0.0), 220.0)*2.6*uSpec;\n" +
+    "  }\n" +
+    "  float d = length(vWorld-uCamPos);\n" +
+    "  float low = exp(-max(vWorld.y,0.0)*0.35);\n" +
+    "  float fog = 1.0-exp(-d*uFogK*(0.55+0.65*low));\n" +
+    "  col = mix(col, uFogColor, clamp(fog,0.0,1.0));\n" +
+    "  gl_FragColor = vec4(grade(col*uExposure), 1.0);\n" +
+    "}",
+  "solid",
+);
+
+
+/* 源码：src/shaders-effects.js */
+/* ------------------------------------------------------ 旌旗程序 */
+var progCloth = makeProgram(
+  "precision highp float;\n" +
+    "attribute vec3 aPos;\n" +
+    "attribute vec3 aNrm;\n" +
+    "attribute vec3 aCol;\n" +
+    "attribute vec2 aUv;\n" +
+    "attribute vec3 aInfo;\n" +
+    "uniform mat4 uViewProj;\n" +
+    "uniform mat4 uModel;\n" +
+    "uniform float uTime;\n" +
+    "varying vec3 vWorld;\n" +
+    "varying vec3 vNrm;\n" +
+    "varying vec3 vCol;\n" +
+    "varying vec2 vUv;\n" +
+    "void main(){\n" +
+    "  vec3 p = aPos;\n" +
+    "  float att = aInfo.z;\n" +
+    "  float ph = aInfo.y;\n" +
+    "  float amp = aInfo.x;\n" +
+    "  float gust = 0.72+0.28*sin(uTime*0.55+ph*0.7);\n" +
+    "  p.z += sin(p.y*2.15 - uTime*2.35 + ph)*amp*att*gust;\n" +
+    "  p.x += cos(p.y*1.55 - uTime*1.75 + ph*1.3)*amp*0.42*att*gust;\n" +
+    "  vec4 wp = uModel*vec4(p,1.0);\n" +
+    "  vWorld = wp.xyz;\n" +
+    "  vNrm = normalize(mat3(uModel)*aNrm);\n" +
+    "  vCol = aCol;\n" +
+    "  vUv = aUv;\n" +
+    "  gl_Position = uViewProj*wp;\n" +
+    "}",
+
+  "precision highp float;\n" +
+    "varying vec3 vWorld;\n" +
+    "varying vec3 vNrm;\n" +
+    "varying vec3 vCol;\n" +
+    "varying vec2 vUv;\n" +
+    "uniform vec3 uCamPos;\n" +
+    "uniform vec3 uMoonDir;\n" +
+    "uniform vec3 uMoonCol;\n" +
+    "uniform vec3 uAmbSky;\n" +
+    "uniform vec3 uAmbGround;\n" +
+    "uniform vec3 uFogColor;\n" +
+    "uniform float uFogK;\n" +
+    "uniform float uExposure;\n" +
+    "uniform vec4 uLPos[4];\n" +
+    "uniform vec3 uLCol[4];\n" +
+    "uniform float uLInt[4];\n" +
+    GLSL_NOISE +
+    "\n" +
+    GLSL_TONE +
+    "\n" +
+    "void main(){\n" +
+    "  vec3 N = normalize(vNrm);\n" +
+    "  if (!gl_FrontFacing) N = -N;\n" +
+    "  vec3 V = normalize(uCamPos - vWorld);\n" +
+    "  float ndl = max(dot(N,uMoonDir),0.0);\n" +
+    "  vec3 diff = mix(uAmbGround,uAmbSky,0.5+0.5*N.y)*1.15 + uMoonCol*ndl;\n" +
+    "  for (int i=0;i<4;i++){\n" +
+    "    vec3 L = uLPos[i].xyz - vWorld;\n" +
+    "    float d2 = dot(L,L);\n" +
+    "    float rad = max(uLPos[i].w,0.001);\n" +
+    "    float att = 1.0/(1.0+d2/(rad*rad));\n" +
+    "    float nl = max(dot(N, L*inversesqrt(d2+1e-4)), 0.0);\n" +
+    "    diff += uLCol[i]*uLInt[i]*att*(nl*0.75+0.25)*1.15;\n" +
+    "  }\n" +
+    "  vec3 col = vCol*diff;\n" +
+    "  float weave = vnoise(vUv*vec2(120.0,90.0))*0.12+0.94;\n" +
+    "  col *= weave;\n" +
+    "  col *= 0.86+0.14*smoothstep(0.0,0.35,vUv.x);\n" +
+    "  float d = length(vWorld-uCamPos);\n" +
+    "  float fog = 1.0-exp(-d*uFogK*1.05);\n" +
+    "  col = mix(col, uFogColor, clamp(fog,0.0,1.0));\n" +
+    "  gl_FragColor = vec4(grade(col*uExposure), 1.0);\n" +
+    "}",
+  "cloth",
+);
+
+/* ------------------------------------------------------ 草叶程序 */
+var progGrass = makeProgram(
+  "precision highp float;\n" +
+    "attribute vec3 aPos;\n" +
+    "attribute vec2 aLocal;\n" +
+    "attribute vec3 aSeed;\n" +
+    "uniform mat4 uViewProj;\n" +
+    "uniform float uTime;\n" +
+    "varying vec2 vLocal;\n" +
+    "varying vec3 vWorld;\n" +
+    "varying vec3 vCol;\n" +
+    "void main(){\n" +
+    "  float ang = aSeed.z;\n" +
+    "  vec3 right = vec3(cos(ang),0.0,sin(ang));\n" +
+    "  float h = aSeed.x;\n" +
+    "  vec3 p = aPos + right*(aLocal.x*0.060*(1.0-0.55*aLocal.y)) + vec3(0.0,aLocal.y*h,0.0);\n" +
+    "  float sway = sin(uTime*1.55 + aSeed.y*6.283 + aPos.x*0.42)*0.085*(aLocal.y*aLocal.y);\n" +
+    "  p.x += sway; p.z += sway*0.55;\n" +
+    "  vLocal = aLocal;\n" +
+    "  vWorld = p;\n" +
+    "  vCol = vec3(0.062,0.070,0.040)*(0.65+0.55*aLocal.y);\n" +
+    "  gl_Position = uViewProj*vec4(p,1.0);\n" +
+    "}",
+
+  "precision highp float;\n" +
+    "varying vec2 vLocal;\n" +
+    "varying vec3 vWorld;\n" +
+    "varying vec3 vCol;\n" +
+    "uniform vec3 uCamPos;\n" +
+    "uniform vec3 uLampPos;\n" +
+    "uniform vec3 uLampCol;\n" +
+    "uniform vec3 uAmbSky;\n" +
+    "uniform vec3 uFogColor;\n" +
+    "uniform float uFogK;\n" +
+    "uniform float uExposure;\n" +
+    GLSL_TONE +
+    "\n" +
+    "void main(){\n" +
+    "  float w = mix(1.0, 0.06, clamp(vLocal.y,0.0,1.0));\n" +
+    "  float a = smoothstep(w, w*0.55, abs(vLocal.x));\n" +
+    "  a *= smoothstep(0.0,0.10,vLocal.y);\n" +
+    "  if (a < 0.02) discard;\n" +
+    "  vec3 L = uLampPos - vWorld;\n" +
+    "  float d2 = dot(L,L);\n" +
+    "  float att = 1.0/(1.0+d2/20.0);\n" +
+    "  float nl = max(dot(normalize(vec3(vLocal.x,0.55,0.0)), L*inversesqrt(d2+1e-4)), 0.0);\n" +
+    "  vec3 col = vCol*(uAmbSky*1.6 + uLampCol*att*(nl*1.3+0.25));\n" +
+    "  float d = length(vWorld-uCamPos);\n" +
+    "  col = mix(col, uFogColor, clamp(1.0-exp(-d*uFogK*1.2),0.0,1.0));\n" +
+    "  gl_FragColor = vec4(grade(col*uExposure), a*0.92);\n" +
+    "}",
+  "grass",
+);
+
+/* ------------------------------------------------------ 精灵程序 */
+var progSprite = makeProgram(
+  "precision highp float;\n" +
+    "attribute vec3 aCenter;\n" +
+    "attribute vec2 aLocal;\n" +
+    "attribute vec3 aCol;\n" +
+    "attribute vec4 aInfo;\n" +
+    "uniform mat4 uViewProj;\n" +
+    "uniform vec3 uCamRight;\n" +
+    "uniform vec3 uCamUp;\n" +
+    "uniform float uFlat;\n" +
+    "uniform float uTime;\n" +
+    "varying vec2 vUv;\n" +
+    "varying vec3 vCol;\n" +
+    "varying vec4 vInfo;\n" +
+    "varying vec3 vWorld;\n" +
+    "void main(){\n" +
+    "  vec3 c = aCenter;\n" +
+    "  float sz = aInfo.x;\n" +
+    "  if (aInfo.w > 1.5 && aInfo.w < 3.5){\n" +
+    "    float life = fract(uTime*0.26 + aInfo.z);\n" +
+    "    if (aInfo.w < 2.5){\n" +
+    "      life = fract(aInfo.z*7.3 + uTime*0.045);\n" +
+    "      c.y += life*5.2; c.x += life*0.55; sz *= 0.70+life*1.9;\n" +
+    "    } else {\n" +
+    "      c.y += life*3.6; c.x += sin(uTime*0.9+aInfo.z*21.0)*0.30*life;\n" +
+    "      sz *= 1.0-0.55*life;\n" +
+    "    }\n" +
+    "  }\n" +
+    "  vec3 right = uCamRight;\n" +
+    "  vec3 up = uCamUp;\n" +
+    "  if (uFlat > 0.5){ right = vec3(1.0,0.0,0.0); up = vec3(0.0,0.0,1.0); c.y += 0.015; }\n" +
+    "  vec2 l = aLocal;\n" +
+    "  float s = sin(aInfo.y), co = cos(aInfo.y);\n" +
+    "  l = vec2(l.x*co-l.y*s, l.x*s+l.y*co);\n" +
+    "  vec3 wp = c + right*(l.x*sz) + up*(l.y*sz);\n" +
+    "  vUv = aLocal;\n" +
+    "  vCol = aCol;\n" +
+    "  vInfo = aInfo;\n" +
+    "  vWorld = wp;\n" +
+    "  gl_Position = uViewProj*vec4(wp,1.0);\n" +
+    "}",
+
+  "precision highp float;\n" +
+    "varying vec2 vUv;\n" +
+    "varying vec3 vCol;\n" +
+    "varying vec4 vInfo;\n" +
+    "varying vec3 vWorld;\n" +
+    "uniform float uKind;\n" +
+    "uniform float uTime;\n" +
+    "uniform float uAlpha;\n" +
+    "uniform vec3 uFogColor;\n" +
+    "uniform vec3 uCamPos;\n" +
+    "uniform float uFogK;\n" +
+    GLSL_NOISE +
+    "\n" +
+    "void main(){\n" +
+    "  float a = 0.0;\n" +
+    "  vec3 col = vCol;\n" +
+    "  float d = length(vUv);\n" +
+    "  if (uKind < 0.5){\n" +
+    "    a = pow(max(0.0,1.0-d), 2.6);\n" +
+    "    a *= 0.85+0.15*sin(uTime*9.0+vInfo.z*7.0);\n" +
+    "  } else if (uKind < 1.5){\n" +
+    "    float y = vUv.y*0.5+0.5;\n" +
+    "    float n = fbm3(vec2(vUv.x*3.6, vUv.y*2.4-uTime*1.9+vInfo.z*9.0));\n" +
+    "    float wdt = (1.0-y)*0.86+0.10;\n" +
+    "    float body = smoothstep(wdt, wdt*0.28, abs(vUv.x+(n-0.5)*0.34*(1.0-y)));\n" +
+    "    body *= smoothstep(0.0,0.14,y)*smoothstep(1.0,0.52,y);\n" +
+    "    col = mix(vec3(1.0,0.34,0.07), vec3(1.0,0.78,0.38), pow(1.0-y,1.5));\n" +
+    "    col = mix(col, vec3(1.0,0.96,0.82), pow(1.0-y,7.0)*0.85);\n" +
+    "    a = body*(0.55+0.55*n);\n" +
+    "  } else if (uKind < 2.5){\n" +
+    "    float n = fbm3(vUv*1.7+vec2(vInfo.z*3.0, -uTime*0.16));\n" +
+    "    float lifeS = fract(vInfo.z*7.3 + uTime*0.045);\n" +
+    "    a = smoothstep(1.0,0.05,d)*(0.28+0.62*n)*smoothstep(1.0,0.35,d);\n" +
+    "    a *= (1.0-lifeS*0.85)*smoothstep(0.0,0.12,lifeS);\n" +
+    "    col = mix(vec3(0.10,0.11,0.125), vec3(0.30,0.27,0.24), n*0.7);\n" +
+    "  } else if (uKind < 3.5){\n" +
+    "    float lifeE = fract(uTime*0.26 + vInfo.z);\n" +
+    "    a = smoothstep(0.62,0.0,d);\n" +
+    "    a *= (0.55+0.45*sin(uTime*6.0+vInfo.z*20.0))*(1.0-lifeE*0.75);\n" +
+    "  } else if (uKind < 4.5){\n" +
+    "    a = pow(max(0.0,1.0-d), 1.7)*0.55;\n" +
+    "    col = vec3(0.012,0.012,0.014);\n" +
+    "  } else {\n" +
+    "    col = vCol*(exp(-d*11.0)*1.5+exp(-d*2.6)*0.22);\n" +
+    "    a = 1.0;\n" +
+    "  }\n" +
+    "  if (uKind > 2.5 && uKind < 4.5){\n" +
+    "    float fog = 1.0-exp(-length(vWorld-uCamPos)*uFogK);\n" +
+    "    col = mix(col, uFogColor, fog*0.5);\n" +
+    "  }\n" +
+    "  if (a <= 0.004) discard;\n" +
+    "  gl_FragColor = vec4(col, a*uAlpha);\n" +
+    "}",
+  "sprite",
+);
+
+
+/* 源码：src/geometry.js */
+/* ------------------------------------------------------- 网格工具 */
+var ATTR_SIZE = {
+  aPos: 3,
+  aNrm: 3,
+  aCol: 3,
+  aUv: 2,
+  aInfo: 3,
+  aLocal: 2,
+  aSeed: 3,
+  aCenter: 3,
+};
+
+function uploadMesh(attrs, indices) {
+  var m = {
+    buf: {},
+    count: indices.length,
+    type: canU32 ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT,
+  };
+  for (var k in attrs) {
+    var arr =
+      attrs[k] instanceof Float32Array ? attrs[k] : new Float32Array(attrs[k]);
+    var b = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, b);
+    gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
+    m.buf[k] = b;
+  }
+  var ib = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib);
+  gl.bufferData(
+    gl.ELEMENT_ARRAY_BUFFER,
+    canU32 ? new Uint32Array(indices) : new Uint16Array(indices),
+    gl.STATIC_DRAW,
+  );
+  m.ibo = ib;
+  return m;
+}
+
+function drawMesh(prog, mesh) {
+  var k, loc, b;
+  for (k in mesh.buf) {
+    loc = prog.a[k];
+    if (loc === undefined || loc < 0) continue;
+    b = mesh.buf[k];
+    gl.bindBuffer(gl.ARRAY_BUFFER, b);
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, ATTR_SIZE[k], gl.FLOAT, false, 0, 0);
+  }
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.ibo);
+  gl.drawElements(gl.TRIANGLES, mesh.count, mesh.type, 0);
+  drawCallCount++;
+}
+
+function Mesh() {
+  return { p: [], n: [], c: [], u: [], i: [] };
+}
+function vtx(m, x, y, z, nx, ny, nz, col, uv) {
+  m.p.push(x, y, z);
+  m.n.push(nx, ny, nz);
+  m.c.push(col[0], col[1], col[2]);
+  m.u.push(uv ? uv[0] : 0, uv ? uv[1] : 0);
+  return m.p.length / 3 - 1;
+}
+function tri(m, a, b, c) {
+  m.i.push(a, b, c);
+}
+function quadIdx(m, a, b, c, d) {
+  m.i.push(a, b, c, a, c, d);
+}
+
+function flatTri(m, p0, p1, p2, col) {
+  var ax = p1[0] - p0[0],
+    ay = p1[1] - p0[1],
+    az = p1[2] - p0[2];
+  var bx = p2[0] - p0[0],
+    by = p2[1] - p0[1],
+    bz = p2[2] - p0[2];
+  var nx = ay * bz - az * by,
+    ny = az * bx - ax * bz,
+    nz = ax * by - ay * bx;
+  var nl = Math.hypot(nx, ny, nz) || 1;
+  nx /= nl;
+  ny /= nl;
+  nz /= nl;
+  var i0 = vtx(m, p0[0], p0[1], p0[2], nx, ny, nz, col, [0, 0]);
+  var i1 = vtx(m, p1[0], p1[1], p1[2], nx, ny, nz, col, [1, 0]);
+  var i2 = vtx(m, p2[0], p2[1], p2[2], nx, ny, nz, col, [0.5, 1]);
+  tri(m, i0, i1, i2);
+}
+
+/* 平面四边面（同法线，硬边），用于帐篷、木器、旗面 */
+function flatQuad(m, p0, p1, p2, p3, col, uv) {
+  var ax = p1[0] - p0[0],
+    ay = p1[1] - p0[1],
+    az = p1[2] - p0[2];
+  var bx = p3[0] - p0[0],
+    by = p3[1] - p0[1],
+    bz = p3[2] - p0[2];
+  var nx = ay * bz - az * by,
+    ny = az * bx - ax * bz,
+    nz = ax * by - ay * bx;
+  var nl = Math.hypot(nx, ny, nz) || 1;
+  nx /= nl;
+  ny /= nl;
+  nz /= nl;
+  var i0 = vtx(m, p0[0], p0[1], p0[2], nx, ny, nz, col, uv ? uv[0] : [0, 0]);
+  var i1 = vtx(m, p1[0], p1[1], p1[2], nx, ny, nz, col, uv ? uv[1] : [1, 0]);
+  var i2 = vtx(m, p2[0], p2[1], p2[2], nx, ny, nz, col, uv ? uv[2] : [1, 1]);
+  var i3 = vtx(m, p3[0], p3[1], p3[2], nx, ny, nz, col, uv ? uv[3] : [0, 1]);
+  quadIdx(m, i0, i1, i2, i3);
+}
+
+/* 带旋转的方盒，盒心 (cx,cy,cz)，尺寸 (sx,sy,sz) */
+function addBox(m, cx, cy, cz, sx, sy, sz, ry, col, shade) {
+  var c = Math.cos(ry || 0),
+    s = Math.sin(ry || 0);
+  function P(x, y, z) {
+    return [cx + x * c + z * s, cy + y, cz - x * s + z * c];
+  }
+  var hx = sx / 2,
+    hy = sy / 2,
+    hz = sz / 2;
+  var f = [col[0], col[1], col[2]];
+  function sh(k) {
+    return [f[0] * k, f[1] * k, f[2] * k];
+  }
+  flatQuad(
+    m,
+    P(-hx, hy, -hz),
+    P(hx, hy, -hz),
+    P(hx, hy, hz),
+    P(-hx, hy, hz),
+    sh(1.0),
+  ); /* 顶 */
+  flatQuad(
+    m,
+    P(-hx, -hy, hz),
+    P(hx, -hy, hz),
+    P(hx, hy, hz),
+    P(-hx, hy, hz),
+    sh(shade ? 0.95 : 0.9),
+  );
+  flatQuad(
+    m,
+    P(hx, -hy, -hz),
+    P(-hx, -hy, -hz),
+    P(-hx, hy, -hz),
+    P(hx, hy, -hz),
+    sh(0.62),
+  );
+  flatQuad(
+    m,
+    P(-hx, -hy, -hz),
+    P(-hx, -hy, hz),
+    P(-hx, hy, hz),
+    P(-hx, hy, -hz),
+    sh(0.78),
+  );
+  flatQuad(
+    m,
+    P(hx, -hy, hz),
+    P(hx, -hy, -hz),
+    P(hx, hy, -hz),
+    P(hx, hy, hz),
+    sh(0.86),
+  );
+}
+
+/* 沿曲线的管（旗杆、矛杆、号角） */
+function addTube(m, pts, radii, sides, col, capEnds) {
+  var n = pts.length,
+    i,
+    j;
+  var rings = [];
+  for (i = 0; i < n; i++) {
+    var a = pts[Math.max(0, i - 1)],
+      b = pts[Math.min(n - 1, i + 1)];
+    var tx = b[0] - a[0],
+      ty = b[1] - a[1],
+      tz = b[2] - a[2];
+    var tl = Math.hypot(tx, ty, tz) || 1;
+    tx /= tl;
+    ty /= tl;
+    tz /= tl;
+    var ux = 0,
+      uy = 1,
+      uz = 0;
+    if (Math.abs(ty) > 0.92) {
+      ux = 1;
+      uy = 0;
+      uz = 0;
+    }
+    var rx = uy * tz - uz * ty,
+      ry = uz * tx - ux * tz,
+      rz = ux * ty - uy * tx;
+    var rl = Math.hypot(rx, ry, rz) || 1;
+    rx /= rl;
+    ry /= rl;
+    rz /= rl;
+    var sx = ty * rz - tz * ry,
+      sy = tz * rx - tx * rz,
+      sz = tx * ry - ty * rx;
+    var ring = [];
+    for (j = 0; j < sides; j++) {
+      var ang = (j / sides) * Math.PI * 2;
+      var ca = Math.cos(ang),
+        sa = Math.sin(ang);
+      var nx = rx * ca + sx * sa,
+        ny = ry * ca + sy * sa,
+        nz = rz * ca + sz * sa;
+      var r = radii[i];
+      ring.push(
+        vtx(
+          m,
+          pts[i][0] + nx * r,
+          pts[i][1] + ny * r,
+          pts[i][2] + nz * r,
+          nx,
+          ny,
+          nz,
+          col,
+          [j / sides, i / (n - 1)],
+        ),
+      );
+    }
+    rings.push(ring);
+  }
+  for (i = 0; i < n - 1; i++) {
+    for (j = 0; j < sides; j++) {
+      var j2 = (j + 1) % sides;
+      quadIdx(m, rings[i][j], rings[i][j2], rings[i + 1][j2], rings[i + 1][j]);
+    }
+  }
+  if (capEnds) {
+    var last = rings[n - 1],
+      first = rings[0];
+    for (j = 1; j < sides - 1; j++) {
+      tri(m, last[0], last[j], last[j + 1]);
+      tri(m, first[0], first[j + 1], first[j]);
+    }
+  }
+}
+
+/* 旋转体（灯、酒瓮、杯） */
+function addLathe(m, profile, sides, col, cx, cy, cz, scale) {
+  var rings = [],
+    i,
+    j;
+  var s = scale || 1;
+  for (i = 0; i < profile.length; i++) {
+    var r = profile[i][0] * s,
+      y = profile[i][1] * s;
+    var pr = profile[Math.max(0, i - 1)],
+      nx = profile[Math.min(profile.length - 1, i + 1)];
+    var dr = nx[0] - pr[0],
+      dy = nx[1] - pr[1];
+    var dl = Math.hypot(dr, dy) || 1;
+    dr /= dl;
+    dy /= dl;
+    var ring = [];
+    for (j = 0; j < sides; j++) {
+      var ang = (j / sides) * Math.PI * 2,
+        ca = Math.cos(ang),
+        sa = Math.sin(ang);
+      var n = [dy * ca, -dr, dy * sa];
+      var nl = Math.hypot(n[0], n[1], n[2]) || 1;
+      ring.push(
+        vtx(
+          m,
+          cx + r * ca,
+          cy + y,
+          cz + r * sa,
+          n[0] / nl,
+          n[1] / nl,
+          n[2] / nl,
+          col,
+          [j / sides, i / (profile.length - 1)],
+        ),
+      );
+    }
+    rings.push(ring);
+  }
+  for (i = 0; i < rings.length - 1; i++) {
+    for (j = 0; j < sides; j++) {
+      var j2 = (j + 1) % sides;
+      quadIdx(m, rings[i][j], rings[i][j2], rings[i + 1][j2], rings[i + 1][j]);
+    }
+  }
+}
+
+
+/* 源码：src/terrain.js */
+/* ------------------------------------------------------- 地形高度 */
+function groundH(x, z) {
+  var camp = smoothstep(5, 25, Math.hypot(x * 0.9, z + 2));
+  var n =
+    (N1.fbm(x * 0.03 + 3.1, z * 0.03 + 7.4, 4) - 0.5) * 2.6 +
+    (N2.fbm(x * 0.1, z * 0.1, 3) - 0.5) * 0.55;
+  n *= 0.28 + 0.72 * camp;
+  var rise =
+    smoothstep(34, 110, Math.hypot(x, z + 6)) *
+    3.4 *
+    (0.45 + N2.fbm(x * 0.012, z * 0.012, 3));
+  return n * 0.55 + rise - 0.05;
+}
+
+/* ------------------------------------------------------- 地形网格 */
+function buildTerrain() {
+  var NX = isSmall ? 104 : 152,
+    NZ = NX,
+    X0 = -115,
+    X1 = 115,
+    Z0 = -135,
+    Z1 = 45;
+  var nv = (NX + 1) * (NZ + 1);
+  var pos = new Float32Array(nv * 3),
+    nrm = new Float32Array(nv * 3),
+    col = new Float32Array(nv * 3),
+    uv = new Float32Array(nv * 2);
+  var idx = new Uint32Array(NX * NZ * 6);
+  var i,
+    j,
+    k = 0,
+    vi = 0;
+  var earth = [0.07, 0.058, 0.045],
+    grass = [0.052, 0.06, 0.036],
+    dirt = [0.115, 0.098, 0.076],
+    stone = [0.105, 0.1, 0.092];
+  for (j = 0; j <= NZ; j++) {
+    var z = Z0 + ((Z1 - Z0) * j) / NZ;
+    for (i = 0; i <= NX; i++) {
+      var x = X0 + ((X1 - X0) * i) / NX;
+      var y = groundH(x, z);
+      var e = 0.45;
+      var hx = groundH(x + e, z) - groundH(x - e, z);
+      var hz = groundH(x, z + e) - groundH(x, z - e);
+      var nx = -hx / (2 * e),
+        ny = 1,
+        nz = -hz / (2 * e);
+      var nl = Math.hypot(nx, ny, nz) || 1;
+      nx /= nl;
+      ny /= nl;
+      nz /= nl;
+      var n1 = N1.fbm(x * 0.14, z * 0.14, 3),
+        n2 = N2.fbm(x * 0.55, z * 0.55, 3);
+      var slope = 1.0 - ny;
+      var path =
+        Math.exp(-Math.pow((x - 0.55 * Math.sin(z * 0.055) - 0.4) / 1.55, 2)) *
+        smoothstep(18, 2, z) *
+        0.85;
+      var c = [0, 0, 0];
+      for (var q = 0; q < 3; q++) {
+        var base = lerp(earth[q], grass[q], smoothstep(0.42, 0.72, n1));
+        base = lerp(base, stone[q], smoothstep(0.28, 0.62, slope) * 0.8);
+        base = lerp(base, dirt[q], path);
+        c[q] = base * (0.78 + 0.44 * n2);
+      }
+      pos[vi * 3] = x;
+      pos[vi * 3 + 1] = y;
+      pos[vi * 3 + 2] = z;
+      nrm[vi * 3] = nx;
+      nrm[vi * 3 + 1] = ny;
+      nrm[vi * 3 + 2] = nz;
+      col[vi * 3] = c[0];
+      col[vi * 3 + 1] = c[1];
+      col[vi * 3 + 2] = c[2];
+      uv[vi * 2] = i / NX;
+      uv[vi * 2 + 1] = j / NZ;
+      vi++;
+    }
+  }
+  for (j = 0; j < NZ; j++) {
+    for (i = 0; i < NX; i++) {
+      var a = j * (NX + 1) + i,
+        b = a + 1,
+        c2 = a + NX + 1,
+        d = c2 + 1;
+      idx[k++] = a;
+      idx[k++] = c2;
+      idx[k++] = b;
+      idx[k++] = b;
+      idx[k++] = c2;
+      idx[k++] = d;
+    }
+  }
+  return uploadMesh({ aPos: pos, aNrm: nrm, aCol: col, aUv: uv }, idx);
+}
+
+/* ------------------------------------------------------- 远山 */
+function buildMountains() {
+  var m = Mesh();
+  function ridge(z, hMin, hMax, col, seedOff) {
+    var seg = 64,
+      x0 = -230,
+      x1 = 230,
+      top = [],
+      base = [];
+    for (var i = 0; i <= seg; i++) {
+      var x = x0 + ((x1 - x0) * i) / seg;
+      var n = N2.fbm(x * 0.01 + seedOff, 3.7, 4);
+      var n2 = N1.fbm(x * 0.035 + seedOff * 2.0, 8.2, 3);
+      var h = hMin + (hMax - hMin) * (n * 0.85 + n2 * 0.45);
+      top.push([x, h, z]);
+      base.push([x, -2, z]);
+    }
+    for (var j = 0; j < seg; j++) {
+      var shade = 0.72 + 0.28 * Math.sin(j * 0.7 + seedOff);
+      flatQuad(m, base[j], base[j + 1], top[j + 1], top[j], [
+        col[0] * shade,
+        col[1] * shade,
+        col[2] * shade,
+      ]);
+    }
+  }
+  ridge(-118, 5, 21, [0.045, 0.052, 0.062], 1.3);
+  ridge(-172, 12, 34, [0.038, 0.045, 0.058], 4.7);
+  ridge(-235, 20, 52, [0.033, 0.04, 0.052], 9.1);
+  return uploadMesh({ aPos: m.p, aNrm: m.n, aCol: m.c, aUv: m.u }, m.i);
+}
+
+
+/* 源码：src/camp.js */
+/* ------------------------------------------------------- 帐篷 */
+var tentMouth = Mesh();
+var TENTS = [];
+function addTent(m, x, z, w, d, h, yaw, shade, glow) {
+  TENTS.push({ x: x, z: z, w: w, d: d });
+  var c = Math.cos(yaw),
+    s = Math.sin(yaw);
+  function P(lx, ly, lz) {
+    return [
+      x + lx * c + lz * s,
+      groundH(x + lx * c + lz * s, z - lx * s + lz * c) + ly - 0.05,
+      z - lx * s + lz * c,
+    ];
+  }
+  var fabric = [0.175 * shade, 0.17 * shade, 0.148 * shade];
+  var seg = 4,
+    i,
+    j;
+  /* 两坡屋面：脊线到檐口，带轻微下垂 */
+  for (var side = -1; side <= 1; side += 2) {
+    var prev = null;
+    for (i = 0; i <= seg; i++) {
+      var t = i / seg,
+        lz = -d / 2 + d * t;
+      var row = [];
+      for (j = 0; j <= 2; j++) {
+        var u = j / 2;
+        var lx = side * (w / 2) * u;
+        var ly =
+          lerp(h, h * 0.34, u) -
+          Math.sin(Math.PI * u) * 0.1 * Math.sin(t * Math.PI) * 0.9;
+        row.push(P(lx, ly, lz));
+      }
+      if (prev) {
+        var cc = [
+          fabric[0] * (0.92 + 0.16 * Math.sin(i * 1.7 + side)),
+          fabric[1] * (0.92 + 0.16 * Math.sin(i * 1.7 + side)),
+          fabric[2] * (0.92 + 0.16 * Math.sin(i * 1.7 + side)),
+        ];
+        if (side < 0) flatQuad(m, prev[0], prev[1], row[1], row[0], cc);
+        else flatQuad(m, row[0], row[1], prev[1], prev[0], cc);
+      }
+      prev = row;
+    }
+  }
+  /* 两山墙 */
+  var apexF = P(0, h, d / 2),
+    apexB = P(0, h, -d / 2);
+  var fbl = P((-w / 2) * 0.99, 0, d / 2),
+    fbr = P((w / 2) * 0.99, 0, d / 2);
+  var bbl = P((-w / 2) * 0.99, 0, -d / 2),
+    bbr = P((w / 2) * 0.99, 0, -d / 2);
+  var eyF_L = P(-w / 2, h * 0.34, d / 2),
+    eyF_R = P(w / 2, h * 0.34, d / 2);
+  var eyB_L = P(-w / 2, h * 0.34, -d / 2),
+    eyB_R = P(w / 2, h * 0.34, -d / 2);
+  flatQuad(m, bbl, bbr, eyB_R, eyB_L, [
+    fabric[0] * 0.86,
+    fabric[1] * 0.86,
+    fabric[2] * 0.86,
+  ]);
+  flatTri(m, eyB_L, eyB_R, apexB, [
+    fabric[0] * 0.86,
+    fabric[1] * 0.86,
+    fabric[2] * 0.86,
+  ]);
+  /* 前墙留门洞 */
+  if (glow) {
+    var wall = [fabric[0] * 0.94, fabric[1] * 0.94, fabric[2] * 0.94];
+    flatQuad(
+      m,
+      fbl,
+      P(-0.34, 0, d / 2),
+      P(-0.34, h * 0.34, d / 2),
+      eyF_L,
+      wall,
+    );
+    flatQuad(m, P(0.34, 0, d / 2), fbr, eyF_R, P(0.34, h * 0.34, d / 2), wall);
+    flatQuad(
+      m,
+      P(-0.34, h * 0.3, d / 2),
+      P(0.34, h * 0.3, d / 2),
+      P(0.34, h * 0.34, d / 2),
+      P(-0.34, h * 0.34, d / 2),
+      wall,
+    );
+    flatTri(m, eyF_L, eyF_R, apexF, wall);
+    /* 帐内透出的暖光 */
+    var mc = [0.62, 0.27, 0.085];
+    var g0 = P(-0.3, 0.02, d / 2 - 0.02),
+      g1 = P(0.3, 0.02, d / 2 - 0.02);
+    var g2 = P(0.3, h * 0.29, d / 2 - 0.02),
+      g3 = P(-0.3, h * 0.29, d / 2 - 0.02);
+    flatQuad(tentMouth, g0, g1, g2, g3, mc, [
+      [0, 0],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+    ]);
+  } else {
+    flatQuad(m, fbl, fbr, eyF_R, eyF_L, [
+      fabric[0] * 0.94,
+      fabric[1] * 0.94,
+      fabric[2] * 0.94,
+    ]);
+    flatTri(m, eyF_L, eyF_R, apexF, [
+      fabric[0] * 0.94,
+      fabric[1] * 0.94,
+      fabric[2] * 0.94,
+    ]);
+  }
+  /* 脊杆 */
+  addTube(
+    m,
+    [P(0, h, -d / 2 - 0.32), P(0, h, d / 2 + 0.32)],
+    [0.035, 0.035],
+    5,
+    [0.12, 0.09, 0.06],
+    true,
+  );
+  /* 四根拉绳 */
+  var ropes = [
+    [P(0, h, d / 2 + 0.2), P(-w / 2 - 0.75, 0.02, d / 2 + 0.55)],
+    [P(0, h, d / 2 + 0.2), P(w / 2 + 0.75, 0.02, d / 2 + 0.55)],
+    [P(0, h, -d / 2 - 0.2), P(-w / 2 - 0.75, 0.02, -d / 2 - 0.55)],
+    [P(0, h, -d / 2 - 0.2), P(w / 2 + 0.75, 0.02, -d / 2 - 0.55)],
+  ];
+  for (i = 0; i < ropes.length; i++) {
+    var a = ropes[i][0],
+      b = ropes[i][1];
+    var wob = 0.018;
+    flatQuad(
+      m,
+      [a[0] - wob, a[1], a[2]],
+      [a[0] + wob, a[1], a[2]],
+      [b[0] + wob * 0.5, b[1], b[2]],
+      [b[0] - wob * 0.5, b[1], b[2]],
+      [0.085, 0.07, 0.052],
+    );
+  }
+}
+
+function buildCamp() {
+  var m = Mesh();
+  var rows = [
+    {
+      z: -9.5,
+      xs: [-12.5, -7.4, -2.2, 2.6, 7.8, 13.2],
+      w: 3.5,
+      d: 3.4,
+      h: 2.6,
+    },
+    {
+      z: -16.5,
+      xs: [-15.5, -10.2, -4.8, 0.4, 5.8, 11.2, 16.6],
+      w: 3.7,
+      d: 3.6,
+      h: 2.7,
+    },
+    {
+      z: -24.0,
+      xs: [-18.0, -12.4, -6.6, -0.8, 5.0, 10.8, 16.6, 22.2],
+      w: 3.9,
+      d: 3.7,
+      h: 2.8,
+    },
+    {
+      z: -33.0,
+      xs: [-21.0, -15.0, -8.8, -2.6, 3.6, 9.8, 16.0, 22.2],
+      w: 4.1,
+      d: 3.9,
+      h: 2.9,
+    },
+  ];
+  for (var r = 0; r < rows.length; r++) {
+    var row = rows[r];
+    for (var i = 0; i < row.xs.length; i++) {
+      var x = row.xs[i] + (RND() - 0.5) * 0.9;
+      var z = row.z + (RND() - 0.5) * 1.1;
+      var yaw = (RND() - 0.5) * 0.16;
+      var w = row.w * (0.9 + RND() * 0.2),
+        d = row.d * (0.9 + RND() * 0.2),
+        h = row.h * (0.94 + RND() * 0.12);
+      var glow = r < 3 && (i + r) % 2 === 0;
+      addTent(m, x, z, w, d, h, yaw, 0.86 + RND() * 0.28, glow);
+    }
+  }
+  return uploadMesh({ aPos: m.p, aNrm: m.n, aCol: m.c, aUv: m.u }, m.i);
+}
+
+/* ------------------------------------------------------- 旌旗 */
+var clothM = Mesh(),
+  poleM = Mesh();
+function addBanner(x, z, h, w, phase, shade) {
+  var y0 = groundH(x, z);
+  addTube(
+    poleM,
+    [
+      [x, y0 - 0.1, z],
+      [x, y0 + h * 0.62, z],
+      [x, y0 + h, z],
+    ],
+    [0.055, 0.045, 0.03],
+    6,
+    [0.115, 0.086, 0.058],
+    true,
+  );
+  addTube(
+    poleM,
+    [
+      [x - w * 0.62, y0 + h * 0.955, z],
+      [x + w * 0.3, y0 + h * 0.975, z],
+    ],
+    [0.02, 0.018],
+    5,
+    [0.1, 0.078, 0.052],
+    true,
+  );
+  var segX = 6,
+    segY = 12,
+    i,
+    j;
+  var idx0 = clothM.p.length / 3;
+  for (j = 0; j <= segY; j++) {
+    var v = j / segY;
+    for (i = 0; i <= segX; i++) {
+      var u = i / segX;
+      var px = x - w * 0.1 + w * 0.42 * u;
+      var py = y0 + h * 0.955 - h * 0.52 * v;
+      var pz = z + 0.02;
+      var col = [0.235 * shade, 0.062 * shade, 0.05 * shade];
+      if (v > 0.93 || u > 0.9)
+        col = [0.14 * shade, 0.04 * shade, 0.034 * shade];
+      var att = Math.pow(u, 1.15);
+      clothM.p.push(px, py, pz);
+      clothM.n.push(0, 0, 1);
+      clothM.c.push(col[0], col[1], col[2]);
+      clothM.u.push(u, v);
+      clothM.info = clothM.info || [];
+      clothM.info.push(0.085 + w * 0.03, phase, att);
+    }
+  }
+  for (j = 0; j < segY; j++) {
+    for (i = 0; i < segX; i++) {
+      var a = idx0 + j * (segX + 1) + i,
+        b = a + 1,
+        c = a + segX + 1,
+        d = c + 1;
+      clothM.i.push(a, b, c, b, d, c);
+    }
+  }
+}
+
+function buildBanners() {
+  addBanner(-3.9, -4.4, 6.6, 1.25, 0.4, 1.0);
+  addBanner(6.2, -9.6, 7.2, 1.35, 1.9, 0.92);
+  addBanner(-12.0, -16.4, 7.8, 1.45, 3.1, 0.86);
+  addBanner(1.6, -17.2, 6.9, 1.25, 4.4, 0.96);
+  addBanner(12.6, -23.0, 7.4, 1.35, 5.6, 0.82);
+  addBanner(-7.5, -27.5, 7.0, 1.3, 2.3, 0.78);
+}
+
+
+/* 源码：src/props.js */
+/* ------------------------------------------------------- 矛架 */
+function addSpearRack(m, x, z, yaw) {
+  var y0 = groundH(x, z);
+  var c = Math.cos(yaw),
+    s = Math.sin(yaw);
+  function P(lx, ly, lz) {
+    return [x + lx * c + lz * s, y0 + ly, z - lx * s + lz * c];
+  }
+  /* 三脚架 */
+  addTube(
+    m,
+    [P(-0.62, 0, -0.35), P(0, 1.32, 0)],
+    [0.035, 0.032],
+    5,
+    [0.12, 0.095, 0.062],
+    true,
+  );
+  addTube(
+    m,
+    [P(0.62, 0, -0.35), P(0, 1.32, 0)],
+    [0.035, 0.032],
+    5,
+    [0.12, 0.095, 0.062],
+    true,
+  );
+  addTube(
+    m,
+    [P(0, 0, 0.55), P(0, 1.32, 0)],
+    [0.035, 0.032],
+    5,
+    [0.12, 0.095, 0.062],
+    true,
+  );
+  addTube(
+    m,
+    [P(-0.52, 1.02, 0), P(0.52, 1.02, 0)],
+    [0.028, 0.028],
+    5,
+    [0.115, 0.09, 0.06],
+    true,
+  );
+  /* 斜倚的长矛 */
+  var rnd = mulberry32((x * 97 + z * 31) | 0);
+  for (var i = 0; i < 11; i++) {
+    var lx = -0.46 + i * 0.092;
+    var lean = 0.1 + rnd() * 0.09;
+    var len = 3.3 + rnd() * 0.85;
+    var bx = P(lx, 0.0, 0.16);
+    var tx = P(lx + lean * 1.5, len, 0.16 + lean * 0.6);
+    addTube(m, [bx, tx], [0.021, 0.014], 5, [0.14, 0.115, 0.082], false);
+    /* 矛头 */
+    var dir = [tx[0] - bx[0], tx[1] - bx[1], tx[2] - bx[2]];
+    var dl = Math.hypot(dir[0], dir[1], dir[2]) || 1;
+    var M = m4axis(tx, dir, [0, 0, 1], 1);
+    var tip = xf(M, [0, 0.3, 0]);
+    addTube(m, [tx, tip], [0.03, 0.002], 4, [0.52, 0.52, 0.55], true);
+  }
+}
+
+/* 在局部坐标系中放置方盒（用于剑格） */
+function addLocalBox(m, M, cx, cy, cz, sx, sy, sz, col) {
+  var hx = sx / 2,
+    hy = sy / 2,
+    hz = sz / 2,
+    i;
+  var pts = [];
+  for (i = 0; i < 8; i++) {
+    var lx = i & 1 ? hx : -hx,
+      ly = i & 2 ? hy : -hy,
+      lz = i & 4 ? hz : -hz;
+    pts.push(xf(M, [cx + lx, cy + ly, cz + lz]));
+  }
+  /* 顶点索引：0(-,-,-) 1(+,-,-) 2(-,+,-) 3(+,+,-) 4(-,-,+) 5(+,-,+) 6(-,+,+) 7(+,+,+) */
+  flatQuad(m, pts[4], pts[5], pts[7], pts[6], col);
+  flatQuad(m, pts[1], pts[0], pts[2], pts[3], [
+    col[0] * 0.8,
+    col[1] * 0.8,
+    col[2] * 0.8,
+  ]);
+  flatQuad(m, pts[0], pts[4], pts[6], pts[2], [
+    col[0] * 0.9,
+    col[1] * 0.9,
+    col[2] * 0.9,
+  ]);
+  flatQuad(m, pts[5], pts[1], pts[3], pts[7], [
+    col[0] * 0.95,
+    col[1] * 0.95,
+    col[2] * 0.95,
+  ]);
+  flatQuad(m, pts[3], pts[2], pts[6], pts[7], col);
+  flatQuad(m, pts[0], pts[1], pts[5], pts[4], [
+    col[0] * 0.7,
+    col[1] * 0.7,
+    col[2] * 0.7,
+  ]);
+}
+
+/* ------------------------------------------------------- 剑 */
+function addSword(m, M) {
+  var i;
+  var stations = [
+    [0.0, 0.052, 0.0125],
+    [0.1, 0.051, 0.0118],
+    [0.46, 0.047, 0.0102],
+    [0.74, 0.04, 0.0086],
+    [0.88, 0.03, 0.0066],
+    [0.965, 0.008, 0.003],
+  ];
+  var rings = [];
+  for (i = 0; i < stations.length; i++) {
+    var y = stations[i][0],
+      w = stations[i][1],
+      t = stations[i][2];
+    var pts = [
+      [0, y, t],
+      [w, y, 0],
+      [0, y, -t],
+      [-w, y, 0],
+    ];
+    var ring = [];
+    for (var k = 0; k < 4; k++) {
+      var p = xf(M, pts[k]);
+      ring.push(
+        vtx(m, p[0], p[1], p[2], 0, 0, 0, [0.46, 0.48, 0.5], [k / 4, y]),
+      );
+    }
+    rings.push(ring);
+  }
+  /* 重新以面法线着色，保持棱线 */
+  m.p.length -= 0;
+  for (i = 0; i < rings.length - 1; i++) {
+    for (var k = 0; k < 4; k++) {
+      var k2 = (k + 1) % 4;
+      var a = rings[i][k],
+        b = rings[i][k2],
+        c = rings[i + 1][k2],
+        d = rings[i + 1][k];
+      var pa = [m.p[a * 3], m.p[a * 3 + 1], m.p[a * 3 + 2]];
+      var pb = [m.p[b * 3], m.p[b * 3 + 1], m.p[b * 3 + 2]];
+      var pc = [m.p[c * 3], m.p[c * 3 + 1], m.p[c * 3 + 2]];
+      var e1 = [pb[0] - pa[0], pb[1] - pa[1], pb[2] - pa[2]],
+        e2 = [pc[0] - pa[0], pc[1] - pa[1], pc[2] - pa[2]];
+      var nx = e1[1] * e2[2] - e1[2] * e2[1],
+        ny = e1[2] * e2[0] - e1[0] * e2[2],
+        nz = e1[0] * e2[1] - e1[1] * e2[0];
+      var nl = Math.hypot(nx, ny, nz) || 1;
+      var face = 0.42 + 0.3 * Math.abs(ny / nl);
+      m.c[a * 3] = face * 1.05;
+      m.c[a * 3 + 1] = face * 1.05;
+      m.c[a * 3 + 2] = face * 1.1;
+      m.c[b * 3] = face * 1.05;
+      m.c[b * 3 + 1] = face * 1.05;
+      m.c[b * 3 + 2] = face * 1.1;
+      m.c[c * 3] = face * 1.05;
+      m.c[c * 3 + 1] = face * 1.05;
+      m.c[c * 3 + 2] = face * 1.1;
+      m.c[d * 3] = face * 1.05;
+      m.c[d * 3 + 1] = face * 1.05;
+      m.c[d * 3 + 2] = face * 1.1;
+      (function (mm, a, b, c, d, nx, ny, nz) {
+        mm.i.push(a, b, c, a, c, d);
+        var ids = [a, b, c, d];
+        for (var q = 0; q < 4; q++) {
+          mm.n[ids[q] * 3] = nx;
+          mm.n[ids[q] * 3 + 1] = ny;
+          mm.n[ids[q] * 3 + 2] = nz;
+        }
+      })(m, a, b, c, d, nx / nl, ny / nl, nz / nl);
+    }
+  }
+  /* 护手 */
+  addLocalBox(m, M, 0, -0.012, 0, 0.19, 0.03, 0.05, [0.3, 0.24, 0.13]);
+  addLocalBox(m, M, 0, -0.036, 0, 0.12, 0.024, 0.042, [0.26, 0.21, 0.12]);
+  /* 握柄与柄头 */
+  var h0 = xf(M, [0, -0.045, 0]),
+    h1 = xf(M, [0, -0.205, 0]);
+  addTube(m, [h0, h1], [0.023, 0.021], 8, [0.095, 0.07, 0.048], false);
+  for (i = 0; i < 6; i++) {
+    var t0 = -0.055 - i * 0.024,
+      t1 = t0 - 0.009;
+    var r0 = xf(M, [0, t0, 0]),
+      r1 = xf(M, [0, t1, 0]);
+    addTube(m, [r0, r1], [0.026, 0.026], 8, [0.07, 0.052, 0.036], false);
+  }
+  var pom = xf(M, [0, -0.225, 0]);
+  addLathe(
+    m,
+    [
+      [0, 0.0],
+      [0.02, 0.004],
+      [0.028, 0.018],
+      [0.022, 0.034],
+      [0.0, 0.042],
+    ],
+    8,
+    [0.32, 0.25, 0.13],
+    pom[0],
+    pom[1],
+    pom[2],
+    1,
+  );
+}
+
+/* ------------------------------------------------------- 器物 */
+function addTable(m, x, z, yaw) {
+  var y0 = groundH(x, z);
+  var w = 1.52,
+    d = 0.68,
+    topY = y0 + 0.6;
+  var c = Math.cos(yaw),
+    s = Math.sin(yaw);
+  function P(lx, ly, lz) {
+    return [x + lx * c + lz * s, y0 + ly, z - lx * s + lz * c];
+  }
+  for (var i = 0; i < 3; i++) {
+    var lz = -d / 2 + 0.115 + i * 0.225;
+    flatQuad(
+      m,
+      P(-w / 2, topY, lz - 0.112),
+      P(w / 2, topY, lz - 0.112),
+      P(w / 2, topY, lz + 0.112),
+      P(-w / 2, topY, lz + 0.112),
+      [0.15, 0.112, 0.074],
+    );
+    flatQuad(
+      m,
+      P(-w / 2, topY - 0.05, lz + 0.112),
+      P(w / 2, topY - 0.05, lz + 0.112),
+      P(w / 2, topY, lz + 0.112),
+      P(-w / 2, topY, lz + 0.112),
+      [0.098, 0.072, 0.047],
+    );
+  }
+  var legs = [
+    [-w / 2 + 0.1, -d / 2 + 0.1],
+    [w / 2 - 0.1, -d / 2 + 0.1],
+    [-w / 2 + 0.1, d / 2 - 0.1],
+    [w / 2 - 0.1, d / 2 - 0.1],
+  ];
+  for (i = 0; i < 4; i++) {
+    var lp = P(legs[i][0], 0, legs[i][1]);
+    addTube(
+      m,
+      [
+        [lp[0], lp[1], lp[2]],
+        [lp[0], lp[1] + topY - 0.05, lp[2]],
+      ],
+      [0.032, 0.027],
+      5,
+      [0.105, 0.078, 0.05],
+      true,
+    );
+  }
+  addTube(
+    m,
+    [P(-w / 2 + 0.1, 0.22, -d / 2 + 0.1), P(w / 2 - 0.1, 0.22, -d / 2 + 0.1)],
+    [0.018, 0.018],
+    4,
+    [0.09, 0.068, 0.045],
+    true,
+  );
+  addTube(
+    m,
+    [P(-w / 2 + 0.1, 0.22, d / 2 - 0.1), P(w / 2 - 0.1, 0.22, d / 2 - 0.1)],
+    [0.018, 0.018],
+    4,
+    [0.09, 0.068, 0.045],
+    true,
+  );
+}
+
+function addOilLamp(m, x, y, z) {
+  addLathe(
+    m,
+    [
+      [0.0, 0.0],
+      [0.075, 0.006],
+      [0.062, 0.022],
+      [0.026, 0.036],
+      [0.02, 0.1],
+      [0.034, 0.118],
+      [0.058, 0.126],
+      [0.062, 0.14],
+      [0.05, 0.15],
+      [0.0, 0.152],
+    ],
+    10,
+    [0.36, 0.27, 0.14],
+    x,
+    y,
+    z,
+    0.72,
+  );
+  addLathe(
+    m,
+    [
+      [0.0, 0.0],
+      [0.03, 0.006],
+      [0.01, 0.026],
+      [0.006, 0.04],
+      [0.0, 0.042],
+    ],
+    6,
+    [0.88, 0.8, 0.62],
+    x + 0.005,
+    y + 0.1,
+    z,
+    1,
+  );
+}
+
+function addJar(m, x, z, s) {
+  var y0 = groundH(x, z);
+  addLathe(
+    m,
+    [
+      [0.0, 0.0],
+      [0.1, 0.006],
+      [0.155, 0.075],
+      [0.165, 0.16],
+      [0.145, 0.245],
+      [0.105, 0.3],
+      [0.072, 0.322],
+      [0.078, 0.345],
+      [0.0, 0.348],
+    ],
+    11,
+    [0.115, 0.105, 0.085],
+    x,
+    y0,
+    z,
+    s || 1,
+  );
+}
+
+function addCup(m, x, y, z) {
+  addLathe(
+    m,
+    [
+      [0.0, 0.0],
+      [0.028, 0.004],
+      [0.036, 0.01],
+      [0.042, 0.052],
+      [0.038, 0.054],
+      [0.03, 0.014],
+      [0.0, 0.01],
+    ],
+    9,
+    [0.3, 0.26, 0.2],
+    x,
+    y,
+    z,
+    1,
+  );
+}
+
+/* 号角（角身弯曲，置木架） */
+function addHorn(m, x, z, yaw) {
+  var y0 = groundH(x, z);
+  var c = Math.cos(yaw),
+    s = Math.sin(yaw);
+  function P(lx, ly, lz) {
+    return [x + lx * c + lz * s, y0 + ly, z - lx * s + lz * c];
+  }
+  var pts = [],
+    radii = [];
+  for (var i = 0; i <= 10; i++) {
+    var t = i / 10;
+    var ang = t * 1.15;
+    var lx = -0.55 + Math.sin(ang) * 0.62;
+    var ly = 1.02 + Math.cos(ang) * 0.3 - 0.3 + t * 0.1;
+    pts.push(P(lx, ly, 0));
+    radii.push(0.02 + t * 0.055);
+  }
+  addTube(m, pts, radii, 8, [0.3, 0.22, 0.11], true);
+  var bell = P(
+    -0.55 + Math.sin(1.15) * 0.62,
+    1.02 + Math.cos(1.15) * 0.3 - 0.3 + 0.1,
+    0,
+  );
+  addLathe(
+    m,
+    [
+      [0.0, 0.075],
+      [0.055, 0.07],
+      [0.082, 0.02],
+      [0.078, 0.0],
+    ],
+    9,
+    [0.34, 0.25, 0.12],
+    bell[0],
+    bell[1],
+    bell[2],
+    1,
+  );
+  /* 木架 */
+  addTube(
+    m,
+    [P(-0.72, 0, 0.16), P(-0.3, 0.92, 0)],
+    [0.026, 0.024],
+    5,
+    [0.11, 0.082, 0.055],
+    true,
+  );
+  addTube(
+    m,
+    [P(0.42, 0, 0.16), P(0.12, 0.92, 0)],
+    [0.026, 0.024],
+    5,
+    [0.11, 0.082, 0.055],
+    true,
+  );
+  addTube(
+    m,
+    [P(-0.68, 0, -0.16), P(-0.3, 0.92, 0)],
+    [0.026, 0.024],
+    5,
+    [0.1, 0.076, 0.05],
+    true,
+  );
+  addTube(
+    m,
+    [P(0.38, 0, -0.16), P(0.12, 0.92, 0)],
+    [0.026, 0.024],
+    5,
+    [0.1, 0.076, 0.05],
+    true,
+  );
+}
+
+
+/* 源码：src/particles.js */
+/* ------------------------------------------------------- 草 */
+function buildGrass() {
+  var m = { p: [], local: [], seed: [], i: [] };
+  var rnd = mulberry32(20260815);
+  var clumps = isSmall ? 520 : 1100;
+  var vi = 0;
+  for (var i = 0; i < clumps; i++) {
+    var x = (rnd() - 0.5) * 30;
+    var z = 1.0 + rnd() * 13.5;
+    if (x > -2.6 && x < -0.1 && z > 3.2 && z < 4.9) continue;
+    var y = groundH(x, z);
+    var h = 0.16 + rnd() * 0.3;
+    var ang = rnd() * 6.283;
+    var seed = [h, rnd(), ang];
+    var quad = [
+      [-1, 0],
+      [1, 0],
+      [1, 1],
+      [-1, 1],
+    ];
+    for (var k = 0; k < 4; k++) {
+      m.p.push(x, y, z);
+      m.local.push(quad[k][0], quad[k][1]);
+      m.seed.push(seed[0], seed[1], seed[2]);
+      vi++;
+    }
+    m.i.push(vi - 4, vi - 3, vi - 2, vi - 4, vi - 2, vi - 1);
+  }
+  return uploadMesh({ aPos: m.p, aLocal: m.local, aSeed: m.seed }, m.i);
+}
+
+/* ------------------------------------------------------- 精灵批次 */
+function SpriteBatch(cap) {
+  return {
+    c: new Float32Array(cap * 12),
+    l: new Float32Array(cap * 8),
+    col: new Float32Array(cap * 12),
+    inf: new Float32Array(cap * 16),
+    n: 0,
+    cap: cap,
+    mesh: {
+      buf: {},
+      count: 0,
+      type: canU32 ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT,
+    },
+    ibo: null,
+    buf: null,
+  };
+}
+var QUAD_L = [-1, -1, 1, -1, 1, 1, -1, 1];
+function pushSprite(b, x, y, z, size, rot, seed, kind, col) {
+  if (b.n >= b.cap) return;
+  var n = b.n++;
+  // 非实例绘制时，同一粒子的四个顶点各自需要一份中心坐标。
+  for (var vertex = 0; vertex < 4; vertex++) {
+    b.c[n * 12 + vertex * 3] = x;
+    b.c[n * 12 + vertex * 3 + 1] = y;
+    b.c[n * 12 + vertex * 3 + 2] = z;
+  }
+  for (var k = 0; k < 4; k++) {
+    b.l[n * 8 + k * 2] = QUAD_L[k * 2];
+    b.l[n * 8 + k * 2 + 1] = QUAD_L[k * 2 + 1];
+  }
+  for (k = 0; k < 4; k++) {
+    b.col[n * 12 + k * 3] = col[0];
+    b.col[n * 12 + k * 3 + 1] = col[1];
+    b.col[n * 12 + k * 3 + 2] = col[2];
+  }
+  for (k = 0; k < 4; k++) {
+    b.inf[n * 16 + k * 4] = size;
+    b.inf[n * 16 + k * 4 + 1] = rot;
+    b.inf[n * 16 + k * 4 + 2] = seed;
+    b.inf[n * 16 + k * 4 + 3] = kind;
+  }
+}
+function initSprites(b) {
+  b.buf = {
+    aCenter: gl.createBuffer(),
+    aLocal: gl.createBuffer(),
+    aCol: gl.createBuffer(),
+    aInfo: gl.createBuffer(),
+  };
+  var idx = new Uint32Array(b.cap * 6);
+  for (var i = 0; i < b.cap; i++) {
+    var v = i * 4;
+    idx[i * 6] = v;
+    idx[i * 6 + 1] = v + 1;
+    idx[i * 6 + 2] = v + 2;
+    idx[i * 6 + 3] = v;
+    idx[i * 6 + 4] = v + 2;
+    idx[i * 6 + 5] = v + 3;
+  }
+  b.ibo = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, b.ibo);
+  gl.bufferData(
+    gl.ELEMENT_ARRAY_BUFFER,
+    canU32 ? idx : new Uint16Array(idx),
+    gl.STATIC_DRAW,
+  );
+  b.mesh.buf = b.buf;
+  uploadSprites(b);
+}
+function uploadSprites(b) {
+  if (b.n === 0) return;
+  gl.bindBuffer(gl.ARRAY_BUFFER, b.buf.aCenter);
+  gl.bufferData(gl.ARRAY_BUFFER, b.c.subarray(0, b.n * 12), gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, b.buf.aLocal);
+  gl.bufferData(gl.ARRAY_BUFFER, b.l.subarray(0, b.n * 8), gl.DYNAMIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, b.buf.aCol);
+  gl.bufferData(gl.ARRAY_BUFFER, b.col.subarray(0, b.n * 12), gl.DYNAMIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, b.buf.aInfo);
+  gl.bufferData(gl.ARRAY_BUFFER, b.inf.subarray(0, b.n * 16), gl.DYNAMIC_DRAW);
+  b.mesh.count = b.n * 6;
+}
+function drawSprites(prog, b) {
+  if (b.n === 0) return;
+  var k, loc;
+  var names = { aCenter: 3, aLocal: 2, aCol: 3, aInfo: 4 };
+  for (k in names) {
+    loc = prog.a[k];
+    if (loc === undefined || loc < 0) continue;
+    gl.bindBuffer(gl.ARRAY_BUFFER, b.buf[k]);
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, names[k], gl.FLOAT, false, 0, 0);
+  }
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, b.ibo);
+  gl.drawElements(gl.TRIANGLES, b.mesh.count, b.mesh.type, 0);
+  drawCallCount++;
+}
+
+
+/* 源码：src/assembly.js */
+/* ------------------------------------------------------- 场景装配 */
+var isSmall = Math.min(window.innerWidth, window.innerHeight) < 720;
+
+var skyMesh = uploadMesh(
+  { aPos: [-1, -1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0] },
+  [0, 1, 2, 2, 1, 3],
+);
+var terrainMesh = buildTerrain();
+var mountainMesh = buildMountains();
+var campMesh = buildCamp();
+var mouthMesh = uploadMesh(
+  { aPos: tentMouth.p, aNrm: tentMouth.n, aCol: tentMouth.c, aUv: tentMouth.u },
+  tentMouth.i,
+);
+
+/* 器物与剑 */
+var TABLE_Y = groundH(-1.42, 4.02) + 0.6;
+var LAMP_X = -2.08,
+  LAMP_Z = 3.74,
+  LAMP_Y = TABLE_Y;
+var propM = Mesh();
+addTable(propM, -1.42, 4.02, 0.16);
+addJar(propM, -2.62, 4.62, 0.95);
+addCup(propM, -1.6, TABLE_Y + 0.004, 4.26);
+addOilLamp(propM, LAMP_X, LAMP_Y, LAMP_Z);
+addSpearRack(propM, -5.3, -3.4, 0.35);
+addSpearRack(propM, 4.6, -11.2, -0.22);
+addHorn(propM, 5.0, -6.4, 0.55);
+var propMesh = uploadMesh(
+  { aPos: propM.p, aNrm: propM.n, aCol: propM.c, aUv: propM.u },
+  propM.i,
+);
+
+var swordM = Mesh();
+var SWORD_POS = [-1.1, TABLE_Y + 0.035, 4.18];
+var SWORD_DIR = [-0.905, 0.17, -0.32];
+var SWORD_M = m4axis(SWORD_POS, SWORD_DIR, [0, 1, 0], 1);
+addSword(swordM, SWORD_M);
+var swordMesh = uploadMesh(
+  { aPos: swordM.p, aNrm: swordM.n, aCol: swordM.c, aUv: swordM.u },
+  swordM.i,
+);
+
+buildBanners();
+var clothMesh = uploadMesh(
+  {
+    aPos: clothM.p,
+    aNrm: clothM.n,
+    aCol: clothM.c,
+    aUv: clothM.u,
+    aInfo: clothM.info,
+  },
+  clothM.i,
+);
+var poleMesh = uploadMesh(
+  { aPos: poleM.p, aNrm: poleM.n, aCol: poleM.c, aUv: poleM.u },
+  poleM.i,
+);
+var grassMesh = buildGrass();
+
+/* 灯火位置（灯芯） */
+var LAMP = [LAMP_X, LAMP_Y + 0.128, LAMP_Z];
+var FIRES = [
+  { x: 4.3, z: -4.2, s: 1.0 },
+  { x: -7.6, z: -10.6, s: 0.9 },
+  { x: 8.2, z: -16.2, s: 0.85 },
+  { x: -2.0, z: -22.0, s: 0.8 },
+  { x: 14.0, z: -28.0, s: 0.7 },
+  { x: -15.0, z: -30.5, s: 0.64 },
+];
+for (var fi = 0; fi < FIRES.length; fi++) {
+  FIRES[fi].y = groundH(FIRES[fi].x, FIRES[fi].z) + 0.18;
+}
+
+/* 地面投影 */
+var shadowB = SpriteBatch(96),
+  groundGlowB = SpriteBatch(24);
+for (var si = 0; si < FIRES.length; si++) {
+  pushSprite(
+    shadowB,
+    FIRES[si].x,
+    FIRES[si].y - 0.16,
+    FIRES[si].z,
+    1.5,
+    0,
+    0.1,
+    4,
+    [0.02, 0.02, 0.02],
+  );
+  pushSprite(
+    groundGlowB,
+    FIRES[si].x,
+    FIRES[si].y - 0.16,
+    FIRES[si].z,
+    2.6 * FIRES[si].s,
+    0,
+    0.1,
+    0,
+    [1.0, 0.4, 0.13],
+  );
+}
+pushSprite(
+  groundGlowB,
+  LAMP[0],
+  LAMP[1] - 0.12,
+  LAMP[2],
+  1.55,
+  0,
+  0.4,
+  0,
+  [1.0, 0.52, 0.2],
+);
+pushSprite(
+  shadowB,
+  -1.42,
+  groundH(-1.42, 4.02) + 0.012,
+  4.02,
+  1.2,
+  0,
+  0.2,
+  4,
+  [0.02, 0.02, 0.02],
+);
+for (var ti = 0; ti < TENTS.length; ti++) {
+  var tn = TENTS[ti];
+  pushSprite(
+    shadowB,
+    tn.x,
+    groundH(tn.x, tn.z) + 0.014,
+    tn.z,
+    tn.w * 0.72,
+    0,
+    0.3 + ti * 0.17,
+    4,
+    [0.02, 0.02, 0.02],
+  );
+}
+
+/* 火焰与光晕 */
+var flameB = SpriteBatch(64),
+  glowB = SpriteBatch(96),
+  emberB = SpriteBatch(520),
+  smokeB = SpriteBatch(220),
+  farB = SpriteBatch(140);
+(function () {
+  var rnd = mulberry32(77123);
+  for (var i = 0; i < FIRES.length; i++) {
+    var f = FIRES[i];
+    var k = f.s;
+    pushSprite(
+      glowB,
+      f.x,
+      f.y + 0.35,
+      f.z,
+      2.4 * k,
+      0,
+      rnd() * 6.28,
+      0,
+      [1.0, 0.42, 0.14],
+    );
+    pushSprite(
+      glowB,
+      f.x,
+      f.y + 0.3,
+      f.z,
+      1.0 * k,
+      0,
+      rnd() * 6.28,
+      0,
+      [1.0, 0.62, 0.28],
+    );
+    for (var j = 0; j < 4; j++) {
+      pushSprite(
+        flameB,
+        f.x + (rnd() - 0.5) * 0.16 * k,
+        f.y + 0.2 * j * 0.42 * k,
+        f.z + (rnd() - 0.5) * 0.16 * k,
+        (0.52 - 0.07 * j) * k,
+        rnd() * 6.28,
+        rnd() * 6.28,
+        1,
+        [1, 1, 1],
+      );
+    }
+    for (j = 0; j < (isSmall ? 14 : 34); j++) {
+      pushSprite(
+        emberB,
+        f.x + (rnd() - 0.5) * 0.35,
+        f.y + 0.3,
+        f.z + (rnd() - 0.5) * 0.35,
+        0.03 + rnd() * 0.028,
+        0,
+        rnd() * 6.28,
+        3,
+        [1.0, 0.48, 0.16],
+      );
+    }
+    for (j = 0; j < (isSmall ? 6 : 14); j++) {
+      pushSprite(
+        smokeB,
+        f.x + (rnd() - 0.5) * 0.4,
+        f.y + 0.4 + rnd() * 0.6,
+        f.z + (rnd() - 0.5) * 0.4,
+        1.6 + rnd() * 1.4,
+        0,
+        rnd() * 6.28,
+        2,
+        [0.2, 0.2, 0.2],
+      );
+    }
+  }
+  pushSprite(
+    glowB,
+    LAMP[0],
+    LAMP[1] + 0.05,
+    LAMP[2],
+    0.52,
+    0,
+    1.2,
+    0,
+    [1.0, 0.66, 0.34],
+  );
+  pushSprite(
+    glowB,
+    LAMP[0],
+    LAMP[1] + 0.03,
+    LAMP[2],
+    0.16,
+    0,
+    2.2,
+    0,
+    [1.0, 0.86, 0.58],
+  );
+  pushSprite(
+    flameB,
+    LAMP[0],
+    LAMP[1] + 0.015,
+    LAMP[2],
+    0.105,
+    0,
+    3.1,
+    1,
+    [1, 1, 1],
+  );
+  /* 远处连营 */
+  for (var i2 = 0; i2 < (isSmall ? 55 : 110); i2++) {
+    var x = (rnd() - 0.5) * 150;
+    var z = -36 - rnd() * 95;
+    var y = groundH(x, z) + 0.4 + rnd() * 1.5;
+    var s = 0.55 + rnd() * 1.15;
+    pushSprite(farB, x, y, z, s, 0, rnd() * 6.28, 5, [1.0, 0.44, 0.16]);
+  }
+})();
+initSprites(shadowB);
+initSprites(groundGlowB);
+initSprites(flameB);
+initSprites(glowB);
+initSprites(emberB);
+initSprites(smokeB);
+initSprites(farB);
+
+/* ------------------------------------------------------- 灯光参数 */
+var BASE = {
+  uMoonDir: [0, 0, 0],
+  uMoonCol: [0.34, 0.44, 0.66],
+  uAmbSky: [0.03, 0.042, 0.068],
+  uAmbGround: [0.011, 0.011, 0.01],
+  uFogColor: [0.045, 0.056, 0.078],
+  uFogK: 0.03,
+  uExposure: 1.25,
+  uZenith: [0.006, 0.011, 0.026],
+  uHorizon: [0.03, 0.042, 0.066],
+  uHaze: [0.11, 0.058, 0.028],
+  uLampPos: LAMP,
+  uLampCol: [1.0, 0.58, 0.26],
+};
+(function () {
+  var d = [-0.46, 0.215, -0.86];
+  var l = Math.hypot(d[0], d[1], d[2]);
+  BASE.uMoonDir = [d[0] / l, d[1] / l, d[2] / l];
+})();
+
+var LPOS = new Float32Array(16),
+  LCOL = new Float32Array(12),
+  LINT = new Float32Array(4);
+function updateLights(t) {
+  var flick =
+    0.86 +
+    0.1 * Math.sin(t * 11.3) +
+    0.05 * Math.sin(t * 27.1 + 1.3) +
+    0.04 * Math.sin(t * 4.1);
+  LPOS[0] = LAMP[0];
+  LPOS[1] = LAMP[1] + 0.03;
+  LPOS[2] = LAMP[2];
+  LPOS[3] = 4.6;
+  LCOL[0] = 1.0;
+  LCOL[1] = 0.56;
+  LCOL[2] = 0.24;
+  LINT[0] = 3.1 * flick;
+  for (var i = 0; i < 3; i++) {
+    var f = FIRES[i];
+    var ff =
+      0.82 +
+      0.14 * Math.sin(t * 7.7 + i * 2.1) +
+      0.06 * Math.sin(t * 19.3 + i * 5.0);
+    LPOS[(i + 1) * 4] = f.x;
+    LPOS[(i + 1) * 4 + 1] = f.y + 0.62;
+    LPOS[(i + 1) * 4 + 2] = f.z;
+    LPOS[(i + 1) * 4 + 3] = 8.5 * f.s;
+    LCOL[(i + 1) * 3] = 1.0;
+    LCOL[(i + 1) * 3 + 1] = 0.42;
+    LCOL[(i + 1) * 3 + 2] = 0.14;
+    LINT[i + 1] = 1.9 * f.s * ff;
+  }
+  return flick;
+}
+
+function setLights(prog) {
+  gl.uniform4fv(prog.u.uLPos, LPOS);
+  gl.uniform3fv(prog.u.uLCol, LCOL);
+  gl.uniform1fv(prog.u.uLInt, LINT);
+}
+
+
+/* 源码：src/render.js */
+/* ------------------------------------------------------- 相机与状态 */
+var qLevels = [
+  // 桌面低档允许低于原生分辨率，避免 DPR=1 时自动降档没有实际效果。
+  { dp: isSmall ? 1.0 : 0.8, n: "流畅" },
+  { dp: 1.35, n: "标准" },
+  { dp: 1.9, n: "精细" },
+];
+var qIndex = isSmall ? 0 : 1;
+var running = true,
+  timeS = 0,
+  pointerX = 0,
+  pointerY = 0,
+  tgtX = 0,
+  tgtY = 0;
+var dreaming = false,
+  dreamBlend = 0,
+  visible = true,
+  needsRender = true;
+var reducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)",
+).matches;
+if (reducedMotion) running = false;
+
+function resize() {
+  var dpr = Math.min(window.devicePixelRatio || 1, qLevels[qIndex].dp);
+  var w = Math.max(1, Math.floor(window.innerWidth * dpr));
+  var h = Math.max(1, Math.floor(window.innerHeight * dpr));
+  if (canvas.width !== w || canvas.height !== h) {
+    canvas.width = w;
+    canvas.height = h;
+    needsRender = true;
+  }
+}
+resize();
+window.addEventListener("resize", resize, false);
+
+window.addEventListener(
+  "pointermove",
+  function (e) {
+    var r = canvas.getBoundingClientRect();
+    tgtX = clamp(((e.clientX - r.left) / r.width) * 2 - 1, -1, 1);
+    tgtY = clamp(((e.clientY - r.top) / r.height) * 2 - 1, -1, 1);
+    needsRender = true;
+  },
+  { passive: true },
+);
+window.addEventListener("pointerleave", function () {
+  tgtX = 0;
+  tgtY = 0;
+});
+
+/* ------------------------------------------------------- 渲染 */
+var vp = new Float32Array(16),
+  viewM = new Float32Array(16),
+  projM = new Float32Array(16);
+var eye = [0, 1.42, 8.4],
+  target = [-0.4, 1.18, -16];
+
+function drawSolid(prog, mesh, model, opt) {
+  gl.uniformMatrix4fv(prog.u.uModel, false, model);
+  if (opt) {
+    if (opt.spec !== undefined) gl.uniform1f(prog.u.uSpec, opt.spec);
+    if (opt.shine !== undefined) gl.uniform1f(prog.u.uShine, opt.shine);
+    if (opt.emissive !== undefined)
+      gl.uniform1f(prog.u.uEmissive, opt.emissive);
+  }
+  drawMesh(prog, mesh);
+}
+
+function render(t) {
+  drawCallCount = 0;
+  resize();
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.clearColor(0.02, 0.028, 0.045, 1);
+  gl.depthMask(true);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  pointerX = lerp(pointerX, tgtX, 0.045);
+  pointerY = lerp(pointerY, tgtY, 0.045);
+  var drift = Math.sin(t * 0.075) * 0.55;
+  var driftY = Math.sin(t * 0.061 + 1.2) * 0.1;
+
+  dreamBlend = reducedMotion
+    ? Number(dreaming)
+    : lerp(dreamBlend, Number(dreaming), 0.045);
+  var portrait = canvas.width / canvas.height < 1;
+  eye[0] = lerp(portrait ? -1.42 : 0.02, 0.4, dreamBlend) + pointerX * 0.65;
+  eye[1] = lerp(1.42, 2.6, dreamBlend) - pointerY * 0.22 + driftY * 0.4;
+  eye[2] = lerp(portrait ? 9.5 : 8.4, 1.5, dreamBlend);
+  target[0] =
+    lerp(portrait ? -1.42 : -0.45, 0.4, dreamBlend) + pointerX * 2.4 + drift;
+  target[1] = lerp(1.18, 1.7, dreamBlend) - pointerY * 0.9 + driftY;
+  target[2] = -16;
+
+  var b = basisFrom(eye, target);
+  viewM.set(m4lookAt(eye, target, [0, 1, 0]));
+  var aspect = canvas.width / canvas.height;
+  var fov = portrait ? 65 : 44;
+  projM.set(m4perspective(fov * DEG, aspect, 0.06, 620));
+  m4mul(vp, projM, viewM);
+  var tanY = Math.tan(fov * 0.5 * DEG);
+
+  var camRight = [viewM[0], viewM[4], viewM[8]];
+  var camUp = [viewM[1], viewM[5], viewM[9]];
+  var camFwd = [-viewM[2], -viewM[6], -viewM[10]];
+
+  var flick = updateLights(t);
+
+  /* 天空 */
+  gl.disable(gl.DEPTH_TEST);
+  gl.disable(gl.BLEND);
+  bind(progSky);
+  setU(progSky, BASE);
+  setU(progSky, {
+    uRight: camRight,
+    uUp: camUp,
+    uFwd: camFwd,
+    uTan: [tanY * aspect, tanY],
+    uTime: t,
+  });
+  drawMesh(progSky, skyMesh);
+
+  /* 山与地 */
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthFunc(gl.LEQUAL);
+  gl.enable(gl.CULL_FACE);
+  gl.cullFace(gl.BACK);
+  bind(progSolid);
+  setU(progSolid, BASE);
+  setU(progSolid, { uViewProj: vp, uCamPos: eye, uTime: t });
+  setLights(progSolid);
+  drawSolid(progSolid, mountainMesh, m4model(0, 0, 0, 0, 1), {
+    spec: 0,
+    shine: 8,
+    emissive: 0,
+  });
+  drawSolid(progSolid, terrainMesh, m4model(0, 0, 0, 0, 1), {
+    spec: 0.04,
+    shine: 12,
+    emissive: 0,
+  });
+
+  /* 地面暗影 */
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.depthMask(false);
+  bind(progSprite);
+  setU(progSprite, {
+    uViewProj: vp,
+    uCamRight: camRight,
+    uCamUp: camUp,
+    uTime: t,
+    uKind: 4,
+    uAlpha: 0.55,
+    uFlat: 1,
+    uFogColor: BASE.uFogColor,
+    uCamPos: eye,
+    uFogK: BASE.uFogK,
+  });
+  drawSprites(progSprite, shadowB);
+
+  /* 火光在地面的暖晕 */
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+  setU(progSprite, { uKind: 0, uAlpha: 0.42, uFlat: 1 });
+  drawSprites(progSprite, groundGlowB);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  /* 营地 */
+  gl.disable(gl.BLEND);
+  gl.depthMask(true);
+  bind(progSolid);
+  setU(progSolid, { uViewProj: vp, uCamPos: eye, uTime: t });
+  setLights(progSolid);
+  drawSolid(progSolid, campMesh, m4model(0, 0, 0, 0, 1), {
+    spec: 0.05,
+    shine: 10,
+    emissive: 0,
+  });
+  drawSolid(progSolid, propMesh, m4model(0, 0, 0, 0, 1), {
+    spec: 0.34,
+    shine: 26,
+    emissive: 0,
+  });
+
+  /* 剑 */
+  drawSolid(progSolid, swordMesh, m4model(0, 0, 0, 0, 1), {
+    spec: 1.0,
+    shine: 74,
+    emissive: 0,
+  });
+
+  /* 帐内灯光 */
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+  bind(progSolid);
+  setU(progSolid, { uViewProj: vp, uCamPos: eye, uTime: t });
+  drawSolid(progSolid, mouthMesh, m4model(0, 0, 0, 0, 1), {
+    spec: 0,
+    shine: 8,
+    emissive: 1,
+  });
+
+  /* 旌旗（双面） */
+  gl.disable(gl.CULL_FACE);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  bind(progCloth);
+  setU(progCloth, BASE);
+  setU(progCloth, {
+    uViewProj: vp,
+    uModel: m4model(0, 0, 0, 0, 1),
+    uCamPos: eye,
+    uTime: t,
+  });
+  setLights(progCloth);
+  drawMesh(progCloth, clothMesh);
+  bind(progSolid);
+  setU(progSolid, { uViewProj: vp, uCamPos: eye, uTime: t });
+  setLights(progSolid);
+  drawSolid(progSolid, poleMesh, m4model(0, 0, 0, 0, 1), {
+    spec: 0.2,
+    shine: 18,
+    emissive: 0,
+  });
+
+  /* 草 */
+  gl.enable(gl.BLEND);
+  bind(progGrass);
+  setU(progGrass, BASE);
+  setU(progGrass, { uViewProj: vp, uCamPos: eye, uTime: t });
+  drawMesh(progGrass, grassMesh);
+
+  /* 烟雾 */
+  gl.depthMask(false);
+  bind(progSprite);
+  setU(progSprite, {
+    uViewProj: vp,
+    uCamRight: camRight,
+    uCamUp: camUp,
+    uTime: t,
+    uKind: 2,
+    uAlpha: 0.3,
+    uFlat: 0,
+    uFogColor: BASE.uFogColor,
+    uCamPos: eye,
+    uFogK: BASE.uFogK,
+  });
+  drawSprites(progSprite, smokeB);
+
+  /* 火焰与光晕 */
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+  setU(progSprite, { uKind: 0, uAlpha: 0.85 });
+  drawSprites(progSprite, glowB);
+  setU(progSprite, { uKind: 1, uAlpha: 0.95 });
+  drawSprites(progSprite, flameB);
+
+  /* 火星 */
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+  setU(progSprite, { uKind: 3, uAlpha: 0.95 });
+  drawSprites(progSprite, emberB);
+
+  /* 远处连营灯火 */
+  setU(progSprite, { uKind: 5, uAlpha: 0.75 });
+  drawSprites(progSprite, farB);
+
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.depthMask(true);
+  gl.enable(gl.CULL_FACE);
+}
+
+
+/* 源码：src/controls.js */
+/* 渲染调度与读者交互；隐藏或滚出视口时停止绘制。 */
+var fpsEl = document.getElementById("fps");
+var lastT = 0,
+  frames = 0,
+  fpsClock = 0,
+  fpsVal = 0,
+  firstDone = false,
+  frameDt = 0;
+var frameRequest = 0;
+var btnQ = document.getElementById("btnQuality");
+var btnP = document.getElementById("btnPause");
+var btnR = document.getElementById("btnReset");
+var btnV = document.getElementById("btnView");
+var qualityPinned = false;
+
+function requestFrame() {
+  if (!frameRequest && visible && !document.hidden)
+    frameRequest = requestAnimationFrame(tick);
+}
+
+function tick(now) {
+  frameRequest = 0;
+  if (document.hidden || !visible) {
+    lastT = 0;
+    return;
+  }
+  var dt = lastT ? (now - lastT) / 1000 : 0.016;
+  lastT = now;
+  frameDt = dt;
+  if (running) timeS += Math.min(dt, 0.06);
+  if (
+    running ||
+    needsRender ||
+    !firstDone ||
+    Math.abs(dreamBlend - Number(dreaming)) > 0.002
+  ) {
+    try {
+      render(timeS);
+    } catch (err) {
+      running = false;
+      fail("渲染中断：" + err.message);
+      return;
+    }
+    needsRender = false;
+    frames++;
+    if (!fpsClock) fpsClock = now;
+    if (now - fpsClock >= 1000) {
+      fpsVal = (frames * 1000) / (now - fpsClock);
+      frames = 0;
+      fpsClock = now;
+      fpsEl.textContent = Math.round(fpsVal) + " FPS";
+      if (
+        running &&
+        !qualityPinned &&
+        fpsVal < 34 &&
+        qIndex > 0 &&
+        timeS > 2.5
+      ) {
+        qIndex--;
+        btnQ.textContent = "画质：" + qLevels[qIndex].n;
+        resize();
+      }
+    }
+    if (!firstDone) {
+      firstDone = true;
+      veil.classList.add("hide");
+      document.documentElement.dataset.ready = "true";
+    }
+  }
+  if (running || Math.abs(dreamBlend - Number(dreaming)) > 0.002)
+    requestFrame();
+}
+
+btnQ.textContent = "画质：" + qLevels[qIndex].n;
+btnQ.addEventListener("click", function () {
+  qualityPinned = true;
+  qIndex = (qIndex + 1) % qLevels.length;
+  btnQ.textContent = "画质：" + qLevels[qIndex].n;
+  resize();
+  needsRender = true;
+  requestFrame();
+});
+function updatePause() {
+  btnP.textContent = running ? "暂停" : "继续";
+  btnP.setAttribute("aria-pressed", String(!running));
+}
+updatePause();
+btnP.addEventListener("click", function () {
+  running = !running;
+  updatePause();
+  lastT = 0;
+  fpsClock = 0;
+  frames = 0;
+  requestFrame();
+});
+btnV.addEventListener("click", function () {
+  dreaming = !dreaming;
+  btnV.textContent = dreaming ? "灯下看剑 ↙" : "梦回连营 ↗";
+  btnV.setAttribute("aria-pressed", String(dreaming));
+  needsRender = true;
+  requestFrame();
+});
+btnR.addEventListener("click", function () {
+  tgtX = 0;
+  tgtY = 0;
+  pointerX = 0;
+  pointerY = 0;
+  dreaming = false;
+  dreamBlend = 0;
+  btnV.textContent = "梦回连营 ↗";
+  btnV.setAttribute("aria-pressed", "false");
+  needsRender = true;
+  requestFrame();
+});
+window.addEventListener("pointermove", requestFrame, { passive: true });
+window.addEventListener("resize", function () {
+  needsRender = true;
+  requestFrame();
+});
+document.addEventListener("visibilitychange", function () {
+  lastT = 0;
+  fpsClock = 0;
+  frames = 0;
+  if (document.hidden) {
+    cancelAnimationFrame(frameRequest);
+    frameRequest = 0;
+  } else {
+    needsRender = true;
+    requestFrame();
+  }
+});
+function setVisible(next) {
+  visible = next;
+  lastT = 0;
+  cancelAnimationFrame(frameRequest);
+  frameRequest = 0;
+  if (visible) {
+    needsRender = true;
+    requestFrame();
+  }
+}
+// 展厅知道 iframe 是否滚出父页面；独立文件不依赖站点脚本。
+window.addEventListener(
+  "message",
+  function (
+    /** @type {MessageEvent<import('../../../assets/types').SceneVisibilityMessage>} */ event,
+  ) {
+    if (event.source !== window.parent || event.origin !== location.origin)
+      return;
+    if (
+      event.data?.type === "poetic-realms-visibility" &&
+      typeof event.data.visible === "boolean"
+    ) {
+      setVisible(event.data.visible);
+    }
+  },
+);
+window.addEventListener("keydown", function (event) {
+  if (/^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(event.target.tagName)) return;
+  if (event.key === " ") {
+    event.preventDefault();
+    btnP.click();
+  }
+  if (event.key.toLowerCase() === "q") btnQ.click();
+});
+
+// 只读运行信息供实际验收采样；绘制次数由真实 drawElements 调用计数。
+window.__poeticScene = {
+  title: "破阵子 · 醉里挑灯看剑",
+  fps: function () {
+    return fpsVal;
+  },
+  gl: gl,
+  quality: function () {
+    return qLevels[qIndex].n;
+  },
+  drawCalls: function () {
+    return drawCallCount;
+  },
+  frameMs: function () {
+    return frameDt * 1000;
+  },
+  time: function () {
+    return timeS;
+  },
+  paused: function () {
+    return !running;
+  },
+};
+requestFrame();
+
+})();
+</script>
+  </body>
+</html>

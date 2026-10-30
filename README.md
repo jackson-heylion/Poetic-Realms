@@ -7,8 +7,10 @@
 ## 当前内容
 
 - **127 条首批候选诗词、词曲及景观相关古文**，跨先秦、两汉、魏晋、南北朝、唐、宋、元、明、清。保存诗题、作者、体裁、摘句、完整电子全文、出处、异文提示、景观标签和场景创作信息。
-- **首页放映厅**：全屏播放一个随机选中的已建场景，可「下一个 / 上一个」逐个漫游，深链 `?poem=<id>&scene=<id>` 固定到某一版。右上角「隐藏界面」（或按 `H`、点完再按 `Esc`）可一键收起品牌、导航与信息面板，只留场景本身。
-- **馆藏页**：搜索诗题/作者/诗句/意象，按朝代、景观、体裁、模型、工具、难度、制作状态筛选；展开全文、核对原文出处和异文说明。
+- **首页放映厅**：全屏随机漫游，深链 `?poem=<id>&scene=<id>` 固定版本。用左右箭头或按钮切换，右上角「静观」或 `H` 收起界面，`Esc` 恢复；焦点在画面里时快捷键同样有效。
+- **馆藏页**：宣纸、墨色与朱砂的诗词画册，展示真实场景封面；搜索覆盖诗题、作者、全文与意象，筛选保存在 URL 中。诗文详情支持键盘与触屏，来源与异文按需展开。页面不再展示任务领取模块；GitHub 协作流程保留在仓库文档中。
+- **诗境展厅**：一次只加载一个版本，可全屏或独立打开；画面之外可阅读全文与创作说明。
+- **新完成《破阵子》**：[灯下看剑 · 梦回连营](scenes/pozhenzi/lamplight-sword.html)，接续本地草稿，补全旌旗、火焰、灯光及交互，可切换视点、暂停与调整画质。零外部依赖，支持直接离线打开；按职责拆分的源码见 `scenes/pozhenzi/src/`，成品由 `node scripts/pack-pozhenzi.mjs` 拼装，浏览网站无需构建。该版本登记为 `prototype`，不改变诗文校勘状态。
 - **首个可交互 WebGL 原型**：[《江雪》· 寒江独钓](scenes/jiangxue/river-snow.html)，支持环视、缩放、动态降雪、画质切换与暂停；单 HTML，可离线打开。
 - **一条提示词走完全程**：127 首诗都有「复制提示词」，内容是「使用html制作3d动态写实场景：<摘句>」＋做完之后怎么把 HTML 交回仓库（存放路径、`scenes[]` 元数据、`validate.mjs`、PR）。每首诗允许收录多个互不覆盖的 HTML，展厅可切换浏览。
 - **GitHub Issue 任务池**：首批 10 道 3D 场景任务。AI Agent 与贡献者按 `/claim model=... tool=...` 认领，领取工作流尽力自动分配 Assignee；PR 合并前人工审核。
@@ -35,22 +37,27 @@ python3 -m http.server 8000
 # http://localhost:8000/  （index.html 需要 HTTP 访问以加载 JSON）
 node scripts/validate.mjs
 node scripts/test-agent-prompt.mjs
+node scripts/test-gallery.mjs
+node scripts/pack-pozhenzi.mjs --check
 ```
 
-`scenes/*.html` 应支持直接双击离线运行，不依赖 CDN、API 或打包资源。
+《破阵子》《渔歌子》的已登记版本零依赖，可直接离线打开。其他已登记场景使用公共 CDN 加载 three.js，需要网络；各版本实际工具见 `data/poems.json`，不请求业务接口。
 
 ## 目录
 
 ```text
 index.html                   放映厅：全屏随机播放已建场景，可切换下一个
-catalog.html                 馆藏：搜索导航、筛选、详情抽屉、任务入口
+catalog.html                 馆藏：场景封面、全文检索、筛选与诗文详情
 assets/                      原生静态站样式、JS、图标
 assets/stage.js              放映厅随机顺序、iframe 换源、深链
-assets/app.js                馆藏页检索、筛选、详情抽屉
+assets/app.js                馆藏页检索、筛选与场景封面
+assets/poem-detail.js        原生 dialog 诗文详情与出处
+assets/types.d.ts            馆藏、版本与文本来源的具名类型
+assets/previews/             从实际场景截取的封面，无外部图片
 assets/agent-prompt.js       创作 + 交作业合并提示词
 assets/clipboard.js          剪贴板与轻提示
 assets/poems-data.js         馆藏目录的唯一加载入口
-data/poems.json              126条诗词、电子全文与原文来源、异文、场景元数据
+data/poems.json              127条诗词、电子全文与原文来源、异文、场景元数据
 scenes/{id}.html             历史作品保留的 HTML
 scenes/{id}/{variant-id}.html 同一首诗的多个独立创作版本
 gallery.html                 多版本场景浏览器

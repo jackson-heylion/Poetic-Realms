@@ -1,77 +1,124 @@
 <!doctype html>
 <html lang="zh-CN" class="stage-root">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#05070d">
-<meta name="description" content="诗境 Poetic Realms：以中国古典诗词为索引的 3D 场景博物馆。每次进入随机放映一个已建成的三维诗境。">
-<title>诗境 · Poetic Realms</title>
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/site.css">
-<script src="assets/poems-data.js" defer></script>
-<script src="assets/agent-prompt.js" defer></script>
-<script src="assets/clipboard.js" defer></script>
-<script src="assets/stage.js" defer></script>
-</head>
-<body class="stage-body">
-<a class="skip" href="#stage-panel">跳至当前场景信息</a>
-
-<main class="theater" id="stage">
-  <!-- 预置第一个原型：脚本未执行或目录拉取失败时，这里仍是一段可看的场景 -->
-  <iframe class="stage-frame" id="stage-frame" src="scenes/jiangxue/snow-mountains.html"
-    title="《江雪》三维场景" allow="autoplay"></iframe>
-  <div class="stage-veil" aria-hidden="true"></div>
-
-  <header class="stage-top">
-    <a class="brand" href="./" aria-label="诗境首页"><b>诗境</b><span>POETIC REALMS</span></a>
-    <nav class="stage-topnav" aria-label="主导航">
-      <a href="catalog.html">馆藏</a>
-      <a href="catalog.html#tasks">共建</a>
-      <a href="https://github.com/jackson-heylion/Poetic-Realms" target="_blank" rel="noopener">GitHub ↗</a>
-      <button class="stage-toggle" id="stage-toggle" type="button" aria-pressed="false"
-        title="隐藏界面（H）" aria-label="隐藏界面">
-        <span class="stage-toggle-glyph" aria-hidden="true">◑</span>
-        <span class="stage-toggle-label">隐藏界面</span>
-      </button>
-    </nav>
-  </header>
-
-  <div class="stage-panel" id="stage-panel">
-    <div class="stage-info" aria-live="polite" aria-atomic="true">
-      <div class="stage-kicker">
-        <span id="stage-scene">初版 · 江雪</span>
-        <span class="sep" aria-hidden="true">/</span>
-        <span class="num" id="stage-count">—</span>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#171d21" />
+    <meta
+      name="description"
+      content="让古典诗词成为可以走入的山河。诗境，一座可漫游的中国诗词三维美术馆。"
+    />
+    <title>诗境 · 字里山河，眼前天地</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <link rel="stylesheet" href="assets/theater.css" />
+    <script src="assets/poems-data.js" defer></script>
+    <script src="assets/agent-prompt.js" defer></script>
+    <script src="assets/clipboard.js" defer></script>
+    <script src="assets/stage.js" defer></script>
+  </head>
+  <body class="stage-body">
+    <a class="skip" href="#stage-panel">跳至当前诗境</a>
+    <main class="theater" id="stage">
+      <iframe
+        class="stage-frame"
+        id="stage-frame"
+        src="scenes/jiangxue/snow-mountains.html"
+        title="《江雪》三维场景"
+        allow="autoplay"
+        allowfullscreen
+      ></iframe>
+      <div class="stage-veil" aria-hidden="true"></div>
+      <header class="stage-top">
+        <a class="brand" href="./" aria-label="诗境首页"
+          ><span class="seal" aria-hidden="true">诗<br />境</span
+          ><span class="brand-name">诗境<small>POETIC REALMS</small></span></a
+        >
+        <nav class="stage-topnav" aria-label="主导航">
+          <a href="./" aria-current="page">漫游</a
+          ><a href="catalog.html">诗词馆藏 ↗</a>
+          <button
+            class="quiet-toggle"
+            id="stage-toggle"
+            type="button"
+            aria-pressed="false"
+            aria-label="隐藏界面"
+            title="隐藏界面（H），按 Esc 恢复"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" /></svg
+            ><span class="stage-toggle-label">静观</span>
+          </button>
+        </nav>
+      </header>
+      <div class="stage-edition">
+        <span class="live-dot"></span> 一座可以走入的诗词美术馆
       </div>
-      <h1 class="stage-title" id="stage-title">江雪</h1>
-      <p class="stage-meta" id="stage-meta">唐 · 柳宗元 · 五言绝句</p>
-      <p class="stage-verse" id="stage-verse">千山鸟飞绝，万径人踪灭。</p>
-      <div class="stage-tags" id="stage-tags"></div>
-    </div>
-
-    <div class="stage-actions">
-      <a class="stage-cta" id="stage-enter" href="gallery.html?poem=jiangxue">进入展厅 ↗</a>
-      <button class="stage-ghost copy-btn" id="stage-copy" type="button" data-copy="jiangxue">复制提示词</button>
-    </div>
-
-    <div class="stage-controls">
-      <button class="stage-arrow" id="stage-prev" type="button" aria-label="上一个场景">←</button>
-      <button class="stage-next" id="stage-next" type="button">下一个场景 <span aria-hidden="true">→</span></button>
-      <span class="stage-hint">或按 →</span>
-    </div>
-  </div>
-
-  <div class="stage-empty" id="stage-empty" hidden>
-    <h2>还没有建成的场景</h2>
-    <p>馆藏里的诗都还等着第一次创作。挑一首，把提示词交给 AI。</p>
-    <a class="stage-cta" href="catalog.html">打开馆藏 ↗</a>
-  </div>
-</main>
-
-<noscript>
-  <p class="stage-noscript">随机漫游需要 JavaScript。你仍可以在 <a href="catalog.html">馆藏</a> 中挑选诗句。</p>
-</noscript>
-
-<div id="copy-status" role="status" aria-live="polite" aria-atomic="true"></div>
-</body>
+      <section class="stage-panel" id="stage-panel" aria-label="当前诗境">
+        <div class="stage-info" aria-live="polite" aria-atomic="true">
+          <p class="stage-kicker">
+            <span id="stage-meta">唐 · 柳宗元</span
+            ><span class="stage-rule"></span
+            ><span id="stage-scene">寒江独钓</span>
+          </p>
+          <h1 id="stage-title">江雪</h1>
+          <p class="stage-verse" id="stage-verse">千山鸟飞绝，万径人踪灭。</p>
+          <div class="stage-links">
+            <a id="stage-enter" href="gallery.html?poem=jiangxue"
+              >读诗 · 入境 <span aria-hidden="true">↗</span></a
+            ><button
+              class="text-button copy-btn"
+              id="stage-copy"
+              type="button"
+              data-copy="jiangxue"
+            >
+              以此创作
+            </button>
+          </div>
+        </div>
+        <div class="stage-controls">
+          <p class="stage-pagination">
+            <span class="num" id="stage-count">—</span><span>山河不止一境</span>
+          </p>
+          <div class="stage-switcher">
+            <button
+              class="stage-arrow"
+              id="stage-prev"
+              type="button"
+              aria-label="上一境"
+            >
+              ←</button
+            ><button class="stage-next" id="stage-next" type="button">
+              邂逅下一境 <span aria-hidden="true">→</span>
+            </button>
+          </div>
+          <span class="stage-hint">← → 切换 · H 静观</span>
+        </div>
+      </section>
+      <div class="stage-loading" id="stage-loading" role="status" hidden>
+        <span class="loading-line"></span>正在入境
+      </div>
+      <div class="stage-empty" id="stage-empty" hidden>
+        <span class="empty-mark" aria-hidden="true">境</span>
+        <h2>山河正在途中</h2>
+        <p>先去诗词馆藏，寻一首心里的风景。</p>
+        <a class="btn btn-primary" href="catalog.html">浏览馆藏 →</a>
+      </div>
+    </main>
+    <noscript
+      ><p class="stage-noscript">
+        开启 JavaScript 即可随机漫游，或前往
+        <a href="catalog.html">诗词馆藏</a>。
+      </p></noscript
+    >
+    <div
+      id="copy-status"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+  </body>
 </html>

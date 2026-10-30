@@ -1,101 +1,206 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f7f7f5">
-<meta name="description" content="诗境馆藏：检索中国古典诗词，复制创作提示词，走进已建成的 3D 诗境展厅。">
-<title>馆藏 · 诗境 Poetic Realms</title>
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/site.css">
-<script src="assets/poems-data.js" defer></script>
-<script src="assets/agent-prompt.js" defer></script>
-<script src="assets/clipboard.js" defer></script>
-<script src="assets/app.js" defer></script>
-</head>
-<body>
-<a class="skip" href="#catalog">跳至诗词目录</a>
-
-<header class="topbar">
-  <a class="brand" href="./" aria-label="诗境首页"><b>诗境</b><span>POETIC REALMS</span></a>
-  <nav class="topnav" aria-label="主导航">
-    <a href="./">放映厅</a>
-    <a href="catalog.html" aria-current="page">馆藏</a>
-    <a href="#tasks">共建</a>
-    <a href="https://github.com/jackson-heylion/Poetic-Realms" target="_blank" rel="noopener">GitHub ↗</a>
-  </nav>
-</header>
-
-<main class="wrap">
-  <section class="hero">
-    <p class="eyebrow num">CATALOGUE</p>
-    <h1>山河入诗，<em>一念成境。</em></h1>
-    <p>所选诗词均可检索、可创作。复制提示词交给 AI 生成三维场景；提示词里已写明作品做完后怎么交回仓库。</p>
-    <div class="metrics num">
-      <span><b id="metric-total">—</b>入藏诗词</span>
-      <span><b id="metric-scenes">—</b>已建场景</span>
-      <span><b id="metric-tasks">—</b>待认领任务</span>
-    </div>
-    <label class="search">
-      <span class="glyph" aria-hidden="true">⌕</span>
-      <input id="search" type="search" placeholder="搜索诗题、诗人、名句、景观…" autocomplete="off" aria-label="搜索诗词">
-      <kbd>/</kbd>
-    </label>
-  </section>
-
-  <section id="catalog" aria-label="诗词目录">
-    <div class="filterbar">
-      <div id="popular" style="display:contents"></div>
-      <button class="chip" id="toggle-advanced" type="button" aria-expanded="false">筛选 ＋</button>
-      <span class="spacer"></span>
-      <span class="count num" id="showing">—</span>
-      <button class="chip" id="reset" type="button">重置</button>
-    </div>
-
-    <div class="advanced" id="advanced">
-      <div class="group"><span class="label">朝代</span><select id="dynasty"><option value="">全部</option></select></div>
-      <div class="group"><span class="label">体裁</span><select id="form"><option value="">全部</option></select></div>
-      <div class="group"><span class="label">难度</span><select id="hardness"><option value="">全部</option><option>H1</option><option>H2</option><option>H3</option><option>H4</option><option>H5</option></select></div>
-      <div class="group"><span class="label">状态</span><select id="status"><option value="">全部</option><option value="prototype">可体验</option><option value="available">待创作</option></select></div>
-      <div class="group"><span class="label">模型</span><select id="model"><option value="">全部</option></select></div>
-      <div class="group"><span class="label">工具</span><select id="tool"><option value="">全部</option></select></div>
-      <div class="group"><span class="label">景观</span><select id="theme"><option value="">全部</option></select></div>
-    </div>
-
-    <div class="grid" id="catalog-grid" aria-live="polite">
-      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
-    </div>
-    <div class="more"><button class="btn" id="more" type="button" hidden>加载更多 ↓</button></div>
-  </section>
-
-  <section class="tasks" id="tasks" aria-label="共建任务">
-    <div class="section-head">
-      <h4>待认领的创作任务</h4>
-    </div>
-    <p class="prose">复制提示词交给 AI 生成场景，同一段提示词里也写明了做完之后怎么把 HTML 交回仓库。同一首诗可以收录多个版本。</p>
-    <div id="task-list"></div>
-    <p class="prose" style="margin-top:18px">
-      <a class="outlined-link" href="https://github.com/jackson-heylion/Poetic-Realms/issues?q=is%3Aissue+is%3Aopen+label%3Ascene" target="_blank" rel="noopener">在 GitHub 查看全部任务 ↗</a>
-      &nbsp;·&nbsp;
-      <a href="./">回到放映厅 ↗</a>
-    </p>
-  </section>
-</main>
-
-<footer><div class="wrap foot">
-  <span>古典文字 · 数字山河 · 开放共建</span>
-  <span>摘句仅为策展入口，原文校勘状态见各诗详情</span>
-</div></footer>
-
-<div class="scrim" id="scrim"></div>
-<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="诗境详情" hidden>
-  <div class="drawer-head">
-    <div><h2 id="detail-title"></h2><div class="sub" id="detail-sub"></div></div>
-    <button class="btn btn-icon" id="close-detail" type="button" aria-label="关闭详情" style="margin-left:auto">×</button>
-  </div>
-  <div id="detail-body"></div>
-</aside>
-
-<div id="copy-status" role="status" aria-live="polite" aria-atomic="true"></div>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#f5f3ed" />
+    <meta
+      name="description"
+      content="在诗境馆藏里寻找山水、月色与人间。读完整诗文，追溯文本出处，走入三维诗境。"
+    />
+    <title>诗词馆藏 · 诗境</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <link rel="stylesheet" href="assets/collection.css" />
+    <link rel="stylesheet" href="assets/catalog.css" />
+    <link rel="stylesheet" href="assets/poem-detail.css" />
+    <script src="assets/poems-data.js" defer></script>
+    <script src="assets/agent-prompt.js" defer></script>
+    <script src="assets/clipboard.js" defer></script>
+    <script src="assets/poem-detail.js" defer></script>
+    <script src="assets/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#catalog">跳至诗词目录</a>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="诗境首页"
+        ><span class="seal" aria-hidden="true">诗<br />境</span
+        ><span class="brand-name">诗境<small>POETIC REALMS</small></span></a
+      >
+      <nav class="topnav" aria-label="主导航">
+        <a href="./">漫游</a
+        ><a href="catalog.html" aria-current="page">诗词馆藏</a
+        ><a
+          class="github-link"
+          href="https://github.com/jackson-heylion/Poetic-Realms"
+          target="_blank"
+          rel="noopener"
+          >GitHub ↗</a
+        >
+      </nav>
+    </header>
+    <main class="wrap">
+      <section class="catalog-hero">
+        <div>
+          <p class="eyebrow">THE COLLECTION <span>／</span> 诗词馆藏</p>
+          <h1>字里有山河，<br /><em>眼前皆诗境。</em></h1>
+        </div>
+        <div class="hero-aside">
+          <p>循着一句诗，去往一片天地。<br />让千年前的山水，与你此刻相逢。</p>
+          <p class="collection-count">
+            <b class="num" id="metric-total">—</b> 篇诗文<span>·</span
+            ><b class="num" id="metric-scenes">—</b> 个诗境
+          </p>
+        </div>
+      </section>
+      <section class="featured" aria-labelledby="featured-title">
+        <div class="section-heading">
+          <h2 id="featured-title">可游之境 <small>从文字，走入风景</small></h2>
+          <a class="text-link" href="./">随机漫游 ↗</a>
+        </div>
+        <div class="featured-grid" id="featured-grid">
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
+      </section>
+      <section class="library" id="catalog" aria-labelledby="library-title">
+        <div class="library-heading">
+          <h2 id="library-title">翻开诗卷</h2>
+          <span class="eyebrow">A VERSE, A WORLD</span>
+        </div>
+        <label class="search"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5" />
+            <path d="m16 16 5 5" /></svg
+          ><input
+            id="search"
+            type="search"
+            placeholder="搜一首诗、一位诗人，或一种意境"
+            autocomplete="off"
+            aria-label="搜索诗题、诗人、全文或景观"
+          /><kbd>/</kbd></label
+        >
+        <div class="filterbar">
+          <div class="status-tabs" role="group" aria-label="体验状态">
+            <button
+              type="button"
+              class="filter-tab"
+              data-status=""
+              aria-pressed="true"
+            >
+              全部诗词</button
+            ><button
+              type="button"
+              class="filter-tab"
+              data-status="playable"
+              aria-pressed="false"
+            >
+              可入境
+            </button>
+          </div>
+          <span class="filter-divider" aria-hidden="true"></span>
+          <div class="popular" id="popular"></div>
+          <button
+            class="filter-toggle"
+            id="toggle-advanced"
+            type="button"
+            aria-expanded="false"
+            aria-controls="advanced"
+          >
+            细选 <span aria-hidden="true">＋</span>
+          </button>
+        </div>
+        <div class="advanced" id="advanced" hidden>
+          <div class="filter-fields">
+            <label
+              >朝代<select id="dynasty">
+                <option value="">不限朝代</option>
+              </select></label
+            ><label
+              >体裁<select id="form">
+                <option value="">不限体裁</option>
+              </select></label
+            ><label
+              >意象<select id="theme">
+                <option value="">不限意象</option>
+              </select></label
+            >
+          </div>
+          <details class="creation-filters">
+            <summary>创作条件</summary>
+            <div class="filter-fields">
+              <label
+                >工程难度<select id="hardness">
+                  <option value="">不限难度</option>
+                  <option>H1</option>
+                  <option>H2</option>
+                  <option>H3</option>
+                  <option>H4</option>
+                  <option>H5</option>
+                </select></label
+              ><label
+                >创作模型<select id="model">
+                  <option value="">不限模型</option>
+                </select></label
+              ><label
+                >制作工具<select id="tool">
+                  <option value="">不限工具</option>
+                </select></label
+              >
+            </div>
+          </details>
+        </div>
+        <div class="results-bar">
+          <p class="num" id="showing" role="status">正在展开诗卷…</p>
+          <button class="text-button" id="reset" type="button" hidden>
+            清除筛选 ↺
+          </button>
+        </div>
+        <div class="poem-grid" id="catalog-grid" aria-label="诗词检索结果">
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="wrap foot">
+        <p class="footer-title">诗有尽，境无穷。</p>
+        <p>
+          古典文字 · 数字山河<br /><span
+            >电子文本保留来源，版本校勘状态见诗文详情。</span
+          >
+        </p>
+        <a href="./">再游一境 ↗</a>
+      </div>
+    </footer>
+    <dialog class="drawer" id="drawer" aria-labelledby="detail-title">
+      <div class="drawer-head">
+        <span class="eyebrow">诗文笺</span
+        ><button
+          class="icon-button"
+          id="close-detail"
+          type="button"
+          aria-label="关闭诗文详情"
+        >
+          ×
+        </button>
+      </div>
+      <div class="drawer-scroll">
+        <h2 id="detail-title"></h2>
+        <p class="detail-sub" id="detail-sub"></p>
+        <div id="detail-body"></div>
+      </div>
+    </dialog>
+    <div
+      id="copy-status"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+  </body>
 </html>
