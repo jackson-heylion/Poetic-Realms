@@ -2144,7 +2144,7 @@
       "visualBrief": "冷雪空山、寒江孤舟与垂钓蓑笠翁",
       "textReview": "待版本校勘",
       "sceneStatus": "prototype",
-      "scenePath": "scenes/jiangxue.html",
+      "scenePath": "scenes/jiangxue/river-snow.html",
       "model": "GPT-6",
       "tools": [
         "WebGL1",
@@ -2175,17 +2175,6 @@
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
       "scenes": [
-        {
-          "id": "original",
-          "title": "初版 · 江雪",
-          "path": "scenes/jiangxue.html",
-          "model": "GPT-6",
-          "tools": [
-            "WebGL1",
-            "Vanilla JS"
-          ],
-          "status": "prototype"
-        },
         {
           "id": "river-snow",
           "title": "寒江独钓 · 风雪空山",

@@ -9,7 +9,7 @@
 - **127 条首批候选诗词、词曲及景观相关古文**，跨先秦、两汉、魏晋、南北朝、唐、宋、元、明、清。保存诗题、作者、体裁、摘句、完整电子全文、出处、异文提示、景观标签和场景创作信息。
 - **首页放映厅**：全屏播放一个随机选中的已建场景，可「下一个 / 上一个」逐个漫游，深链 `?poem=<id>&scene=<id>` 固定到某一版。右上角「隐藏界面」（或按 `H`、点完再按 `Esc`）可一键收起品牌、导航与信息面板，只留场景本身。
 - **馆藏页**：搜索诗题/作者/诗句/意象，按朝代、景观、体裁、模型、工具、难度、制作状态筛选；展开全文、核对原文出处和异文说明。
-- **首个可交互 WebGL 原型**：[《江雪》](scenes/jiangxue.html)，支持旋转、缩放、动态降雪、画质切换与暂停；单 HTML，可离线打开。
+- **首个可交互 WebGL 原型**：[《江雪》· 寒江独钓](scenes/jiangxue/river-snow.html)，支持环视、缩放、动态降雪、画质切换与暂停；单 HTML，可离线打开。
 - **一条提示词走完全程**：127 首诗都有「复制提示词」，内容是「使用html制作3d动态写实场景：<摘句>」＋做完之后怎么把 HTML 交回仓库（存放路径、`scenes[]` 元数据、`validate.mjs`、PR）。每首诗允许收录多个互不覆盖的 HTML，展厅可切换浏览。
 - **GitHub Issue 任务池**：首批 10 道 3D 场景任务。AI Agent 与贡献者按 `/claim model=... tool=...` 认领，领取工作流尽力自动分配 Assignee；PR 合并前人工审核。
 - **CI 结构校验**：JSON 唯一性、字段约束、站内资源引用及脚本语法。
@@ -87,7 +87,7 @@ scripts/validate.mjs         数据、引用、JavaScript 检查
 
 ```json
 {"id":"jiangxue","scenes":[
-  {"id":"original","title":"初版 · 江雪","path":"scenes/jiangxue.html","model":"GPT-6","tools":["WebGL1","Vanilla JS"],"status":"prototype"}
+  {"id":"river-snow","title":"寒江独钓 · 风雪空山","path":"scenes/jiangxue/river-snow.html","model":"DeepSeek-V4.1-Flash","tools":["WebGL1","Vanilla JS"],"status":"prototype"}
 ]}
 ```
 

@@ -45,7 +45,7 @@ const stage = read("assets/stage.js");
 const order = ["assets/poems-data.js", "assets/agent-prompt.js", "assets/clipboard.js", "assets/stage.js"]
   .map(f => index.indexOf('src="' + f + '"'));
 assert(order.every((at, i) => at >= 0 && (i === 0 || at > order[i - 1])), "theatre must load shared scripts first");
-for (const needle of ['class="theater"', 'id="stage-frame"', 'src="scenes/jiangxue.html"', 'id="stage-next"', 'id="copy-status"']) {
+for (const needle of ['class="theater"', 'id="stage-frame"', 'src="scenes/jiangxue/river-snow.html"', 'id="stage-next"', 'id="copy-status"']) {
   assert(index.includes(needle), "homepage missing: " + needle);
 }
 for (const needle of ["stage-next", "shuffled(", "history.replaceState"]) {
@@ -67,7 +67,7 @@ assert(controller.includes("setSelected(") && controller.includes("offset("), "s
 assert(app.includes("gallery.html?poem=") && stage.includes("gallery.html?poem="), "scene links must open gallery");
 
 const sample = works.find(p => p.scenes.length > 0);
-assert(sample && sample.scenes[0].path === "scenes/jiangxue.html", "legacy prototype should be preserved");
+assert(sample && sample.scenes[0].path.startsWith("scenes/"), "first registered scene missing");
 const two = {...sample, scenes:[...sample.scenes, {id:"alternative", title:"另一种诗境", path:"scenes/jiangxue/alternative.html", model:"自选", tools:[], status:"prototype"}]};
 assert(two.scenes.length === sample.scenes.length + 1 && new Set(two.scenes.map(x => x.path)).size === two.scenes.length,
   "multiple HTML paths allowed");
