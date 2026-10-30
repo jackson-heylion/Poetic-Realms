@@ -1,0 +1,296 @@
+/* 展厅：一幅动态画卷，以及画卷之外的诗文与创作说明。 */
+.gallery-wrap {
+  padding-top: 36px;
+}
+.gallery-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+.back-link {
+  color: var(--text-2);
+  font-size: 11px;
+}
+.back-link:hover {
+  color: var(--accent);
+}
+.gallery-intro h1 {
+  margin: 24px 0 12px;
+  font: 38px/1.5 var(--serif);
+  letter-spacing: 0.04em;
+  text-wrap: balance;
+}
+.gallery-intro .detail-sub {
+  margin-bottom: 0;
+}
+.gallery-intro > a {
+  padding-bottom: 4px;
+  white-space: nowrap;
+  color: var(--accent);
+}
+.gallery-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.gallery-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.gallery-option {
+  min-height: 44px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  font-size: 12px;
+  color: var(--text-2);
+}
+.gallery-option:hover {
+  background: var(--surface-2);
+}
+.gallery-option[aria-pressed="true"] {
+  border-color: var(--text-1);
+  color: var(--text-1);
+  background: var(--surface);
+}
+#gallery-count {
+  margin-left: auto;
+  color: var(--text-2);
+  white-space: nowrap;
+  font-size: 10px;
+}
+.gallery-arrows {
+  display: flex;
+  gap: 8px;
+}
+.gallery-arrows .icon-button {
+  font-size: 18px;
+}
+.gallery-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  min-height: 400px;
+  background: #172029;
+  overflow: hidden;
+  color: #f8f5eb;
+}
+.gallery-stage iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.gallery-message {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  text-align: center;
+}
+.gallery-message .empty-mark {
+  border-color: #f8f5eb66;
+  color: inherit;
+}
+.gallery-message > p {
+  font: 16px/1.8 var(--serif);
+}
+.gallery-message .btn {
+  color: #f8f5eb;
+  border-color: #f8f5eb66;
+}
+.gallery-message .btn:hover {
+  background: #f8f5eb20;
+}
+.fullscreen-button {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  left: 16px;
+  min-height: 44px;
+  padding: 8px 14px;
+  color: inherit;
+  border: 1px solid #f8f5eb66;
+  background: #17202977;
+  backdrop-filter: blur(8px);
+  font-size: 11px;
+}
+.fullscreen-button:hover {
+  background: #172029cc;
+}
+.gallery-stage:fullscreen {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+.gallery-caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 0 32px;
+  border-bottom: 1px solid var(--line);
+}
+.gallery-caption p {
+  color: var(--text-2);
+  font: 17px/1.8 var(--serif);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+.gallery-caption a {
+  color: var(--text-2);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.gallery-reading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 80px;
+  padding-top: 40px;
+}
+.gallery-reading .eyebrow {
+  margin-bottom: 24px;
+}
+.gallery-poem {
+  font: 20px/2.1 var(--serif);
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+.gallery-poem p {
+  margin-bottom: 16px;
+}
+.gallery-reading aside {
+  border-left: 1px solid var(--line);
+  padding-left: 40px;
+}
+.gallery-reading h2 {
+  font: 25px/1.6 var(--serif);
+  margin-bottom: 16px;
+}
+.gallery-reading .prose {
+  font-size: 13px;
+}
+.creation-credit {
+  margin-top: 24px;
+  color: var(--text-2);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.source-note {
+  border-block: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--text-2);
+  margin-top: 24px;
+}
+.source-note summary {
+  padding-block: 16px;
+}
+.source-note p {
+  overflow-wrap: anywhere;
+}
+.source-note a {
+  display: block;
+  margin-block: 12px;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.gallery-reading .copy-btn {
+  color: var(--accent);
+  margin-top: 20px;
+}
+@media (max-width: 900px) {
+  .gallery-reading {
+    gap: 40px;
+  }
+  .gallery-reading aside {
+    padding-left: 28px;
+  }
+  .gallery-intro h1 {
+    font-size: 32px;
+  }
+  .gallery-poem {
+    font-size: 18px;
+  }
+}
+@media (max-width: 600px) {
+  .gallery-wrap {
+    padding-top: 24px;
+  }
+  .gallery-intro {
+    display: block;
+    margin-bottom: 24px;
+  }
+  .gallery-intro h1 {
+    font-size: 30px;
+    margin-top: 20px;
+  }
+  .gallery-intro > a {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 12px;
+  }
+  .gallery-bar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .gallery-options {
+    width: 100%;
+  }
+  .gallery-option {
+    text-align: left;
+    font-size: 11px;
+  }
+  .gallery-arrows .icon-button {
+    height: 40px;
+    width: 40px;
+  }
+  #gallery-count {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  .gallery-stage {
+    aspect-ratio: 3/4;
+    min-height: 420px;
+    margin-inline: -24px;
+    width: calc(100% + 48px);
+  }
+  .fullscreen-button {
+    top: 12px;
+    left: 12px;
+    font-size: 10px;
+  }
+  .gallery-caption {
+    display: block;
+    padding-block: 20px;
+  }
+  .gallery-caption p {
+    font-size: 16px;
+  }
+  .gallery-caption a {
+    display: inline-block;
+    padding-top: 16px;
+  }
+  .gallery-reading {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-top: 32px;
+  }
+  .gallery-reading aside {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: 32px 0 0;
+  }
+  .gallery-poem {
+    font-size: 19px;
+  }
+}

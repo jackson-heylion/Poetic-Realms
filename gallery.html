@@ -1,50 +1,142 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f7f7f5">
-<meta name="description" content="诗境展厅：同一首诗的多个独立 HTML 三维场景，可切换浏览。">
-<title>诗境 · 展厅</title>
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/site.css">
-<script src="assets/gallery.js" defer></script>
-</head>
-<body>
-<header class="topbar">
-  <a class="brand" href="./" aria-label="返回诗境首页"><b>诗境</b><span>POETIC REALMS</span></a>
-  <nav class="topnav" aria-label="主导航">
-    <a href="catalog.html">馆藏</a>
-    <a href="catalog.html#tasks">共建</a>
-    <a href="https://github.com/jackson-heylion/Poetic-Realms" target="_blank" rel="noopener">GitHub ↗</a>
-  </nav>
-</header>
-
-<main class="wrap">
-  <div class="gallery-intro">
-    <div>
-      <h1 id="gallery-title">正在加载诗境…</h1>
-      <p id="gallery-verse"></p>
-    </div>
-    <a id="gallery-detail" class="btn" href="catalog.html">查看诗文与创作 ↗</a>
-  </div>
-
-  <div class="gallery-bar">
-    <div id="gallery-options" class="gallery-options" role="group" aria-label="选择场景版本"></div>
-    <span class="spacer"></span>
-    <span id="gallery-count">—</span>
-    <span id="gallery-current" aria-live="polite"></span>
-    <button class="btn btn-icon" id="gallery-prev" type="button" aria-label="上一个场景">←</button>
-    <button class="btn btn-icon" id="gallery-next" type="button" aria-label="下一个场景">→</button>
-    <a class="btn" id="gallery-standalone" href="#" target="_blank" rel="noopener">独立打开 ↗</a>
-  </div>
-
-  <section class="stage" id="gallery-stage" aria-label="三维场景">
-    <div id="gallery-empty">正在准备作品…</div>
-    <iframe id="gallery-frame" title="诗境 3D 场景" loading="eager" allowfullscreen hidden></iframe>
-  </section>
-
-  <p class="gallery-note">同一首诗可收录多个独立 HTML。切换版本会重新载入场景，避免多个渲染器同时运行。</p>
-</main>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#f5f3ed" />
+    <meta
+      name="description"
+      content="读一首诗，游一处境。在诗境展厅切换同一首诗的不同三维演绎。"
+    />
+    <title>诗境展厅 · 诗境</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <link rel="stylesheet" href="assets/gallery.css" />
+    <script src="assets/poems-data.js" defer></script>
+    <script src="assets/agent-prompt.js" defer></script>
+    <script src="assets/clipboard.js" defer></script>
+    <script src="assets/gallery.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#gallery-stage">跳至诗境画面</a>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="诗境首页"
+        ><span class="seal" aria-hidden="true">诗<br />境</span
+        ><span class="brand-name">诗境<small>POETIC REALMS</small></span></a
+      >
+      <nav class="topnav" aria-label="主导航">
+        <a href="./">漫游</a><a href="catalog.html">诗词馆藏</a>
+      </nav>
+    </header>
+    <main class="wrap gallery-wrap">
+      <div class="gallery-intro">
+        <div>
+          <a class="back-link" href="catalog.html">← 返回馆藏</a>
+          <h1 id="gallery-title">正在寻访诗境…</h1>
+          <p class="detail-sub" id="gallery-author"></p>
+        </div>
+        <a id="gallery-detail" class="text-link" href="catalog.html"
+          >诗文与出处 ↗</a
+        >
+      </div>
+      <div class="gallery-bar">
+        <div
+          id="gallery-options"
+          class="gallery-options"
+          role="group"
+          aria-label="选择诗境版本"
+        ></div>
+        <span class="num" id="gallery-count">—</span>
+        <div class="gallery-arrows" id="gallery-arrows" hidden>
+          <button
+            class="icon-button"
+            id="gallery-prev"
+            type="button"
+            aria-label="上一个版本"
+            disabled
+          >
+            ←</button
+          ><button
+            class="icon-button"
+            id="gallery-next"
+            type="button"
+            aria-label="下一个版本"
+            disabled
+          >
+            →
+          </button>
+        </div>
+      </div>
+      <section class="gallery-stage" id="gallery-stage" aria-label="动态诗境">
+        <div class="gallery-message" id="gallery-empty" role="status">
+          <span class="empty-mark" aria-hidden="true">境</span>
+          <p id="gallery-message">正在准备画卷…</p>
+          <a class="btn" id="gallery-recover" href="catalog.html" hidden
+            >返回馆藏 →</a
+          >
+        </div>
+        <iframe
+          id="gallery-frame"
+          title="诗境三维场景"
+          allow="autoplay"
+          allowfullscreen
+          hidden
+        ></iframe
+        ><button
+          class="fullscreen-button"
+          id="gallery-fullscreen"
+          type="button"
+          hidden
+          aria-label="全屏欣赏诗境"
+        >
+          全屏欣赏 ⤢
+        </button>
+      </section>
+      <div class="gallery-caption">
+        <p id="gallery-verse"></p>
+        <a
+          id="gallery-standalone"
+          href="catalog.html"
+          target="_blank"
+          rel="noopener"
+          hidden
+          >独立打开 ↗</a
+        >
+      </div>
+      <div class="gallery-reading" id="gallery-reading" hidden>
+        <section>
+          <p class="eyebrow">原文 <span>／</span> THE VERSE</p>
+          <div class="gallery-poem" id="gallery-poem"></div>
+        </section>
+        <aside>
+          <p class="eyebrow">此境 <span>／</span> THE INTERPRETATION</p>
+          <h2 id="gallery-scene-title"></h2>
+          <p class="prose" id="gallery-brief"></p>
+          <p class="creation-credit" id="gallery-current"></p>
+          <details class="source-note">
+            <summary>文本来源与校勘说明</summary>
+            <div id="gallery-source"></div>
+          </details>
+          <button class="text-button copy-btn" id="gallery-copy" type="button">
+            以此诗创作一个新境 ↗
+          </button>
+        </aside>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="wrap foot">
+        <p class="footer-title">诗有尽，境无穷。</p>
+        <a href="./">邂逅下一境 ↗</a>
+      </div>
+    </footer>
+    <div
+      id="copy-status"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+  </body>
 </html>

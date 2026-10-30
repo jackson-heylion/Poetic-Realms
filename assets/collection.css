@@ -1,0 +1,143 @@
+/* 馆藏用留白与文字层次承载内容，风景预览仅出现在可游作品中。 */
+.catalog-hero {
+  padding: 64px 0 56px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+}
+.catalog-hero .eyebrow {
+  margin-bottom: 24px;
+}
+.catalog-hero h1 {
+  font: 400 clamp(40px, 4.2vw, 62px) / 1.45 var(--serif);
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+.catalog-hero h1 em {
+  color: var(--accent);
+  font-style: normal;
+}
+.hero-aside {
+  padding: 0 0 12px 28px;
+  border-left: 1px solid var(--line);
+}
+.hero-aside > p {
+  color: var(--text-2);
+  font: 14px/2 var(--serif);
+  letter-spacing: 0.04em;
+  margin-bottom: 24px;
+}
+.hero-aside .collection-count {
+  margin: 0;
+  font: 11px var(--sans);
+  color: var(--text-2);
+}
+.collection-count b {
+  font-weight: 500;
+  color: var(--text-1);
+  font-size: 17px;
+  padding-right: 3px;
+}
+.collection-count > span {
+  margin-inline: 14px;
+  color: var(--line-strong);
+}
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.section-heading h2 {
+  margin: 0;
+  font: 22px var(--serif);
+  letter-spacing: 0.06em;
+}
+.section-heading h2 small {
+  margin-left: 16px;
+  color: var(--text-2);
+  font: 11px var(--sans);
+  letter-spacing: 0.04em;
+}
+.section-heading .text-link {
+  color: var(--text-2);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+.scene-cover {
+  display: block;
+  position: relative;
+  min-width: 0;
+}
+.cover-picture {
+  position: relative;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  background: #293a3b;
+}
+.cover-picture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 500ms ease;
+}
+.cover-picture::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #111d2910 40%, #111d2966);
+  pointer-events: none;
+}
+.scene-cover:hover img {
+  transform: scale(1.04);
+}
+.cover-index {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  color: #f9f6ebbb;
+  font: 10px var(--sans);
+  letter-spacing: 0.1em;
+}
+.cover-enter {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #f9f6eb88;
+  color: #f9f6eb;
+  background: #15222322;
+  transition: background 150ms;
+}
+.scene-cover:hover .cover-enter {
+  background: #f9f6eb;
+  color: var(--text-1);
+}
+.cover-caption {
+  margin-top: 12px;
+}
+.cover-caption h3 {
+  font: 18px/1.6 var(--serif);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cover-caption p {
+  margin: 3px 0 0;
+  color: var(--text-2);
+  font-size: 10px;
+}

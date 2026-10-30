@@ -3854,7 +3854,7 @@
       "hardness": "H4",
       "visualBrief": "烛光军帐、梦回营垒",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -3886,7 +3886,21 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "lamplight-sword",
+          "title": "灯下看剑 · 梦回连营",
+          "path": "scenes/pozhenzi/lamplight-sword.html",
+          "model": "GPT-6 (Codex)",
+          "tools": [
+            "WebGL 1/2",
+            "GLSL ES 1.00",
+            "Vanilla JS"
+          ],
+          "status": "prototype",
+          "description": "据“醉里挑灯看剑，梦回吹角连营”布置油灯、长剑、号角、连营与旌旗。可在灯下与营垒之间切换视点。月色、山形、器物造型与营帐布局为艺术加工，不作宋代军营的历史复原；本作接续仓库内既有未登记草稿完成。"
+        }
+      ]
     },
     {
       "id": "pusa-man",

@@ -2,18 +2,20 @@
 (function (root) {
   "use strict";
 
+  /** @type {import('./types').Poem[] | null} */
   var cache = null;
   var pending = null;
 
+  /** @returns {Promise<import('./types').Poem[]>} */
   function load() {
     if (cache) return Promise.resolve(cache);
     if (pending) return pending;
-    pending = fetch("data/poems.json")
+    pending = fetch("data/poems.json", { cache: "no-cache" })
       .then(function (res) {
         if (!res.ok) throw new Error("HTTP " + res.status);
         return res.json();
       })
-      .then(function (data) {
+      .then(function (/** @type {import('./types').Catalogue} */ data) {
         if (!Array.isArray(data.poems)) throw new Error("目录格式错误");
         cache = data.poems;
         pending = null;
@@ -28,7 +30,8 @@
 
   function find(id) {
     if (!cache) return null;
-    for (var i = 0; i < cache.length; i++) if (cache[i].id === id) return cache[i];
+    for (var i = 0; i < cache.length; i++)
+      if (cache[i].id === id) return cache[i];
     return null;
   }
 

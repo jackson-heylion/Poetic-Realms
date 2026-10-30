@@ -1,0 +1,386 @@
+.library {
+  padding-top: 72px;
+}
+.library-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.library-heading h2 {
+  margin: 0;
+  font: 28px var(--serif);
+  letter-spacing: 0.05em;
+}
+.library-heading .eyebrow {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 9px;
+}
+.search {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 56px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+}
+.search svg {
+  width: 18px;
+  height: 18px;
+  color: var(--text-2);
+  flex: none;
+}
+.search:focus-within {
+  border-color: var(--accent);
+  outline: 1px solid var(--accent);
+}
+.search input {
+  border: 0;
+  outline: none;
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  font-size: 13px;
+}
+.search input::placeholder {
+  color: var(--text-3);
+}
+.search kbd {
+  font: 12px var(--sans);
+  border: 1px solid var(--line);
+  color: var(--text-2);
+  padding: 0 7px;
+}
+.filterbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-block: 20px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.status-tabs,
+.popular {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.filter-tab,
+.theme-button,
+.filter-toggle {
+  border: 0;
+  padding: 8px 0;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 12px;
+  min-height: 40px;
+}
+.filter-tab[aria-pressed="true"] {
+  color: var(--accent);
+  font-weight: 600;
+}
+.theme-button[aria-pressed="true"] {
+  color: var(--accent);
+  box-shadow: inset 0 -1px var(--accent);
+}
+.filter-tab:hover,
+.theme-button:hover,
+.filter-toggle:hover {
+  color: var(--accent);
+}
+.filter-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--line);
+}
+.filter-toggle {
+  margin-left: auto;
+}
+.filter-toggle span {
+  margin-left: 8px;
+}
+.advanced {
+  padding: 24px;
+  margin-top: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+.filter-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.filter-fields label {
+  color: var(--text-2);
+  font-size: 11px;
+}
+select {
+  width: 100%;
+  margin-top: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--surface);
+  font-size: 12px;
+}
+.creation-filters {
+  margin-top: 12px;
+  color: var(--text-2);
+  font-size: 12px;
+}
+.results-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  color: var(--text-3);
+  font-size: 11px;
+}
+.results-bar p {
+  margin: 0;
+}
+.results-bar button {
+  font-size: 11px;
+}
+.poem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 40px;
+}
+.poem-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 232px;
+}
+.poem-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  color: var(--text-2);
+  font-size: 10px;
+}
+.poem-card-index {
+  color: var(--text-3);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+.poem-card h3 {
+  margin: 0 0 12px;
+  font: 22px/1.55 var(--serif);
+  letter-spacing: 0.025em;
+}
+.poem-title {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font: inherit;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.poem-title:hover {
+  color: var(--accent);
+}
+.poem-card .verse {
+  margin: 0 0 24px;
+  color: var(--text-2);
+  font: 14px/1.9 var(--serif);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.poem-card-foot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.poem-card-foot .text-button,
+.poem-card-foot a {
+  font-size: 11px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+}
+.poem-card-foot a {
+  color: var(--accent);
+  gap: 12px;
+}
+.scene-status {
+  color: var(--text-3);
+  font-size: 10px;
+}
+@media (max-width: 1000px) {
+  .featured-grid {
+    gap: 12px;
+  }
+  .cover-caption h3 {
+    font-size: 16px;
+  }
+  .poem-grid {
+    column-gap: 24px;
+  }
+  .popular {
+    gap: 12px;
+  }
+  .filterbar {
+    gap: 16px;
+  }
+}
+@media (max-width: 800px) {
+  .catalog-hero {
+    gap: 32px;
+    padding-block: 48px;
+  }
+  .catalog-hero h1 {
+    font-size: 42px;
+  }
+  .hero-aside {
+    padding-left: 20px;
+  }
+  .hero-aside > p {
+    font-size: 12px;
+  }
+  .featured-grid {
+    grid-template-columns: repeat(5, 180px);
+    overflow-x: auto;
+    padding-bottom: 16px;
+    scroll-snap-type: x proximity;
+  }
+  .scene-cover {
+    scroll-snap-align: start;
+  }
+  .cover-picture {
+    aspect-ratio: 4/5;
+  }
+  .poem-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 32px;
+  }
+  .filter-divider {
+    display: none;
+  }
+  .popular {
+    order: 3;
+    width: 100%;
+    gap: 24px;
+    overflow-x: auto;
+  }
+  .library {
+    padding-top: 48px;
+  }
+}
+@media (max-width: 600px) {
+  .catalog-hero {
+    display: block;
+    padding: 40px 0;
+  }
+  .catalog-hero .eyebrow {
+    font-size: 9px;
+    margin-bottom: 20px;
+  }
+  .catalog-hero h1 {
+    font-size: 42px;
+    line-height: 1.5;
+  }
+  .hero-aside {
+    margin-top: 24px;
+    padding: 0;
+    border: 0;
+  }
+  .hero-aside > p:first-child {
+    display: none;
+  }
+  .hero-aside .collection-count {
+    font-size: 11px;
+  }
+  .section-heading h2 {
+    font-size: 20px;
+  }
+  .section-heading h2 small {
+    display: none;
+  }
+  .featured-grid {
+    grid-template-columns: repeat(5, 156px);
+    gap: 12px;
+  }
+  .cover-caption h3 {
+    font-size: 17px;
+  }
+  .cover-caption p {
+    font-size: 10px;
+  }
+  .library-heading h2 {
+    font-size: 26px;
+  }
+  .library-heading .eyebrow {
+    font-size: 8px;
+  }
+  .search {
+    min-height: 54px;
+    gap: 12px;
+    padding-inline: 12px;
+  }
+  .search input {
+    font-size: 12px;
+  }
+  .search kbd {
+    display: none;
+  }
+  .popular {
+    gap: 22px;
+  }
+  .theme-button {
+    white-space: nowrap;
+  }
+  .filterbar {
+    row-gap: 4px;
+    padding-bottom: 12px;
+  }
+  .status-tabs {
+    gap: 24px;
+  }
+  .poem-grid {
+    grid-template-columns: 1fr;
+  }
+  .poem-card {
+    padding-block: 24px;
+    contain-intrinsic-size: auto 218px;
+  }
+  .poem-card h3 {
+    font-size: 23px;
+  }
+  .poem-card .verse {
+    font-size: 15px;
+    margin-bottom: 16px;
+  }
+  .poem-card-meta {
+    font-size: 11px;
+  }
+  .poem-card-foot a,
+  .poem-card-foot .text-button {
+    font-size: 12px;
+    min-height: 44px;
+  }
+  .filter-fields {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .advanced {
+    padding: 20px;
+  }
+}

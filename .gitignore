@@ -1,0 +1,3 @@
+# 浏览器验收产生的临时记录与截图。
+.playwright-cli/
+output/playwright/
