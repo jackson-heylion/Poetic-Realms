@@ -500,7 +500,7 @@
       "hardness": "H5",
       "visualBrief": "滕王阁远眺秋水、落霞与飞鸟同框",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -534,7 +534,20 @@
         "mode": "online-text-reviewed",
         "warning": "正文录通行文字，不含逐句异文；网上《文苑英华》卷718与707年正仓院抄本存在差异，未经纸本逐字校勘。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "sunset-lone-duck",
+          "title": "落霞孤鹜 · 秋水长天",
+          "path": "scenes/tengwangge/sunset-lone-duck.html",
+          "model": "DeepSeek-V4.1-Flash",
+          "tools": [
+            "three.js r160",
+            "Custom GLSL",
+            "Vanilla JS"
+          ],
+          "status": "prototype"
+        }
+      ]
     },
     {
       "id": "wanglushan",
