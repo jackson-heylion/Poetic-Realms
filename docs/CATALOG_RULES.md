@@ -44,4 +44,4 @@
 
 每首诗的 `scenes[]` 可列出任意多个自包含 HTML。每项必须具备：本诗内唯一 `id`、标题 `title`、文件 `path`、实际模型 `model`、`tools[]`、`status=prototype|published`。新版本路径 `scenes/{poem-id}/{variant-id}.html`；旧版保留 `scenes/{poem-id}.html`，不得覆盖其他版本。所有路径均需实际存在、在仓库内且不可重复。
 
-诗词级 `scenePath` 是兼容旧目录的历史字段，不代表只能有一个作品。页面由 `gallery.html?poem={poem-id}&scene={variant-id}` 切换不同的真实 HTML。创作提示词始终极简，投稿的仓库流程由单独「交作业提示词」负责。
+诗词级 `scenePath` 是兼容旧目录的历史字段，不代表只能有一个作品。页面由 `gallery.html?poem={poem-id}&scene={variant-id}` 切换不同的真实 HTML。一键复制的提示词同时包含创作要求与投稿步骤（存放路径、`scenes[]` 字段、`validate.mjs`、PR），一条走完全程。

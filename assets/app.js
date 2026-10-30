@@ -16,76 +16,24 @@ const issueLink = (p) => p.issueNumber
   ? GITHUB + "/issues/" + p.issueNumber
   : GITHUB + "/issues/new?template=scene.yml";
 
-/* ---------- 复制提示词 ---------- */
-function fallbackCopy(text) {
-  const field = document.createElement("textarea");
-  field.value = text;
-  field.setAttribute("readonly", "");
-  field.style.cssText = "position:fixed;top:0;left:-9999px;opacity:0";
-  document.body.append(field);
-  field.focus(); field.select(); field.setSelectionRange(0, text.length);
-  let ok = false;
-  try { ok = !!document.execCommand("copy"); } catch (e) { ok = false; }
-  field.remove();
-  return ok;
-}
-
-let toastTimer = null;
-function toast(message, ok = true) {
-  const el = $("#copy-status");
-  el.textContent = message;
-  el.style.background = ok ? "" : "#8c3a32";
-  el.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove("show"), 3200);
-}
-
-async function copyText(text) {
-  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
-    try { await navigator.clipboard.writeText(text); return true; } catch (e) { /* 降级 */ }
-  }
-  return fallbackCopy(text);
-}
-
-async function copyPrompt(id, kind) {
-  const p = state.all.find((x) => x.id === id);
-  if (!p) return toast("未找到对应诗句，请刷新后重试。", false);
-  const gen = kind === "agent" ? "buildPrompt" : "buildSubmissionPrompt";
-  let text;
-  try { text = globalThis.PoeticRealmsAgentPrompt[gen](p); }
-  catch (err) { return toast("提示词生成失败：" + err.message, false); }
-  const ok = await copyText(text);
-  const label = kind === "agent" ? "创作提示词" : "交作业提示词";
-  toast(ok ? "已复制《" + p.title + "》的" + label : "浏览器禁止了剪贴板访问，请授权后重试。", ok);
-}
-
-function handleCopyClick(event) {
-  const agent = event.target.closest("[data-copy-agent]");
-  const submission = event.target.closest("[data-copy-submission]");
-  if (agent) { event.preventDefault(); copyPrompt(agent.dataset.copyAgent, "agent"); }
-  else if (submission) { event.preventDefault(); copyPrompt(submission.dataset.copySubmission, "submission"); }
-}
-
 /* ---------- 卡片 ---------- */
 function menuFor(p) {
   return '<div class="menu-wrap">'
     + '<button class="btn btn-icon" type="button" data-menu="' + esc(p.id) + '" aria-label="更多操作" aria-expanded="false">⋯</button>'
     + '<div class="menu" hidden>'
     + '<button type="button" data-view="' + esc(p.id) + '">诗境详情</button>'
-    + '<button type="button" data-copy-agent="' + esc(p.id) + '">复制创作提示词</button>'
-    + '<button type="button" data-copy-submission="' + esc(p.id) + '">复制交作业提示词</button>'
+    + '<button type="button" data-copy="' + esc(p.id) + '">复制提示词</button>'
     + '<button type="button" data-issue="' + esc(p.id) + '">' + (p.issueNumber ? "查看任务 ↗" : "发起任务 ↗") + "</button>"
     + "</div></div>";
 }
 
 function card(p) {
   const count = scenesFor(p).length;
-  // 每张卡只留一个主行动；已有作品时可一键复制「交作业」提示词追加新版本。
-  const primary = count
+  // 提示词已含交作业指引，一张卡只留「复制提示词」与「进入展厅」两个动作。
+  const prompt = '<button class="copy-btn' + (count ? "" : " btn-primary") + '" type="button" data-copy="'
+    + esc(p.id) + '">复制提示词</button>';
+  const enter = count
     ? '<a class="btn btn-primary" href="' + esc(galleryLink(p)) + '">进入展厅 ↗</a>'
-    : '<button class="copy-agent-btn" type="button" data-copy-agent="' + esc(p.id) + '">复制创作提示词</button>';
-  const secondary = count
-    ? '<button class="copy-submit-btn" type="button" data-copy-submission="' + esc(p.id) + '">复制交作业</button>'
     : "";
   return '<article class="card">'
     + '<div class="card-head"><h3>' + esc(p.title) + "</h3>"
@@ -96,7 +44,7 @@ function card(p) {
     + '<span class="tag">' + esc(p.hardness) + "</span>"
     + (count ? '<span class="tag live">' + count + " 个场景</span>" : '<span class="tag">待创作</span>')
     + "</div>"
-    + '<div class="card-foot">' + menuFor(p) + secondary + primary + "</div>"
+    + '<div class="card-foot">' + menuFor(p) + prompt + enter + "</div>"
     + "</article>";
 }
 
@@ -138,8 +86,7 @@ function renderTasks() {
     + '<span class="t">' + esc(p.title) + "</span>"
     + '<span class="m">' + esc(p.dynasty) + " · " + esc(p.author) + " · " + esc(p.hardness) + "</span>"
     + '<div class="ops">'
-    + '<button class="task-copy" type="button" data-copy-agent="' + esc(p.id) + '">创作提示词</button>'
-    + '<button class="task-submit" type="button" data-copy-submission="' + esc(p.id) + '">交作业</button>'
+    + '<button class="copy-btn" type="button" data-copy="' + esc(p.id) + '">复制提示词</button>'
     + '<a href="' + esc(issueLink(p)) + '" target="_blank" rel="noopener">认领 ↗</a>'
     + "</div></div>"
   ).join("");
@@ -186,8 +133,7 @@ function showDetail(id) {
     + '<div class="section"><h4>出处与校勘</h4><p class="prose">' + esc(p.sourceNote || "暂无说明") + "</p>"
     + sources + "</div>"
     + '<div class="section" style="display:flex;gap:8px;flex-wrap:wrap">'
-    + '<button class="detail-copy" type="button" data-copy-agent="' + esc(p.id) + '">复制创作提示词</button>'
-    + '<button class="detail-submit" type="button" data-copy-submission="' + esc(p.id) + '">复制交作业</button>'
+    + '<button class="copy-btn btn-primary" type="button" data-copy="' + esc(p.id) + '">复制提示词</button>'
     + '<a class="btn" href="' + esc(issueLink(p)) + '" target="_blank" rel="noopener">任务 ↗</a>'
     + "</div>";
 
@@ -222,7 +168,7 @@ function resetFilters() {
 
 /* ---------- 启动 ---------- */
 async function start() {
-  document.body.addEventListener("click",handleCopyClick);
+  document.body.addEventListener("click", PoeticRealmsClipboard.handleCopyClick);
   document.body.addEventListener("click", (e) => {
     const view = e.target.closest("[data-view]");
     const reset = e.target.closest("[data-reset]");
@@ -272,11 +218,7 @@ async function start() {
   });
 
   try {
-    const res = await fetch("data/poems.json");
-    if (!res.ok) throw Error("HTTP " + res.status);
-    const data = await res.json();
-    if (!Array.isArray(data.poems)) throw Error("目录格式错误");
-    state.all = data.poems;
+    state.all = await PoeticRealmsData.load();
 
     const fill = (id, items) => items.forEach((v) => {
       const o = document.createElement("option");

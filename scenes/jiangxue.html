@@ -9,6 +9,7 @@
 #controls{position:fixed;bottom:23px;right:25px;display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% - 40px)}button,a.button{padding:10px 14px;border:1px solid #dfded4a6;color:#f1eee5;background:#203643a8;backdrop-filter:blur(8px);border-radius:2px;font:12px system-ui,sans-serif;cursor:pointer;text-decoration:none}button:hover,a.button:hover{background:#314e5c}button:focus-visible,a:focus-visible{outline:2px solid white;outline-offset:3px}
 #topright{position:fixed;right:26px;top:24px;text-align:right;color:#e8e9e0bd;font:11px/2 system-ui,sans-serif;letter-spacing:.06em}#progress{position:fixed;bottom:25px;left:35px;font:11px system-ui,sans-serif;color:#eee8dfb6;max-width:50%}#notice{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#172634ee;color:#fff;padding:20px;border:1px solid #cdb897;max-width:85vw;display:none;z-index:3}#notice.visible{display:block}
 @media(max-width:650px){#hud{top:65px;left:18px}h1{font-size:44px;margin:10px 0}blockquote{font-size:13px}#hud p{font-size:11px;max-width:230px}#topright{right:14px;top:9px}#controls{bottom:12px;right:11px;gap:5px}button,a.button{font-size:11px;padding:8px}#progress{left:12px;bottom:63px;max-width:90%}}
+.embed #hud,.embed #topright,.embed #progress,.embed #controls{display:none}
 </style></head>
 <body>
 <div id="backdrop"></div><canvas id="gl" aria-label="可旋转缩放的三维雪山寒江场景"></canvas>
@@ -16,10 +17,11 @@
 <div id="topright"><span>江雪 / WebGL 实验场景</span><br><span id="fps">— FPS</span></div>
 <div id="progress">拖动旋转 · 滚轮或双指缩放 · 可调画质</div>
 <div id="controls">
-<a href="../index.html?poem=jiangxue" class="button" target="_top">← 返回诗境</a>
+<a href="../catalog.html?poem=jiangxue" class="button" target="_top">← 返回诗境</a>
 <button id="reset" type="button">重置视角</button><button id="quality" type="button">画质：标准</button><button id="pause" type="button">暂停</button>
 </div><div id="notice" role="alert"></div>
 <script>
+if(window.self!==window.top)document.documentElement.classList.add("embed");
 (function(){
 "use strict";
 var canvas=document.getElementById("gl"),gl=canvas.getContext("webgl",{antialias:false,alpha:true,powerPreference:"low-power"});

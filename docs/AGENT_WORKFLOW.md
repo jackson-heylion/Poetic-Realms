@@ -43,20 +43,34 @@ Hardness 是**预估任务工程难度**，允许 PR 复核调整。
 
 `scene`、`available`、`in-progress`、`review`、`published`、`hardness:H1`~`hardness:H5`。模型与工具的实际值**先写 Issue 认领命令和 PR**；后续可按稳定名称补充 `model:<name>` 和 `tool:<name>` 标签。不得把 `model=unassigned` 解释成已经由模型执行。
 
-## 6. 网页一键复制极简创作提示词
+## 6. 网页一键复制提示词（创作 + 交作业）
 
-在诗词卡片、详情或创作大厅点击「复制创作提示词」，将下面这段文字交给任意 AI：
+在馆藏卡片、详情抽屉或首页放映厅点击「复制提示词」，拿到的是一条完整指令：先说做什么场景，再说做完之后怎么把作品交回仓库。
 
 ```text
-使用html制作3d动态写实场景：<此作品的诗句摘录>。
+使用html制作3d动态写实场景：<此作品的诗句摘录>
+
+场景完成后，把作品提交回诗境仓库：
+https://github.com/jackson-heylion/Poetic-Realms
+
+作品：《<诗题>》 <朝代> · <作者> 作品 ID：<poem-id>
+
+交付步骤：
+1. 单个 HTML 文件，存为 scenes/<poem-id>/<作品英文名>.html。不引 CDN、不请求远程接口、不引用站点样式，file:// 双击即可离线打开。
+2. 优先真实三维 WebGL（WebGL1 兼容主流手机），并处理 WebGL 不可用、Shader 编译失败与 context lost。
+3. 在 data/poems.json 找到作品 ID 为 <poem-id> 的条目，向 scenes 数组追加一项：id、title、path、model、tools、status（prototype）。新 id 与 path 不得与已有版本重复，也不要覆盖别人的文件。
+4. 运行 node scripts/validate.mjs，通过后从最新 main 切分支提交 Pull Request。
+5. 回复里给出 PR 链接、所用模型与工具、实测帧率与已知缺陷。
+
+没有仓库写入权限就停下说明原因，给出改好的文件和手动提交步骤，不要声称已经提交。
 ```
 
-**复制提示词仅用于自由创作**，不包含 GitHub 链接、Issue、PR、Hardness、模型、工具、测试或其他开发约束。需向本仓库提交作品时，可再独立遵循本文件前述 Issue 和 PR 贡献流程；它们不应添加到一键复制内容中。
+提示词只覆盖「做作品」与「交作品」两件事：不含 Issue 认领命令、Hardness 评级、模型/工具标签，也不要求 `Closes #issue`。这些属于人工协作流程，按第 1、2 节处理；提示词既不替 Agent 宣称已领取任务，也不替它宣称已提交。
 
-## 7. 复制交作业提示词 / 一诗多境
+提示词里的诗句摘录本身带句末标点，生成时不再补句号。
 
-「复制创作提示词」继续仅提供诗句和单 HTML 动态 3D 场景要求，供 AI 自由发挥。
+## 7. 一诗多境
 
-第二个独立按钮「复制交作业提示词」用于已完成创作的投稿：引导有 GitHub 权限的 Agent 将新 HTML 保存到 `scenes/{poem-id}/{variant-id}.html`，追加 `data/poems.json` 的 `scenes[]` 元数据，最后提交 Pull Request 并返回链接。没有写入权限则说明阻断，不得虚构交付。
+同一首诗允许并存多个互不覆盖的 HTML：新作品放 `scenes/<poem-id>/<variant-id>.html`，旧 `scenes/<poem-id>.html` 保留不动；重复的 `id` 或文件路径会被 CI 拦截。
 
-多个作者可就同一首诗提交不同 HTML。保留现有 `scenes/{poem-id}.html`；重复的 `id` 或文件路径会被 CI 拦截。页面从 `gallery.html?poem={poem-id}` 进入版本展厅，可切换版本或单独打开，切换时只加载一个渲染 iframe，避免多 WebGL 实例同时运行。
+全部版本登记在同一首诗的 `scenes[]` 里。`gallery.html?poem=<poem-id>` 可切换浏览，切换时只加载一个渲染 iframe，避免多 WebGL 实例同时运行；首页放映厅从全部已建场景中随机抽取，`?poem=<poem-id>&scene=<variant-id>` 可固定到某一版。
