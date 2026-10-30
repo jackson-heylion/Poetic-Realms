@@ -13,7 +13,7 @@
 1. 先核对诗文、列出诗句支持的意象，并注明艺术加工。
 2. 明确场景镜头、空间布局、光照天气、动态规律、交互方式和性能预算。
 3. 从最新 main 新建分支，一篇诗可收录多个自包含 HTML。保留旧 `scenes/{id}.html`，新作品交付 `scenes/{id}/{variant-id}.html`，不引入 CDN、不请求远程 API、不引用站点样式、无需打包。
-4. 场景优先真实三维 WebGL（WebGL1 兼容主流手机），纯 CSS/2D 不能伪装成 3D。允许根据题目选择 Canvas2D，但须如实记录方法。
+4. 技术栈不限：WebGL、Canvas2D、CSS 3D 都可以，只要真的跑得动、手机能打开。但纯 2D 画面不能包装成「3D 场景」，实际方法要在 PR 与 `tools` 字段里如实记录。
 5. 在 `data/poems.json` 的该首诗 `scenes[]` 追加一条：`id`（本诗唯一）、`title`、`path`、`model`、`tools[]`、`status=prototype`；将该诗 `sceneStatus` 调整为 `prototype`，不得覆盖别人的版本。`scenePath` 是旧版兼容字段，新投稿不用设置。
 6. 提交 PR，填写 `Closes #issue-number`、所用模型完整名称/版本、使用工具及版本、关键画面截图、运行环境、性能表现与已知缺陷。
 
@@ -56,18 +56,17 @@ https://github.com/jackson-heylion/Poetic-Realms
 作品：《<诗题>》 <朝代> · <作者> 作品 ID：<poem-id>
 
 交付步骤：
-1. 单个 HTML 文件，存为 scenes/<poem-id>/<作品英文名>.html。不引 CDN、不请求远程接口、不引用站点样式，file:// 双击即可离线打开。
-2. 优先真实三维 WebGL（WebGL1 兼容主流手机），并处理 WebGL 不可用、Shader 编译失败与 context lost。
-3. 在 data/poems.json 找到作品 ID 为 <poem-id> 的条目，向 scenes 数组追加一项：id、title、path、model、tools、status（prototype）。新 id 与 path 不得与已有版本重复，也不要覆盖别人的文件。
-4. 运行 node scripts/validate.mjs，通过后从最新 main 切分支提交 Pull Request。
-5. 回复里给出 PR 链接、所用模型与工具、实测帧率与已知缺陷。
+1. 做成单个 HTML 文件，存为 scenes/<poem-id>/<作品英文名>.html，双击即可离线打开。技术栈不限，不引 CDN、不请求远程接口、不引用站点样式。
+2. 在 data/poems.json 找到作品 ID 为 <poem-id> 的条目，向 scenes 数组追加一项：id、title、path、model、tools、status（prototype）。新 id 与 path 不得与已有版本重复，也不要覆盖别人的文件。
+3. 运行 node scripts/validate.mjs，通过后从最新 main 切分支提交 Pull Request。
+4. 回复里给出 PR 链接、所用模型与工具、实测帧率与已知缺陷。
 
 没有仓库写入权限就停下说明原因，给出改好的文件和手动提交步骤，不要声称已经提交。
 ```
 
 提示词只覆盖「做作品」与「交作品」两件事：不含 Issue 认领命令、Hardness 评级、模型/工具标签，也不要求 `Closes #issue`。这些属于人工协作流程，按第 1、2 节处理；提示词既不替 Agent 宣称已领取任务，也不替它宣称已提交。
 
-提示词里的诗句摘录本身带句末标点，生成时不再补句号。
+提示词不指定技术栈：只要交上来的是单个能离线打开的 HTML，用 WebGL、Canvas 2D 还是 CSS 3D 由 Agent 自己判断，`tools` 字段如实记录即可。提示词里的诗句摘录本身带句末标点，生成时不再补句号。
 
 ## 7. 一诗多境
 
