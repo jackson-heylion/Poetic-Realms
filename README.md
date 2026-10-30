@@ -10,7 +10,7 @@
 - **首页放映厅**：全屏随机漫游，深链 `?poem=<id>&scene=<id>` 固定版本。用左右箭头或按钮切换，右上角「静观」或 `H` 收起界面，`Esc` 恢复；焦点在画面里时快捷键同样有效。
 - **馆藏页**：宣纸、墨色与朱砂的诗词画册，展示真实场景封面；搜索覆盖诗题、作者、全文与意象，筛选保存在 URL 中。诗文详情支持键盘与触屏，来源与异文按需展开。页面不再展示任务领取模块；GitHub 协作流程保留在仓库文档中。
 - **诗境展厅**：一次只加载一个版本，可全屏或独立打开；画面之外可阅读全文与创作说明。
-- **新完成《破阵子》**：[灯下看剑 · 梦回连营](scenes/pozhenzi/lamplight-sword.html)，接续本地草稿，补全旌旗、火焰、灯光及交互，可切换视点、暂停与调整画质。零外部依赖，支持直接离线打开；按职责拆分的源码见 `scenes/pozhenzi/src/`，成品由 `node scripts/pack-pozhenzi.mjs` 拼装，浏览网站无需构建。该版本登记为 `prototype`，不改变诗文校勘状态。
+- **《破阵子》three.js 重写**：[挑灯入梦 · 连营秋夜](scenes/pozhenzi/lamp-and-dream.html)，重做案上灯剑、织物军帐、火光与月色，以金属和木器材质、起伏地形与灯光阴影构成空间，支持拖动环顾、视点切换、暂停、画质与归位。three.js r160 与程序化贴图均内置于独立 HTML，可断网打开。源码位于 `scenes/pozhenzi/threejs/`，用 `node scripts/pack-pozhenzi-three.mjs` 拼装；旧 `lamplight-sword` 已撤下，历史可在 Git 查阅。新版本登记为 `prototype`，不改变文本校勘状态。
 - **首个可交互 WebGL 原型**：[《江雪》· 寒江独钓](scenes/jiangxue/river-snow.html)，支持环视、缩放、动态降雪、画质切换与暂停；单 HTML，可离线打开。
 - **一条提示词走完全程**：127 首诗都有「复制提示词」，内容是「使用html制作3d动态写实场景：<摘句>」＋做完之后怎么把 HTML 交回仓库（存放路径、`scenes[]` 元数据、`validate.mjs`、PR）。每首诗允许收录多个互不覆盖的 HTML，展厅可切换浏览。
 - **GitHub Issue 任务池**：首批 10 道 3D 场景任务。AI Agent 与贡献者按 `/claim model=... tool=...` 认领，领取工作流尽力自动分配 Assignee；PR 合并前人工审核。
@@ -38,10 +38,10 @@ python3 -m http.server 8000
 node scripts/validate.mjs
 node scripts/test-agent-prompt.mjs
 node scripts/test-gallery.mjs
-node scripts/pack-pozhenzi.mjs --check
+node scripts/pack-pozhenzi-three.mjs --check
 ```
 
-《破阵子》《渔歌子》的已登记版本零依赖，可直接离线打开。其他已登记场景使用公共 CDN 加载 three.js，需要网络；各版本实际工具见 `data/poems.json`，不请求业务接口。
+《破阵子》内置 three.js，《渔歌子》不使用外部运行库，两者均可直接离线打开。其他已登记场景使用公共 CDN 加载 three.js，需要网络；各版本实际工具见 `data/poems.json`，不请求业务接口。
 
 ## 目录
 

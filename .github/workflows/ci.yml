@@ -17,8 +17,8 @@ jobs:
           package-manager-cache: false
       - name: Validate metadata and scenes
         run: node scripts/validate.mjs
-      - name: Check standalone scene matches its source
-        run: node scripts/pack-pozhenzi.mjs --check
+      - name: Check three.js scene matches its source
+        run: node scripts/pack-pozhenzi-three.mjs --check
       - name: Test all AI Agent task prompts
         run: node scripts/test-agent-prompt.mjs
       - name: Test multi-scene version switching

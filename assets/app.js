@@ -146,7 +146,9 @@ function renderFeatured() {
             esc(poem.title) +
             '》"><div class="cover-picture"><img src="assets/previews/' +
             poem.id +
-            '.jpg" alt="' +
+            '.jpg?v=' +
+            encodeURIComponent(poem.scenes[0].id) +
+            '" alt="' +
             esc(poem.visualBrief) +
             '" width="480" height="600" loading="eager">' +
             '<span class="cover-index num">' +

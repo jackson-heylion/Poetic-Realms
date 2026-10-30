@@ -3888,17 +3888,18 @@
       },
       "scenes": [
         {
-          "id": "lamplight-sword",
-          "title": "灯下看剑 · 梦回连营",
-          "path": "scenes/pozhenzi/lamplight-sword.html",
+          "id": "lamp-and-dream",
+          "title": "挑灯入梦 · 连营秋夜",
+          "path": "scenes/pozhenzi/lamp-and-dream.html",
           "model": "GPT-6 (Codex)",
           "tools": [
-            "WebGL 1/2",
-            "GLSL ES 1.00",
-            "Vanilla JS"
+            "three.js r160 (bundled)",
+            "WebGL",
+            "CanvasTexture",
+            "Custom GLSL"
           ],
           "status": "prototype",
-          "description": "据“醉里挑灯看剑，梦回吹角连营”布置油灯、长剑、号角、连营与旌旗。可在灯下与营垒之间切换视点。月色、山形、器物造型与营帐布局为艺术加工，不作宋代军营的历史复原；本作接续仓库内既有未登记草稿完成。"
+          "description": "军帐里，一盏油灯照见案上长剑；帐外营火延伸，旌旗在月色里起伏。可从灯下近景切换至连营远望。月色、山形、器物与营帐布局均为艺术加工，不作宋代军营的历史复原。"
         }
       ]
     },
