@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#dfe6e8">
+<title>江雪 · 千山鸟飞绝 | Poetic Realms</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:linear-gradient(#cfd8dc,#eef2f3 55%,#dee5e8);color:#1b2830;font-family:"Songti SC","STSong","Noto Serif SC",serif;-webkit-tap-highlight-color:transparent}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas:active{cursor:grabbing}
+#hud{position:fixed;top:32px;left:36px;max-width:min(330px,calc(100vw - 72px));pointer-events:none;text-shadow:0 1px 14px #ffffffc0;animation:rise 2.4s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.brand{font:11px/1 system-ui,sans-serif;letter-spacing:.26em;color:#54666f}
+h1{margin:20px 0 14px;font-size:58px;font-weight:400;letter-spacing:.3em;color:#16222a}
+blockquote{margin:0;font-size:16px;line-height:2.1;letter-spacing:.1em;color:#243239}
+#hud p{margin:18px 0 0;font:12px/1.95 system-ui,sans-serif;letter-spacing:.04em;color:#4f616a;max-width:230px}
+#topright{position:fixed;top:26px;right:28px;text-align:right;font:11px/1.9 system-ui,sans-serif;letter-spacing:.08em;color:#4f616a;text-shadow:0 1px 10px #ffffffc0}
+#controls{position:fixed;right:24px;bottom:24px;display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 40px)}
+button,a.button{font:12px/1 system-ui,sans-serif;letter-spacing:.04em;padding:9px 13px;color:#1d2a32;background:#f6f9fac9;border:1px solid #35474f8c;border-radius:2px;cursor:pointer;text-decoration:none;backdrop-filter:blur(6px)}
+button:hover,a.button:hover{background:#fff}
+button:focus-visible,a.button:focus-visible{outline:2px solid #1d2a32;outline-offset:2px}
+#vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 46%,transparent 42%,#1b28301f 88%,#1b283036 100%)}
+#notice{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);max-width:80vw;padding:18px 20px;background:#f7fafbf2;border:1px solid #6d8792;color:#1b2830;font:13px/1.7 system-ui,sans-serif;display:none}
+#notice.show{display:block}
+.embed #hud,.embed #topright,.embed #controls{display:none}
+@media(max-width:680px){#hud{top:54px;left:20px}h1{font-size:40px;letter-spacing:.24em;margin:12px 0 10px}blockquote{font-size:13px;line-height:2}#hud p{font-size:11px;max-width:200px}#topright{top:12px;right:14px;font-size:10px}#controls{right:12px;bottom:12px;gap:5px}button,a.button{padding:8px 10px;font-size:11px}}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-label="雪后空山与寒江孤舟的三维场景"></canvas>
+<div id="vignette" aria-hidden="true"></div>
+<div id="hud"><div class="brand">POETIC REALMS / 一诗一境</div><h1>江雪</h1>
+<blockquote>千山鸟飞绝，万径人踪灭。<br>孤舟蓑笠翁，独钓寒江雪。</blockquote>
+<p>唐 · 柳宗元<br>拖动画面环视空山，滚轮或双指推近；雪落不停，人踪已灭。</p></div>
+<div id="topright"><span>风雪空山 / 实时三维</span><br><span id="fps">— FPS</span></div>
+<div id="controls"><a href="../catalog.html?poem=jiangxue" class="button" target="_top">← 返回诗境</a>
+<button id="reset" type="button">重置视角</button><button id="quality" type="button">画质：标准</button><button id="pause" type="button">暂停</button></div>
+<div id="notice" role="alert"></div>
+<script>
+if(window.self!==window.top)document.documentElement.classList.add("embed");
+(function(){
+"use strict";
+var canvas=document.getElementById("gl"),notice=document.getElementById("notice"),fpsEl=document.getElementById("fps");
+function fail(msg){notice.textContent=msg;notice.className="show";}
+var gl=canvas.getContext("webgl",{antialias:true,alpha:false,powerPreference:"high-performance"});
+if(!gl){fail("此浏览器无法创建 WebGL 上下文。请开启硬件加速，或换用较新的浏览器。");return;}
+var HDR="#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n";
+var SKY=`uniform vec3 uSun;
+uniform vec3 uEye;
+uniform float uTime;
+float hsh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float nz(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
+  return mix(mix(hsh(i),hsh(i+vec2(1.0,0.0)),f.x),mix(hsh(i+vec2(0.0,1.0)),hsh(i+vec2(1.0,1.0)),f.x),f.y);}
+vec3 skyCol(vec3 d){
+  float h=clamp(d.y*1.3+0.06,0.0,1.0);
+  vec3 c=mix(vec3(0.815,0.835,0.855),vec3(0.345,0.420,0.530),pow(h,0.58));
+  float s=max(dot(normalize(d),uSun),0.0);
+  c+=vec3(1.0,0.972,0.930)*(pow(s,5.0)*0.12+pow(s,240.0)*0.55);
+  if(d.y>0.02){
+    vec2 q=d.xz/max(d.y,0.09);
+    q=clamp(q,-46.0,46.0);
+    float f=nz(q*0.38+vec2(uTime*0.008,0.0))*0.60+nz(q*1.3+vec2(0.0,uTime*0.005))*0.40;
+    c=mix(c,vec3(0.960,0.965,0.968),smoothstep(0.40,0.82,f)*smoothstep(0.070,0.180,d.y)*0.62);
+  }
+  return c;
+}`;
+/* ---------- 着色器 ---------- */
+var VS_TERRAIN=`precision highp float;
+attribute vec3 aPos;attribute vec3 aNrm;attribute float aOcc;
+uniform mat4 uVP;
+varying vec3 vPos;varying vec3 vNrm;varying float vOcc;
+void main(){vPos=aPos;vNrm=aNrm;vOcc=aOcc;gl_Position=uVP*vec4(aPos,1.0);}`;
+var FS_TERRAIN=HDR+SKY+`
+varying vec3 vPos;varying vec3 vNrm;varying float vOcc;
+void main(){
+  vec3 N=normalize(vNrm);
+  vec3 V=normalize(vPos-uEye);
+  float dist=length(vPos-uEye);
+  float g1=nz(vPos.xz*0.085)*0.6+nz(vPos.xz*0.40)*0.4;
+  float g2=nz(vec2(vPos.y*0.10,vPos.x*0.030))*0.5+nz(vec2(vPos.y*0.40,vPos.z*0.040))*0.5;
+  float ny=clamp(N.y,0.0,1.0);
+  float rock=smoothstep(0.660,0.470,ny+(g1-0.5)*0.07+(g2-0.5)*0.05)*0.72;
+  vec3 rockC=mix(vec3(0.330,0.352,0.378),vec3(0.500,0.520,0.545),g1*0.6+g2*0.4);
+  vec3 snowC=vec3(0.855,0.892,0.938)*(0.94+0.10*g1);
+  vec3 alb=mix(snowC,rockC,rock);
+  float land=abs(vPos.x-66.0*sin(vPos.z*0.0135))-(22.0+7.0*sin(vPos.z*0.019+1.1));
+  alb*=mix(0.80,1.0,smoothstep(0.0,3.4,land));
+  float ndl=max(dot(N,uSun),0.0);
+  float ao=mix(0.45,1.0,vOcc);
+  vec3 amb=mix(vec3(0.175,0.225,0.310),vec3(0.560,0.620,0.730),ny*0.5+0.5)*ao;
+  vec3 col=alb*(amb+vec3(1.0,0.972,0.930)*ndl*0.55*mix(0.55,1.0,vOcc));
+  col+=vec3(0.900,0.940,1.0)*pow(max(0.0,1.0-abs(dot(N,V))),8.0)*0.05*(1.0-rock);
+  float mist=exp(-max(vPos.y,0.0)*0.048)*smoothstep(40.0,230.0,dist);
+  float fog=1.0-exp(-dist*(0.00040+0.0082*mist));
+  gl_FragColor=vec4(mix(col,skyCol(V),clamp(fog,0.0,0.99)),1.0);
+}`;
+var VS_WATER=`precision highp float;
+attribute vec3 aPos;
+uniform mat4 uVP;
+varying vec3 vPos;
+void main(){vPos=aPos;gl_Position=uVP*vec4(aPos,1.0);}`;
+var FS_WATER=HDR+SKY+`
+varying vec3 vPos;
+uniform vec3 uBoat;
+void main(){
+  vec3 V=normalize(vPos-uEye);
+  vec2 p=vPos.xz;
+  float t=uTime;
+  float r1=sin(p.x*1.55+t*1.05)+0.6*sin(p.y*1.05-t*0.68);
+  float r2=sin(p.y*1.30-t*1.15+p.x*0.72)+0.5*sin(p.x*2.35+t*0.55);
+  float r3=nz(p*1.85+vec2(0.0,t*0.16))-0.5;
+  vec3 N=normalize(vec3(-(r1*0.0032+r3*0.019+r2*0.0020),1.0,-(r2*0.0036-r3*0.018)));
+  float fres=0.045+0.88*pow(1.0-max(dot(N,-V),0.0),4.2);
+  vec3 R=reflect(V,N);R.y=abs(R.y)+0.03;
+  vec3 refl=mix(skyCol(normalize(R)),vec3(0.62,0.68,0.72),0.15);
+  vec3 col=mix(vec3(0.150,0.190,0.212),refl,clamp(0.16+fres*0.84,0.0,0.92));
+  float slush=smoothstep(0.58,0.82,nz(p*0.075+vec2(3.0,7.0))*0.60+nz(p*0.36)*0.40);
+  col=mix(col,vec3(0.855,0.890,0.915),slush*0.40*(1.0-fres));
+  float streak=nz(vec2(p.x*0.30,p.y*0.055+t*0.02));
+  col*=0.972+0.055*streak;
+  float edge=(22.0+7.0*sin(p.y*0.019+1.1))-abs(p.x-66.0*sin(p.y*0.0135));
+  col=mix(col,vec3(0.815,0.855,0.885),(1.0-smoothstep(0.0,7.0,edge))*0.62);
+  col*=mix(0.40,1.0,smoothstep(1.0,5.2,length(p-uBoat.xz)));
+  float dist=length(vPos-uEye);
+  float fog=1.0-exp(-dist*(0.00040+0.0074*smoothstep(40.0,260.0,dist)));
+  gl_FragColor=vec4(mix(col,skyCol(V),clamp(fog,0.0,0.99)),1.0);
+}`;
+var VS_MESH=`precision highp float;
+attribute vec3 aPos;attribute vec3 aNrm;attribute vec3 aCol;
+uniform mat4 uVP;uniform mat4 uModel;uniform mat3 uNrm;
+varying vec3 vCol;varying vec3 vN;varying vec3 vP;
+void main(){vec4 w=uModel*vec4(aPos,1.0);vP=w.xyz;vN=uNrm*aNrm;vCol=aCol;gl_Position=uVP*w;}`;
+var FS_MESH=HDR+SKY+`
+varying vec3 vCol;varying vec3 vN;varying vec3 vP;
+void main(){
+  vec3 N=normalize(vN);
+  vec3 V=normalize(vP-uEye);
+  float ndl=max(dot(N,uSun),0.0);
+  vec3 amb=mix(vec3(0.300,0.340,0.400),vec3(0.740,0.790,0.860),N.y*0.5+0.5);
+  vec3 col=vCol*(amb+vec3(1.0,0.975,0.940)*ndl*0.50);
+  col+=vec3(0.72,0.80,0.90)*pow(1.0-clamp(dot(N,-V),0.0,1.0),3.0)*0.18;
+  float dist=length(vP-uEye);
+  float mist=exp(-max(vP.y,0.0)*0.048)*smoothstep(40.0,230.0,dist);
+  float fog=1.0-exp(-dist*(0.00040+0.0082*mist));
+  gl_FragColor=vec4(mix(col,skyCol(V),clamp(fog,0.0,0.99)),1.0);
+}`;
+var VS_SKY=`precision highp float;
+attribute vec2 aPos;
+uniform vec3 uFwd;uniform vec3 uRight;uniform vec3 uUp;
+varying vec3 vDir;
+void main(){vDir=uFwd+uRight*aPos.x+uUp*aPos.y;gl_Position=vec4(aPos,0.9999,1.0);}`;
+var FS_SKY=HDR+SKY+`
+varying vec3 vDir;
+void main(){gl_FragColor=vec4(skyCol(normalize(vDir)),1.0);}`;
+var VS_SNOW=`precision highp float;
+attribute vec3 aSeed;
+uniform mat4 uVP;uniform vec3 uCam;uniform float uTime;uniform float uPx;
+varying float vA;
+void main(){
+  float sp=0.55+aSeed.z*0.85;
+  float y=fract(aSeed.y-uTime*0.050*sp);
+  float x=fract(aSeed.x+sin(uTime*0.37+aSeed.z*31.0)*0.010+uTime*0.005);
+  vec3 w=vec3(uCam.x+(x-0.5)*54.0,uCam.y-7.0+y*26.0,uCam.z+(aSeed.z-0.5)*62.0);
+  vec4 cp=uVP*vec4(w,1.0);
+  gl_Position=cp;
+  float d=max(cp.w,1.0);
+  gl_PointSize=clamp(uPx*78.0*(0.40+aSeed.x*0.65)/d,1.0,3.4*uPx);
+  vA=0.70*(1.0-smoothstep(9.0,13.0,abs(y-0.5)*26.0));
+}`;
+var FS_SNOW=HDR+`
+varying float vA;
+void main(){
+  vec2 d=gl_PointCoord-0.5;
+  float r=length(d);
+  if(r>0.5)discard;
+  gl_FragColor=vec4(vec3(0.975,0.985,1.0),smoothstep(0.5,0.10,r)*vA);
+}`;
+function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error((gl.getShaderInfoLog(s)||"编译失败").slice(0,240));return s;}
+function prog(v,f){var p=gl.createProgram();gl.attachShader(p,sh(gl.VERTEX_SHADER,v));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,f));
+  gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error((gl.getProgramInfoLog(p)||"链接失败").slice(0,240));return p;}
+var pTerrain,pWater,pMesh,pSky,pSnow;
+try{pTerrain=prog(VS_TERRAIN,FS_TERRAIN);pWater=prog(VS_WATER,FS_WATER);pMesh=prog(VS_MESH,FS_MESH);pSky=prog(VS_SKY,FS_SKY);pSnow=prog(VS_SNOW,FS_SNOW);}
+catch(e){fail("着色器初始化失败："+e.message);return;}
+function U(p,n){var o={};for(var i=0;i<n.length;i++)o[n[i]]=gl.getUniformLocation(p,n[i]);return o;}
+var uT=U(pTerrain,["uVP","uSun","uEye","uTime"]);
+var uW=U(pWater,["uVP","uSun","uEye","uTime","uBoat"]);
+var uM=U(pMesh,["uVP","uSun","uEye","uTime","uModel","uNrm"]);
+var uS=U(pSky,["uSun","uEye","uTime","uFwd","uRight","uUp"]);
+var uF=U(pSnow,["uVP","uCam","uTime","uPx"]);
+/* ---------- 矩阵 ---------- */
+function perspective(fovy,asp,n,f){var t=1/Math.tan(fovy/2),o=new Float32Array(16);
+  o[0]=t/asp;o[5]=t;o[10]=(f+n)/(n-f);o[11]=-1;o[14]=2*f*n/(n-f);return o;}
+function lookAt(e,c,up){var zx=e[0]-c[0],zy=e[1]-c[1],zz=e[2]-c[2];
+  var l=Math.hypot(zx,zy,zz)||1;zx/=l;zy/=l;zz/=l;
+  var xx=up[1]*zz-up[2]*zy,xy=up[2]*zx-up[0]*zz,xz=up[0]*zy-up[1]*zx;
+  l=Math.hypot(xx,xy,xz)||1;xx/=l;xy/=l;xz/=l;
+  var yx=zy*xz-zz*xy,yy=zz*xx-zx*xz,yz=zx*xy-zy*xx;
+  return new Float32Array([xx,yx,zx,0,xy,yy,zy,0,xz,yz,zz,0,
+    -(xx*e[0]+xy*e[1]+xz*e[2]),-(yx*e[0]+yy*e[1]+yz*e[2]),-(zx*e[0]+zy*e[1]+zz*e[2]),1]);}
+function mul(a,b){var o=new Float32Array(16);
+  for(var c=0;c<4;c++)for(var r=0;r<4;r++){var s=0;for(var k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s;}return o;}
+/* ---------- 地形：河谷高度场 ---------- */
+function h11(x,y){var n=Math.sin(x*127.1+y*311.7)*43758.5453;return n-Math.floor(n);}
+function vn(x,y){var xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi;
+  var u=xf*xf*(3-2*xf),v=yf*yf*(3-2*yf);
+  var a=h11(xi,yi),b=h11(xi+1,yi),c=h11(xi,yi+1),d=h11(xi+1,yi+1);
+  return (a*(1-u)+b*u)*(1-v)+(c*(1-u)+d*u)*v;}
+function fbm(x,y,oct){var s=0,a=0.5,f=1;for(var i=0;i<oct;i++){s+=a*vn(x*f,y*f);f*=2.03;a*=0.5;}return s;}
+function sstep(a,b,x){var t=Math.min(1,Math.max(0,(x-a)/(b-a)));return t*t*(3-2*t);}
+function riverX(z){return 66*Math.sin(z*0.0135);}
+function halfW(z){return 22+7*Math.sin(z*0.019+1.1);}
+function terrainH(x,z){
+  var t=Math.max(0,Math.abs(x-riverX(z))-halfW(z));
+  var ra=fbm(x*0.0105+4.1,z*0.0105+9.7,4), rb=fbm(x*0.0098+21.3,z*0.0098+2.9,3);
+  var ridgeA=1-Math.abs(2*ra-1), ridgeB=Math.pow(1-Math.abs(2*rb-1),1.25);
+  var shore=Math.min(t,30)*0.20+sstep(0,40,t)*(9*fbm(x*0.020,z*0.020,3)-4.4);
+  var mid=sstep(16,130,t)*(4+26*ridgeA+9*fbm(x*0.032,z*0.032,3)+7*fbm(x*0.075,z*0.075,3));
+  var far=sstep(70,390,t)*(24+150*ridgeB+26*fbm(x*0.034,z*0.034,3)+16*fbm(x*0.062,z*0.062,2));
+  return shore+mid+far-1.8;
+}
+var NX=184,NZ=236,gx=[],gz=[],i,j,W=NX+1,H=NZ+1;
+for(i=0;i<=NX;i++){var s=i/NX*2-1;gx.push((s<0?-1:1)*Math.pow(Math.abs(s),1.85)*520);}
+for(j=0;j<=NZ;j++){var tt=j/NZ;gz.push(40-1540*Math.pow(tt,1.72));}
+var hg=new Float32Array(W*H);
+for(j=0;j<H;j++)for(i=0;i<W;i++)hg[j*W+i]=terrainH(gx[i],gz[j]);
+var tv=new Float32Array(W*H*7);
+function hAt(ii,jj){return hg[Math.min(NZ,Math.max(0,jj))*W+Math.min(NX,Math.max(0,ii))];}
+for(j=0;j<H;j++)for(i=0;i<W;i++){
+  var t0=j*W+i,il=i>0?i-1:i,ir=i<NX?i+1:i,ju=j>0?j-1:j,jd=j<NZ?j+1:j;
+  var dx=gx[ir]-gx[il],dz=gz[jd]-gz[ju];
+  var a=-(hg[j*W+ir]-hg[j*W+il])/dx, b=-(hg[jd*W+i]-hg[ju*W+i])/dz;
+  var nl=Math.hypot(a,1,b),hc=hg[t0];
+  var oc1=(hAt(i-1,j)+hAt(i+1,j)+hAt(i,j-1)+hAt(i,j+1))*0.25-hc;
+  var oc2=(hAt(i-4,j)+hAt(i+4,j)+hAt(i,j-4)+hAt(i,j+4))*0.25-hc;
+  var occ=Math.min(1,Math.max(0.26,1-oc1*0.026-oc2*0.022));
+  tv[t0*7]=gx[i];tv[t0*7+1]=hc;tv[t0*7+2]=gz[j];
+  tv[t0*7+3]=a/nl;tv[t0*7+4]=1/nl;tv[t0*7+5]=b/nl;tv[t0*7+6]=occ;
+}
+var tIdx=new Uint16Array(NX*NZ*6),k=0;
+for(j=0;j<NZ;j++)for(i=0;i<NX;i++){
+  var v00=j*W+i,v10=v00+1,v01=v00+W,v11=v01+1;
+  tIdx[k++]=v00;tIdx[k++]=v10;tIdx[k++]=v11;tIdx[k++]=v00;tIdx[k++]=v11;tIdx[k++]=v01;
+}
+/* ---------- 网格工具 ---------- */
+var mp=[],mn=[],mc=[];
+function quad(A,B,C,D,col,outward){
+  var ux=B[0]-A[0],uy=B[1]-A[1],uz=B[2]-A[2],vx=C[0]-A[0],vy=C[1]-A[1],vz=C[2]-A[2];
+  var nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz2=ux*vy-uy*vx;
+  var l=Math.hypot(nx,ny,nz2)||1;nx/=l;ny/=l;nz2/=l;
+  var cx=(A[0]+B[0]+C[0]+D[0])*0.25,cz=(A[2]+B[2]+C[2]+D[2])*0.25;
+  if(outward&&(nx*cx+nz2*cz)<0){nx=-nx;ny=-ny;nz2=-nz2;}
+  if(outward===2&&ny<0){nx=-nx;ny=-ny;nz2=-nz2;}
+  var tri=[[A,B,C],[A,C,D]];
+  for(var q=0;q<2;q++)for(var w=0;w<3;w++){
+    var p=tri[q][w];mp.push(p[0],p[1],p[2]);mn.push(nx,ny,nz2);mc.push(col[0],col[1],col[2]);
+  }
+}
+function tri3(A,B,C,col){
+  var ux=B[0]-A[0],uy=B[1]-A[1],uz=B[2]-A[2],vx=C[0]-A[0],vy=C[1]-A[1],vz=C[2]-A[2];
+  var nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz2=ux*vy-uy*vx;
+  var l=Math.hypot(nx,ny,nz2)||1;
+  if(ny<0){nx=-nx;ny=-ny;nz2=-nz2;}
+  [[A,B,C]].forEach(function(t){t.forEach(function(p){mp.push(p[0],p[1],p[2]);mn.push(nx/l,ny/l,nz2/l);mc.push(col[0],col[1],col[2]);});});
+}
+function cone(cx,cy,cz,r0,r1,hh,seg,col){
+  for(var i=0;i<seg;i++){
+    var a0=i/seg*6.2832,a1=(i+1)/seg*6.2832;
+    quad([cx+Math.cos(a0)*r0,cy,cz+Math.sin(a0)*r0],[cx+Math.cos(a1)*r0,cy,cz+Math.sin(a1)*r0],
+         [cx+Math.cos(a1)*r1,cy+hh,cz+Math.sin(a1)*r1],[cx+Math.cos(a0)*r1,cy+hh,cz+Math.sin(a0)*r1],col,true);
+  }
+}
+function stick(p,q,r,col){
+  var dx=q[0]-p[0],dy=q[1]-p[1],dz=q[2]-p[2],l=Math.hypot(dx,dy,dz)||1;
+  dx/=l;dy/=l;dz/=l;
+  var uy=Math.abs(dy)>0.9?[1,0,0]:[0,1,0];
+  var sx=dy*uy[2]-dz*uy[1],sy=dz*uy[0]-dx*uy[2],sz=dx*uy[1]-dy*uy[0];
+  var sl=Math.hypot(sx,sy,sz)||1;sx/=sl;sy/=sl;sz/=sl;
+  var tx=sy*dz-sz*dy,ty=sz*dx-sx*dz,tz=sx*dy-sy*dx;
+  for(var i=0;i<4;i++){
+    var a0=i/4*6.2832,a1=(i+1)/4*6.2832;
+    var c0=Math.cos(a0)*r,s0=Math.sin(a0)*r,c1=Math.cos(a1)*r,s1=Math.sin(a1)*r;
+    quad([p[0]+sx*c0+tx*s0,p[1]+sy*c0+ty*s0,p[2]+sz*c0+tz*s0],
+         [p[0]+sx*c1+tx*s1,p[1]+sy*c1+ty*s1,p[2]+sz*c1+tz*s1],
+         [q[0]+sx*c1+tx*s1,q[1]+sy*c1+ty*s1,q[2]+sz*c1+tz*s1],
+         [q[0]+sx*c0+tx*s0,q[1]+sy*c0+ty*s0,q[2]+sz*c0+tz*s0],col,false);
+  }
+}
+/* 小舟：按站位的 V 形横剖面放样 */
+var hull=[],st,zc,wid,top;
+for(st=0;st<=10;st++){
+  zc=-2.35+st*0.47;
+  wid=0.98*Math.max(0.06,1-Math.pow(Math.abs(zc)/2.55,1.7));
+  top=0.46*Math.pow(wid/0.98,0.45)+0.10;
+  hull.push([[-wid,top,zc],[-wid*0.60,top-wid*0.62,zc],[0,-0.20,zc],[wid*0.60,top-wid*0.62,zc],[wid,top,zc]]);
+}
+for(st=0;st<10;st++)for(i=0;i<4;i++)
+  quad(hull[st][i],hull[st][i+1],hull[st+1][i+1],hull[st+1][i],[0.120,0.102,0.086],true);
+for(st=0;st<10;st++){
+  var r0=hull[st],r1=hull[st+1];
+  quad([r0[0][0]*0.90,r0[0][1]-0.13,r0[0][2]],[r0[4][0]*0.90,r0[4][1]-0.13,r0[4][2]],
+       [r1[4][0]*0.90,r1[4][1]-0.13,r1[4][2]],[r1[0][0]*0.90,r1[0][1]-0.13,r1[0][2]],[0.050,0.055,0.058],2);
+}
+/* 蓑笠翁：坐姿，斗笠、蓑衣、钓竿 */
+cone(0,0.10,0.10,0.44,0.20,0.98,12,[0.145,0.132,0.112]);
+cone(0,1.02,0.10,0.25,0.10,0.20,10,[0.128,0.118,0.100]);
+cone(0,1.18,0.10,0.40,0.02,0.20,14,[0.108,0.100,0.086]);
+cone(0,1.14,0.10,0.09,0.09,0.10,8,[0.230,0.188,0.155]);
+stick([0.30,0.95,0.02],[0.74,2.44,-1.74],0.018,[0.100,0.094,0.084]);
+stick([0.74,2.44,-1.74],[0.74,0.02,-1.76],0.008,[0.175,0.175,0.168]);
+var boatData={pos:new Float32Array(mp),nrm:new Float32Array(mn),col:new Float32Array(mc),count:mp.length/3};
+/* 岸边寒林：无叶枯枝，压住画面边界 */
+mp=[];mn=[];mc=[];
+var rnd=(function(){var sd=77713;return function(){sd=(sd*1664525+1013904223)>>>0;return sd/4294967296;};})();
+function pine(x,y,z,hh,col){
+  var tx=x+(rnd()-0.5)*0.6,tz=z+(rnd()-0.5)*0.6;
+  stick([x,y-0.5,z],[tx,y+hh,tz],0.030, col);
+  for(var b=0,nb=4+Math.floor(rnd()*3);b<nb;b++){
+    var f=0.32+rnd()*0.60, a=rnd()*6.283, len=hh*(0.16+rnd()*0.20), rise=len*(0.9+rnd()*0.9);
+    var bx=x+(tx-x)*f,bz=z+(tz-z)*f,by=y+hh*f;
+    var ex=bx+Math.cos(a)*len,ez=bz+Math.sin(a)*len;
+    stick([bx,by,bz],[ex,by+rise,ez],0.020,col);
+    stick([ex,by+rise,ez],[ex+Math.cos(a+0.7)*len*0.5,by+rise*1.6,ez+Math.sin(a+0.7)*len*0.5],0.011,col);
+  }
+}
+for(var pz=-190;pz<=-30;pz+=9){
+  for(var side=-1;side<=1;side+=2){
+    if(rnd()<0.42)continue;
+    var back=11+rnd()*26, ex2=riverX(pz)+side*(halfW(pz)+back), hh2=4.5+rnd()*5.5;
+    pine(ex2,terrainH(ex2,pz),pz,hh2,[0.075,0.078,0.076]);
+  }
+}
+/* 江面浮冰 */
+function floe(x,z,r){
+  var n=7,c=[],i2;
+  for(i2=0;i2<n;i2++){var a=i2/n*6.283,rr=r*(0.7+rnd()*0.6);c.push([x+Math.cos(a)*rr,z+Math.sin(a)*rr]);}
+  for(i2=0;i2<n;i2++){var j2=(i2+1)%n;
+    quad([c[i2][0],0.05,c[i2][1]],[c[j2][0],0.05,c[j2][1]],[c[j2][0],-0.30,c[j2][1]],[c[i2][0],-0.30,c[i2][1]],[0.55,0.63,0.69],false);
+    tri3([x,0.06,z],[c[i2][0],0.06,c[i2][1]],[c[j2][0],0.06,c[j2][1]],[0.70,0.75,0.79]);}
+}
+for(var fi=0;fi<110;fi++){
+  var fz2=-185+rnd()*140, sd2=rnd()<0.5?-1:1;
+  floe(riverX(fz2)+sd2*(halfW(fz2)-1-rnd()*10),fz2,0.8+rnd()*2.2);
+}
+var floeData={pos:new Float32Array(mp),nrm:new Float32Array(mn),col:new Float32Array(mc),count:mp.length/3};
+mp=[];mn=[];mc=[];
+/* ---------- 缓冲区 ---------- */
+function buf(data,usage){var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
+  gl.bufferData(gl.ARRAY_BUFFER,data,usage||gl.STATIC_DRAW);return b;}
+var bTerrain=buf(tv),bTIdx=(function(){var b=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,b);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,tIdx,gl.STATIC_DRAW);return b;})();
+var bWater=buf(new Float32Array([-900,0,240, 900,0,240, -900,0,-1800, 900,0,-1800]));
+var bBoatPos=buf(boatData.pos),bBoatNrm=buf(boatData.nrm),bBoatCol=buf(boatData.col);
+var bFloePos=buf(floeData.pos),bFloeNrm=buf(floeData.nrm),bFloeCol=buf(floeData.col);
+var bSky=buf(new Float32Array([-1,-1, 1,-1, -1,1, 1,1]));
+var SNOW_MAX=4200;
+var snowSeeds=(function(){var a=new Float32Array(SNOW_MAX*3),sd=20260130;
+  function rnd(){sd=(sd*1664525+1013904223)>>>0;return sd/4294967296;}
+  for(var i2=0;i2<SNOW_MAX*3;i2++)a[i2]=rnd();return a;})();
+var bSnow=buf(snowSeeds);
+/* ---------- 视角与状态 ---------- */
+var HOME=[26,4.2,30];
+var DEF={yaw:0.640,pitch:0.105,dist:140,distMin:100,distMax:180};
+var yaw=DEF.yaw,pitch=DEF.pitch,dist=DEF.dist;
+var SUN=(function(){var v=[-0.46,0.40,0.56],l=Math.hypot(v[0],v[1],v[2]);return [v[0]/l,v[1]/l,v[2]/l];})();
+var BOAT=[-20.0,0.02,-16.0];
+var t=0,paused=false,qIndex=1,qScale=[0.72,1,1.32],qName=["省电","标准","高清"],qSnow=[0.4,1,1];
+var last=0,frames=0,fpsStamp=0,frameId=0,drag=null,pinch=null,alive=true,eye=[0,0,0];
+var fpsSamples=[];window.__fpsSamples=fpsSamples;
+function resize(){var dpr=Math.min(window.devicePixelRatio||1,(innerWidth<760?1.3:1.75))*qScale[qIndex];
+  var w=Math.max(1,Math.round(innerWidth*dpr)),h=Math.max(1,Math.round(innerHeight*dpr));
+  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+  gl.viewport(0,0,w,h);}
+function modelMat(px,py,pz,ya,ro){
+  var cy=Math.cos(ya),sy=Math.sin(ya),cr=Math.cos(ro),sr=Math.sin(ro),m=new Float32Array(16);
+  m[0]=cy*cr;m[1]=sr;m[2]=-sy*cr;m[4]=-cy*sr;m[5]=cr;m[6]=sy*sr;m[8]=sy;m[9]=0;m[10]=cy;
+  m[12]=px;m[13]=py;m[14]=pz;m[15]=1;return m;
+}
+var nrmMat=new Float32Array(9),VPc=null,eyeC=null;
+var aPm=0,aNm=0,aCm=0;
+function drawMesh(bp,bn,bc,count,M){
+  gl.useProgram(pMesh);gl.uniformMatrix4fv(uM.uVP,false,VPc);gl.uniform3fv(uM.uSun,SUN);
+  gl.uniform3fv(uM.uEye,eyeC);gl.uniform1f(uM.uTime,t);gl.uniformMatrix4fv(uM.uModel,false,M);
+  nrmMat[0]=M[0];nrmMat[1]=M[1];nrmMat[2]=M[2];nrmMat[3]=M[4];nrmMat[4]=M[5];nrmMat[5]=M[6];nrmMat[6]=M[8];nrmMat[7]=M[9];nrmMat[8]=M[10];
+  gl.uniformMatrix3fv(uM.uNrm,false,nrmMat);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bp);gl.enableVertexAttribArray(aPm);gl.vertexAttribPointer(aPm,3,gl.FLOAT,false,12,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bn);gl.enableVertexAttribArray(aNm);gl.vertexAttribPointer(aNm,3,gl.FLOAT,false,12,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bc);gl.enableVertexAttribArray(aCm);gl.vertexAttribPointer(aCm,3,gl.FLOAT,false,12,0);
+  gl.drawArrays(gl.TRIANGLES,0,count);
+}
+aPm=gl.getAttribLocation(pMesh,"aPos");aNm=gl.getAttribLocation(pMesh,"aNrm");aCm=gl.getAttribLocation(pMesh,"aCol");
+function render(now){
+  if(!alive)return;frameId=requestAnimationFrame(render);
+  if(document.hidden){last=0;return;}
+  if(!last)last=now;
+  var dt=Math.min((now-last)/1000,0.05);last=now;
+  if(!paused)t+=dt;
+  resize();
+  var asp=canvas.width/canvas.height,upright=asp<0.95,fov=(upright?57:42)*Math.PI/180;
+  var cy2=Math.cos(pitch),sy2=Math.sin(pitch),vy=yaw+(upright?0.105:0);
+  var fw=[-Math.sin(vy)*cy2,sy2,-Math.cos(vy)*cy2],push=DEF.dist-dist;
+  eye=[HOME[0]+fw[0]*push,HOME[1]+fw[1]*push,HOME[2]+fw[2]*push];
+  var tgt=[eye[0]+fw[0]*60,eye[1]+fw[1]*60,eye[2]+fw[2]*60];
+  var V=lookAt(eye,tgt,[0,1,0]),P=perspective(fov,asp,0.5,3000),VP=mul(P,V);
+  VPc=VP;eyeC=eye;
+  var right=[V[0],V[4],V[8]],up=[V[1],V[5],V[9]],fwd=[-V[2],-V[6],-V[10]];
+  var ty=Math.tan(fov/2),tx=ty*asp;
+  gl.clearColor(0.85,0.87,0.89,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.disable(gl.DEPTH_TEST);gl.depthMask(false);
+  gl.useProgram(pSky);gl.uniform3fv(uS.uSun,SUN);gl.uniform3fv(uS.uEye,eye);gl.uniform1f(uS.uTime,t);
+  gl.uniform3f(uS.uFwd,fwd[0],fwd[1],fwd[2]);
+  gl.uniform3f(uS.uRight,right[0]*tx,right[1]*tx,right[2]*tx);
+  gl.uniform3f(uS.uUp,up[0]*ty,up[1]*ty,up[2]*ty);
+  var aS=gl.getAttribLocation(pSky,"aPos");gl.bindBuffer(gl.ARRAY_BUFFER,bSky);
+  gl.enableVertexAttribArray(aS);gl.vertexAttribPointer(aS,2,gl.FLOAT,false,8,0);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.depthFunc(gl.LEQUAL);
+  gl.useProgram(pTerrain);gl.uniformMatrix4fv(uT.uVP,false,VP);gl.uniform3fv(uT.uSun,SUN);
+  gl.uniform3fv(uT.uEye,eye);gl.uniform1f(uT.uTime,t);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bTerrain);
+  var aP=gl.getAttribLocation(pTerrain,"aPos"),aN=gl.getAttribLocation(pTerrain,"aNrm"),aO=gl.getAttribLocation(pTerrain,"aOcc");
+  gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,3,gl.FLOAT,false,28,0);
+  gl.enableVertexAttribArray(aN);gl.vertexAttribPointer(aN,3,gl.FLOAT,false,28,12);
+  gl.enableVertexAttribArray(aO);gl.vertexAttribPointer(aO,1,gl.FLOAT,false,28,24);
+  gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,bTIdx);gl.drawElements(gl.TRIANGLES,tIdx.length,gl.UNSIGNED_SHORT,0);
+  gl.disable(gl.CULL_FACE);
+  /* 孤舟 */
+  var bob=Math.sin(t*0.52)*0.045,roll=Math.sin(t*0.41)*0.016,bYaw=0.44+Math.sin(t*0.09)*0.02;
+  var M=modelMat(BOAT[0],BOAT[1]+bob,BOAT[2],bYaw,roll);
+  drawMesh(bBoatPos,bBoatNrm,bBoatCol,boatData.count,M);
+  var IM=new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
+  drawMesh(bFloePos,bFloeNrm,bFloeCol,floeData.count,IM);
+  /* 寒江 */
+  gl.useProgram(pWater);gl.uniformMatrix4fv(uW.uVP,false,VP);gl.uniform3fv(uW.uSun,SUN);
+  gl.uniform3fv(uW.uEye,eye);gl.uniform1f(uW.uTime,t);
+  gl.uniform3f(uW.uBoat,BOAT[0],BOAT[1],BOAT[2]);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bWater);var a4=gl.getAttribLocation(pWater,"aPos");
+  gl.enableVertexAttribArray(a4);gl.vertexAttribPointer(a4,3,gl.FLOAT,false,12,0);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  /* 雪 */
+  gl.useProgram(pSnow);gl.uniformMatrix4fv(uF.uVP,false,VP);gl.uniform3fv(uF.uCam,eye);
+  gl.uniform1f(uF.uTime,t);gl.uniform1f(uF.uPx,Math.min(window.devicePixelRatio||1,2)*qScale[qIndex]);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bSnow);var a5=gl.getAttribLocation(pSnow,"aSeed");
+  gl.enableVertexAttribArray(a5);gl.vertexAttribPointer(a5,3,gl.FLOAT,false,12,0);
+  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);
+  gl.drawArrays(gl.POINTS,0,Math.floor(SNOW_MAX*Math.min(1,qSnow[qIndex])));
+  gl.depthMask(true);gl.disable(gl.BLEND);
+  frames++;
+  if(now-fpsStamp>600){var f=Math.round(frames*1000/(now-fpsStamp));
+    fpsEl.textContent=f+" FPS";fpsSamples.push(f);if(fpsSamples.length>40)fpsSamples.shift();frames=0;fpsStamp=now;}
+  window.__frames=(window.__frames||0)+1;
+}
+/* ---------- 交互 ---------- */
+function clamp(v,a,b){return Math.min(b,Math.max(a,v));}
+canvas.addEventListener("pointerdown",function(e){canvas.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,yaw:yaw,pitch:pitch};});
+canvas.addEventListener("pointermove",function(e){if(!drag||!e.isPrimary)return;
+  yaw=clamp(drag.yaw+(e.clientX-drag.x)*0.0030,-0.55,0.55);
+  pitch=clamp(drag.pitch-(e.clientY-drag.y)*0.0015,0.0,0.22);});
+["pointerup","pointercancel","lostpointercapture"].forEach(function(ev){canvas.addEventListener(ev,function(){drag=null;});});
+canvas.addEventListener("wheel",function(e){e.preventDefault();dist=clamp(dist+Math.sign(e.deltaY)*3.0,DEF.distMin,DEF.distMax);},{passive:false});
+canvas.addEventListener("touchstart",function(e){if(e.touches.length===2){pinch=Math.hypot(
+  e.touches[0].pageX-e.touches[1].pageX,e.touches[0].pageY-e.touches[1].pageY);drag=null;}},{passive:true});
+canvas.addEventListener("touchmove",function(e){if(e.touches.length===2&&pinch){
+  var v=Math.hypot(e.touches[0].pageX-e.touches[1].pageX,e.touches[0].pageY-e.touches[1].pageY);
+  dist=clamp(dist+(pinch-v)*0.07,DEF.distMin,DEF.distMax);pinch=v;}},{passive:true});
+canvas.addEventListener("touchend",function(){pinch=null;});
+document.getElementById("reset").onclick=function(){yaw=DEF.yaw;pitch=DEF.pitch;dist=DEF.dist;};
+var qBtn=document.getElementById("quality");
+qBtn.onclick=function(){qIndex=(qIndex+1)%3;qBtn.textContent="画质："+qName[qIndex];resize();};
+var pBtn=document.getElementById("pause");
+function syncPause(){pBtn.textContent=paused?"继续":"暂停";}
+pBtn.onclick=function(){paused=!paused;syncPause();};
+canvas.addEventListener("webglcontextlost",function(e){e.preventDefault();alive=false;cancelAnimationFrame(frameId);
+  fail("WebGL 上下文已丢失，请刷新页面恢复。");});
+canvas.addEventListener("webglcontextrestored",function(){location.reload();});
+document.addEventListener("visibilitychange",function(){last=0;});
+resize();requestAnimationFrame(render);window.__ready=true;
+})();
+</script>
+</body>
+</html>
