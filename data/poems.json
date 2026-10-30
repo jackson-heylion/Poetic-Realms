@@ -1880,7 +1880,7 @@
       "hardness": "H4",
       "visualBrief": "洞庭蒸腾云雾、波浪拍岸",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -1910,7 +1910,20 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "clouds-over-dongting",
+          "title": "云梦蒸波",
+          "path": "scenes/dongtinghu/clouds-over-dongting.html",
+          "model": "GPT-6 (Codex)",
+          "tools": [
+            "WebGL 1.0",
+            "GLSL ES 1.00",
+            "JavaScript"
+          ],
+          "status": "prototype"
+        }
+      ]
     },
     {
       "id": "yijiangnan",
