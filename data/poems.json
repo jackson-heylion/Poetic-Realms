@@ -2488,7 +2488,7 @@
       "hardness": "H3",
       "visualBrief": "江南春水、桃花与白鹭飞行",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -2516,7 +2516,21 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "peach-river-egrets",
+          "title": "西塞春江 · 桃花流水",
+          "path": "scenes/yugezi/peach-river-egrets.html",
+          "model": "DeepSeek-V4.1-Flash",
+          "tools": [
+            "WebGL1/2",
+            "Custom GLSL",
+            "Canvas2D procedural texture",
+            "Vanilla JS"
+          ],
+          "status": "prototype"
+        }
+      ]
     },
     {
       "id": "yongliu",
