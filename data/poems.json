@@ -5585,6 +5585,68 @@
       "scenes": []
     },
     {
+      "id": "tilongyang-xianqingcaohu",
+      "title": "题龙阳县青草湖",
+      "author": "唐珙",
+      "dynasty": "元",
+      "form": "七言绝句",
+      "excerpt": "醉后不知天在水，满船清梦压星河。",
+      "categories": [
+        "湖泊",
+        "月夜",
+        "舟行"
+      ],
+      "hardness": "H4",
+      "visualBrief": "青草湖夜泊，一叶乌篷，船头挑灯；银河低垂及水，满湖倒影，天与水不可分辨。",
+      "textReview": "待版本校勘",
+      "sceneStatus": "prototype",
+      "scenePath": null,
+      "model": "DeepSeek-V4.1-Flash",
+      "tools": [
+        "WebGL1",
+        "Canvas2D",
+        "Vanilla JS"
+      ],
+      "issueNumber": null,
+      "sources": [
+        {
+          "kind": "wikisource-text",
+          "source": "维基文库",
+          "work": "题龙阳县青草湖",
+          "collection": "全元诗",
+          "locator": "zh.wikisource.org/wiki/題龍陽縣青草湖（pageid 42636）",
+          "url": "https://zh.wikisource.org/wiki/%E9%A1%8C%E9%BE%8D%E9%99%BD%E7%B8%A3%E9%9D%92%E8%8D%89%E6%B9%96",
+          "excerptMatch": "normalized-exact",
+          "matchScore": 1
+        }
+      ],
+      "sourceStatus": "transcription-exact",
+      "sourceNote": "维基文库录文四句，摘句与其一致。此诗曾被《全唐诗》误收，作者题作「唐温如」；「温如」实为唐珙表字，唐珙为元末明初人，本站采元人归属。电子转录尚未与纸本《全元诗》逐字核对。",
+      "transcription": {
+        "text": [
+          "西风吹老洞庭波，一夜湘君白发多。",
+          "醉后不知天在水，满船清梦压星河。"
+        ],
+        "mode": "online-text-reviewed",
+        "sourcePath": "维基文库·题龙阳县青草湖（pageid 42636），据《全元诗》",
+        "warning": "电子转录，尚未与纸本底本逐字核对；异体字与标点从通行整理本，不作为校定本。"
+      },
+      "scenes": [
+        {
+          "id": "starry-lake",
+          "title": "星河水镜",
+          "path": "scenes/tilongyang-xianqingcaohu/starry-lake.html",
+          "model": "DeepSeek-V4.1-Flash",
+          "tools": [
+            "WebGL1",
+            "Canvas2D",
+            "Vanilla JS"
+          ],
+          "status": "prototype"
+        }
+      ]
+    },
+    {
       "id": "taohuange",
       "title": "桃花庵歌",
       "author": "唐寅",
