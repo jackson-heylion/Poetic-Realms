@@ -1,0 +1,76 @@
+<!doctype html>
+<!-- 自动生成的独立成品。修改 threejs/ 源码后运行 node scripts/pack-pozhenzi-three.mjs。 -->
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#131922" />
+    <title>破阵子 · 挑灯入梦，连营秋夜</title>
+    <meta
+      name="description"
+      content="醉里挑灯看剑，梦回吹角连营。以 three.js 重写的独立三维诗境。"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%239d4036'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-size='22' fill='%23f5f3ed'%3E境%3C/text%3E%3C/svg%3E"
+    />
+    <!-- SCENE_STYLE -->
+  </head>
+  <body>
+    <main id="stage" aria-label="可拖动视角的三维军帐夜景">
+      <canvas
+        id="canvas"
+        aria-label="油灯照亮案上长剑，帐外连营在月色与火光中延伸"
+      ></canvas>
+    </main>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="poem">
+      <span class="title">破阵子</span
+      ><span class="subtitle">为陈同甫赋壮词以寄之</span
+      ><span class="verse">醉里挑灯看剑</span
+      ><span class="verse">梦回吹角连营</span
+      ><span class="author">宋 · 辛弃疾</span>
+    </div>
+    <div class="hint">拖动环顾 · 滚轮推近 · 空格暂停</div>
+    <nav id="bar" aria-label="诗境控制">
+      <a
+        class="back"
+        href="../../catalog.html?poem=pozhenzi"
+        target="_top"
+        aria-label="返回诗境馆藏"
+        >←</a
+      >
+      <div class="views" role="group" aria-label="选择视点">
+        <button id="view-lamp" type="button" aria-pressed="true">
+          灯下看剑</button
+        ><button id="view-camp" type="button" aria-pressed="false">
+          梦回连营
+        </button>
+      </div>
+      <button id="pause" type="button" aria-pressed="false">暂停</button>
+      <details id="settings">
+        <summary aria-label="更多场景选项">···</summary>
+        <div class="settings-panel">
+          <label
+            >画面精度<select id="quality">
+              <option value="0">流畅</option>
+              <option value="1" selected>标准</option>
+              <option value="2">精细</option>
+            </select></label
+          ><button id="reset" type="button">视角归位 ↺</button>
+        </div>
+      </details>
+    </nav>
+    <div id="veil" role="status">
+      <span class="loading-seal">境</span>
+      <p id="loading-text">灯火将明，夜色将起</p>
+      <p id="error" hidden></p>
+      <button id="retry" type="button" hidden>重新入境 →</button>
+    </div>
+    <!-- SCENE_ENGINE -->
+    <!-- SCENE_SCRIPT -->
+  </body>
+</html>
