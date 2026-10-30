@@ -92,13 +92,40 @@ function step(delta) {
   show(state.order[next], true);
 }
 
+/* ---------- 一键隐藏界面 ---------- */
+const toggle = $("#stage-toggle");
+
+function setQuiet(quiet) {
+  stageRoot.classList.toggle("is-quiet", quiet);
+  toggle.setAttribute("aria-pressed", String(quiet));
+  toggle.setAttribute("aria-label", quiet ? "显示界面" : "隐藏界面");
+  toggle.title = quiet ? "显示界面（H）" : "隐藏界面（H）";
+  toggle.querySelector(".stage-toggle-label").textContent = quiet ? "显示界面" : "隐藏界面";
+}
+
+const isQuiet = () => stageRoot.classList.contains("is-quiet");
+
 /* ---------- 启动 ---------- */
 async function start() {
   document.body.addEventListener("click", PoeticRealmsClipboard.handleCopyClick);
   $("#stage-next").addEventListener("click", () => step(1));
   $("#stage-prev").addEventListener("click", () => step(-1));
+  toggle.addEventListener("click", () => setQuiet(!isQuiet()));
   document.addEventListener("keydown", (e) => {
-    if (/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+    const tag = document.activeElement.tagName;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
+    if (e.key === "h" || e.key === "H") {
+      e.preventDefault();
+      setQuiet(!isQuiet());
+      return;
+    }
+    if (e.key === "Escape" && isQuiet()) {
+      e.preventDefault();
+      setQuiet(false);
+      return;
+    }
+    // 焦点在按钮/链接上时，空格留给它们自己触发，避免「点完下一个又跳一格」
+    if (e.key === " " && /^(BUTTON|A)$/.test(tag)) return;
     if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " " || e.key === "PageDown") {
       e.preventDefault();
       step(1);
