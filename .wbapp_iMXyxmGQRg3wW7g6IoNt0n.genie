@@ -1,0 +1,5 @@
+appId: wbapp_iMXyxmGQRg3wW7g6IoNt0n
+name: 诗境 · 诗词三维场景
+localDir: /Users/heylion/vscode/Poetic-Realms
+appType: web
+entryHtml: scenes/yugezi/peach-river-egrets.html
