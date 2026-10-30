@@ -62,7 +62,7 @@ const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej)=>setTimeout
 (async () => {
   let THREE = null;
   for (const url of CDN){
-    try { THREE = await withTimeout(import(url), 6000); break; } catch (e) { /* 换下一个镜像 */ }
+    try { THREE = await withTimeout(import(url), 10000); break; } catch (e) { /* 换下一个镜像 */ }
   }
   if (!THREE){ fail('未能载入三维引擎（baomitu / bootcdn / jsdelivr 均不可用），请检查网络后刷新。'); return; }
   try { boot(THREE); } catch (e){ console.error(e); fail('场景初始化失败：' + (e && e.message ? e.message : '未知错误')); }

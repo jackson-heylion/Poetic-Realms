@@ -175,7 +175,7 @@ function fail(msg){
   ]);
   let THREE = null;
   for (const url of CDN){
-    try { THREE = await withTimeout(import(url), 7000); break; } catch (e) { /* 换下一个镜像 */ }
+    try { THREE = await withTimeout(import(url), 10000); break; } catch (e) { /* 换下一个镜像 */ }
   }
   if (!THREE){ fail('未能载入 3D 引擎（baomitu / bootcdn / jsdelivr 三个镜像均不可用），请检查网络后刷新页面'); return; }
   try {
