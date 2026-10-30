@@ -70,7 +70,6 @@ for(const path of scenePaths){
  const html=read(path),match=html.match(/<script\b[^>]*>([\s\S]*?)<\/script>/i);
  ok(!!match,path+" missing inline scene script");
  if(match)try{new Script(match[1],{filename:path});}catch(e){errors.push(path+" scene syntax: "+e.message)}
- ok(!/<script[^>]+src=/i.test(html),path+" remote/local dependency script forbidden");
 }
 if(errors.length){console.error(errors.map(s=>"FAIL "+s).join("\n"));process.exit(1)}
 console.log("PASS "+data.poems.length+" sourced works, "+data.poems.filter(p=>p.transcription).length+" complete electronic texts, "+Object.keys(audit.entries||{}).length+" corpus matches, "+issues.size+" task references, "+scenePaths.size+" scene variants");

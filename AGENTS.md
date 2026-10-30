@@ -19,7 +19,7 @@
 ## 工程交付
 
 - `index.html` 是 GitHub Pages 根入口，也是放映厅：全屏 iframe 随机播放一个已建场景，`?poem=&scene=` 可固定版本。馆藏检索与任务入口在 `catalog.html`，多版本切换在 `gallery.html`。所有站内链接**使用相对路径**，适配 `/Poetic-Realms/` 子目录。项目无需构建器与后端。
-- **一诗多境**：同篇可收录多个独立 HTML。保留旧 `scenes/{id}.html`，新交作业放 `scenes/{id}/{variant-id}.html`，在 `data/poems.json` 对应条目的 `scenes[]` 追加 `{id,title,path,model,tools,status}`，不得覆盖其他作品。每篇 `sceneStatus` 表示总体是否有可用版本。HTML 自包含 WebGL/HTML/CSS/JS，能离线启动，禁止外部 CDN、账号令牌和未经授权的 API。
+- **一诗多境**：同篇可收录多个独立 HTML。保留旧 `scenes/{id}.html`，新交作业放 `scenes/{id}/{variant-id}.html`，在 `data/poems.json` 对应条目的 `scenes[]` 追加 `{id,title,path,model,tools,status}`，不得覆盖其他作品。每篇 `sceneStatus` 表示总体是否有可用版本。HTML 自包含场景代码，能离线启动；可用国内公共 CDN 加载开源三维库（baomitu、bootcdn、jsdelivr 等，首个镜像 10 秒不通就换下一个），但不请求业务接口、不引用站点样式、不暴露账号令牌或未授权 API。
 - WebGL 同名 uniform 的类型、精度在 vertex/fragment 必须一致；需要编译、链接与 context-lost 错误提示。
 - 移动端限制 DPR、粒子数与 draw calls，提供画质调节或相应降级；后台不可持续高负载渲染。
 - 提交前执行 `node scripts/validate.mjs`；在实际桌面/移动端浏览器测试交互、首帧、资源加载和控制台。不要把仅通过语法校验写成视觉验收成功。

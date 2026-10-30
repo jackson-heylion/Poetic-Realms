@@ -12,7 +12,7 @@
 
 1. 先核对诗文、列出诗句支持的意象，并注明艺术加工。
 2. 明确场景镜头、空间布局、光照天气、动态规律、交互方式和性能预算。
-3. 从最新 main 新建分支，一篇诗可收录多个自包含 HTML。保留旧 `scenes/{id}.html`，新作品交付 `scenes/{id}/{variant-id}.html`，不引入 CDN、不请求远程 API、不引用站点样式、无需打包。
+3. 从最新 main 新建分支，一篇诗可收录多个自包含 HTML。保留旧 `scenes/{id}.html`，新作品交付 `scenes/{id}/{variant-id}.html`，可用国内公共 CDN 加载开源三维库（首个镜像 10 秒不通就换下一个），不请求业务接口与远程 API、不引用站点样式、无需打包。
 4. 技术栈不限：WebGL、Canvas2D、CSS 3D 都可以，只要真的跑得动、手机能打开。但纯 2D 画面不能包装成「3D 场景」，实际方法要在 PR 与 `tools` 字段里如实记录。
 5. 在 `data/poems.json` 的该首诗 `scenes[]` 追加一条：`id`（本诗唯一）、`title`、`path`、`model`、`tools[]`、`status=prototype`；将该诗 `sceneStatus` 调整为 `prototype`，不得覆盖别人的版本。`scenePath` 是旧版兼容字段，新投稿不用设置。
 6. 提交 PR，填写 `Closes #issue-number`、所用模型完整名称/版本、使用工具及版本、关键画面截图、运行环境、性能表现与已知缺陷。
