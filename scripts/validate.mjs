@@ -54,7 +54,7 @@ for(const id of Object.keys(audit.entries||{}))ok(ids.has(id),"unreferenced sour
 const index=read("index.html"),catalog=read("catalog.html"),js=read("assets/app.js");
 ok(index.includes('href="assets/site.css"'),"homepage stylesheet not relative");
 ok(index.includes('src="assets/stage.js"'),"theatre script not loaded");
-ok(index.includes("scenes/jiangxue/river-snow.html"),"homepage demo missing");
+ok(index.includes("scenes/jiangxue/snow-mountains.html"),"homepage demo missing");
 ok(existsSync(new URL("../catalog.html",import.meta.url)),"catalog.html is missing");
 ok(catalog.includes('src="assets/app.js"'),"catalogue script not relative");
 ok(catalog.includes('href="assets/site.css"'),"catalogue stylesheet not relative");

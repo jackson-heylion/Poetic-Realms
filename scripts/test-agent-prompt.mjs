@@ -45,7 +45,7 @@ const stage = read("assets/stage.js");
 const order = ["assets/poems-data.js", "assets/agent-prompt.js", "assets/clipboard.js", "assets/stage.js"]
   .map(f => index.indexOf('src="' + f + '"'));
 assert(order.every((at, i) => at >= 0 && (i === 0 || at > order[i - 1])), "theatre must load shared scripts first");
-for (const needle of ['class="theater"', 'id="stage-frame"', 'src="scenes/jiangxue/river-snow.html"', 'id="stage-next"', 'id="copy-status"']) {
+for (const needle of ['class="theater"', 'id="stage-frame"', 'src="scenes/jiangxue/snow-mountains.html"', 'id="stage-next"', 'id="copy-status"']) {
   assert(index.includes(needle), "homepage missing: " + needle);
 }
 for (const needle of ["stage-next", "shuffled(", "history.replaceState"]) {

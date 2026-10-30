@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070c17">
+<meta name="description" content="《题龙阳县青草湖》醉后不知天在水，满船清梦压星河。夜泊湖上的实时三维诗境。">
+<title>题龙阳县青草湖 · 满船清梦压星河 | Poetic Realms</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#05080f;color:#e6e2d4;font-family:"Songti SC","STSong","Noto Serif SC",serif;-webkit-tap-highlight-color:transparent}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas:active{cursor:grabbing}
+#hud{position:fixed;top:30px;left:36px;max-width:min(380px,calc(100vw - 72px));pointer-events:none;animation:rise 2.8s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.brand{font:10px/1 system-ui,sans-serif;letter-spacing:.32em;color:#8a8f9e;text-shadow:0 2px 18px #000a}
+h1{margin:18px 0 12px;font-size:38px;font-weight:400;letter-spacing:.22em;color:#efe7d2;text-shadow:0 2px 30px #000c,0 0 2px #0008}
+blockquote{margin:0;font-size:15px;line-height:2.15;letter-spacing:.14em;color:#e2d9c4;text-shadow:0 2px 26px #000d,0 0 3px #000a}
+#hud p{margin:16px 0 0;font:11px/1.95 system-ui,sans-serif;letter-spacing:.05em;color:#9a9789;max-width:250px;text-shadow:0 2px 16px #000c}
+#fps{position:fixed;right:28px;top:26px;text-align:right;font:10px/1.9 system-ui,sans-serif;letter-spacing:.14em;color:#8d90a0;text-shadow:0 2px 14px #000c}
+#bar{position:fixed;right:24px;bottom:24px;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 40px)}
+#bar .btn{font:11px/1 system-ui,sans-serif;letter-spacing:.05em;padding:9px 12px;color:#e6dfd0;text-decoration:none;cursor:pointer;background:#131a26b8;border:1px solid #6d748c80;border-radius:2px;backdrop-filter:blur(8px);transition:background .18s,border-color .18s}
+#bar .btn:hover{background:#1e2735e0;border-color:#98a0b8}
+#bar .btn:focus-visible{outline:2px solid #d8cfb4;outline-offset:2px}
+#vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 48%,transparent 36%,#02040a40 80%,#01020666 100%)}
+#notice{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);max-width:80vw;padding:18px 20px;background:#0d1420f2;border:1px solid #6d748c;color:#e6dfd0;font:12px/1.7 system-ui,sans-serif;display:none;z-index:9}
+#notice.show{display:block}
+#veil{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 58%,#111a2a,#070c17 62%,#03060d);transition:opacity 2s ease}
+#veil.hide{opacity:0;pointer-events:none}
+#veil .t{writing-mode:vertical-rl;text-orientation:upright;font-size:12px;letter-spacing:.6em;color:#8e93a6;animation:breathe 2.6s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.4}50%{opacity:.95}}
+.embed #bar,.embed #fps{display:none}
+@media(max-width:680px){#hud{top:38px;left:20px}h1{font-size:26px;letter-spacing:.16em;margin:12px 0 9px}blockquote{font-size:12px;line-height:2}#hud p{font-size:10px;max-width:210px;line-height:1.85}#fps{top:12px;right:14px;font-size:9px}#bar{right:11px;bottom:11px;gap:5px}#bar .btn{padding:8px 10px;font-size:10px}}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="vignette"></div>
+<div id="hud"><div class="brand">POETIC REALMS / 一诗一境</div><h1>题龙阳县青草湖</h1>
+<blockquote>醉后不知天在水，<br>满船清梦压星河。</blockquote>
+<p>元 · 唐珙<br>轻移视点，湖天随视线流转；星河低垂及水。</p></div>
+<div id="fps">— FPS</div>
+<div id="bar">
+  <a class="btn" href="../../catalog.html?poem=tilongyang-xianqingcaohu" target="_top">← 返回诗境</a>
+  <button class="btn" id="btnReset" type="button">重置视角</button>
+  <button class="btn" id="btnQuality" type="button">画质：标准</button>
+  <button class="btn" id="btnPause" type="button">暂停</button>
+</div>
+<div id="notice" role="alert"></div>
+<div id="veil"><div class="t">夜色初合</div></div>
+<script>if(window.self!==window.top)document.documentElement.classList.add("embed");</script>
+<script type="module">
+const CDN = [
+  'https://lib.baomitu.com/three.js/0.160.0/three.module.min.js',
+  'https://cdn.bootcdn.net/ajax/libs/three.js/0.160.0/three.module.min.js',
+  'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'
+];
+const veil = document.getElementById('veil');
+const errEl = document.getElementById('notice');
+function fail(msg){ errEl.className='show'; errEl.textContent = msg; veil.classList.add('hide'); }
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej)=>setTimeout(()=>rej(new Error('timeout')), ms))]);
+(async () => {
+  let THREE = null;
+  for (const url of CDN){
+    try { THREE = await withTimeout(import(url), 6000); break; } catch (e) { /* 换下一个镜像 */ }
+  }
+  if (!THREE){ fail('未能载入三维引擎（baomitu / bootcdn / jsdelivr 均不可用），请检查网络后刷新。'); return; }
+  try { boot(THREE); } catch (e){ console.error(e); fail('场景初始化失败：' + (e && e.message ? e.message : '未知错误')); }
+})();
+
+const DEG = Math.PI/180;
+const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
+const lerp = (a,b,t)=>a+(b-a)*t;
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};}
+
+function boot(THREE){
+  const rnd = mulberry32(20717);
+
+  const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.25;
+  document.getElementById('stage').appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(48, window.innerWidth/window.innerHeight, 0.1, 8000);
+
+  scene.add(new THREE.HemisphereLight(0x2b3a55, 0x05070c, 0.55));
+  const moon = new THREE.DirectionalLight(0xbfd0ee, 0.35);
+  moon.position.set(0.4, 0.8, -0.3);
+  scene.add(moon);
+
+  /* ---------- 夜空 ---------- */
+  const C = {
+    zenith : new THREE.Color(0x03060e),
+    mid    : new THREE.Color(0x07101d),
+    horizon: new THREE.Color(0x101d2e),
+    galaxy : new THREE.Color(0x6f7fae)
+  };
+  /* 银河极轴：让银道斜跨画面上方 */
+  const gal = new THREE.Vector3(0.28, -0.90, -0.31).normalize();
+  const skyU = {
+    uTime:{value:0}, uZenith:{value:C.zenith}, uMid:{value:C.mid},
+    uHorizon:{value:C.horizon}, uGal:{value:C.galaxy}, uGalAxis:{value:gal}
+  };
+
+  const SKY_GLSL = `
+    uniform vec3 uZenith, uMid, uHorizon, uGal, uGalAxis;
+    uniform float uTime;
+    float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }
+    float vn(vec2 p){
+      vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
+      return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y);
+    }
+    float fbm(vec2 p){ float s=0.0, a=0.5; for(int i=0;i<5;i++){ s+=a*vn(p); p*=2.03; a*=0.5; } return s; }
+
+    float starField(vec3 d, float dens){
+      vec2 uv = vec2(atan(d.z, d.x) * 0.15915494, asin(clamp(d.y, -1.0, 1.0)) * 0.31830989);
+      vec2 g = uv * dens;
+      vec2 id = floor(g), f = fract(g);
+      float pick = h21(id + 3.7);
+      if (pick < 0.42) return 0.0;
+      vec2 o = vec2(h21(id), h21(id + 11.3)) * 0.62 + 0.19;
+      float dist = length(f - o);
+      float mag = pow(h21(id + 5.1), 4.0);
+      float tw = 0.72 + 0.28 * sin(uTime * 1.7 + h21(id + 2.2) * 30.0);
+      return smoothstep(0.055, 0.0, dist) * mag * tw;
+    }
+
+    vec3 skyColor(vec3 d){
+      float h = max(d.y, 0.0);
+      vec3 c = mix(uHorizon, uMid, smoothstep(0.0, 0.20, h));
+      c = mix(c, uZenith, smoothstep(0.16, 0.66, h));
+
+      /* 银河：沿大圆的宽带 + 暗尘 */
+      float lat = dot(d, uGalAxis);
+      float az = atan(d.z, d.x);
+      float warp = fbm(vec2(az * 1.7, lat * 3.1) + vec2(0.0, uTime*0.003));
+      float band = exp(-pow((lat + (warp - 0.5) * 0.055) / 0.125, 2.0));
+      float dust = fbm(vec2(az * 5.2, lat * 11.0) + vec2(uTime * 0.004, 0.0));
+      float lane = smoothstep(0.42, 0.62, fbm(vec2(az * 2.9, lat * 6.0) + 17.0));
+      float glow = band * (0.35 + 0.75 * dust) * (1.0 - 0.55 * lane);
+      c += uGal * glow * 0.55;
+      c += uGal * band * band * 0.12;
+
+      /* 星子 */
+      float s = starField(d, 150.0) + 0.55 * starField(d + 0.21, 90.0);
+      c += vec3(0.86, 0.90, 1.0) * s * (0.85 + 0.75 * band);
+
+      /* 地平线一带的微光 */
+      c += vec3(0.05, 0.07, 0.10) * exp(-h * 9.0);
+      return c;
+    }
+  `;
+
+  const skyMat = new THREE.ShaderMaterial({
+    uniforms: skyU,
+    vertexShader:`varying vec3 vDir; void main(){ vec4 wp = modelMatrix*vec4(position,1.0); vDir = wp.xyz - cameraPosition; gl_Position = projectionMatrix*viewMatrix*wp; }`,
+    fragmentShader:`precision highp float; ${SKY_GLSL} varying vec3 vDir;
+      void main(){ gl_FragColor = vec4(skyColor(normalize(vDir)), 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+    side: THREE.BackSide, depthWrite:false, depthTest:false
+  });
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(5200, 48, 32), skyMat);
+  sky.frustumCulled = false; sky.renderOrder = -100;
+  scene.add(sky);
+
+  /* ---------- 湖面 ---------- */
+  const waterU = {
+    uTime:{value:0}, uZenith:{value:C.zenith}, uMid:{value:C.mid},
+    uHorizon:{value:C.horizon}, uGal:{value:C.galaxy}, uGalAxis:{value:gal}
+  };
+  const waterMat = new THREE.ShaderMaterial({
+    uniforms: waterU,
+    vertexShader:`varying vec3 vW; void main(){ vec4 wp = modelMatrix*vec4(position,1.0); vW = wp.xyz; gl_Position = projectionMatrix*viewMatrix*wp; }`,
+    fragmentShader:`precision highp float;
+      uniform vec3 uZenith, uMid, uHorizon, uGal, uGalAxis;
+      uniform float uTime;
+      varying vec3 vW;
+      float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }
+      float vn(vec2 p){
+        vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
+        return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y);
+      }
+      float fbm(vec2 p){ float s=0.0, a=0.5; for(int i=0;i<4;i++){ s+=a*vn(p); p*=2.03; a*=0.5; } return s; }
+      float starField(vec3 d, float dens){
+        vec2 uv = vec2(atan(d.z, d.x) * 0.15915494, asin(clamp(d.y, -1.0, 1.0)) * 0.31830989);
+        vec2 g = uv * dens;
+        vec2 id = floor(g), f = fract(g);
+        if (h21(id + 3.7) < 0.42) return 0.0;
+        vec2 o = vec2(h21(id), h21(id + 11.3)) * 0.62 + 0.19;
+        float dist = length(f - o);
+        float mag = pow(h21(id + 5.1), 4.0);
+        float tw = 0.72 + 0.28 * sin(uTime * 1.7 + h21(id + 2.2) * 30.0);
+        return smoothstep(0.060, 0.0, dist) * mag * tw;
+      }
+      vec3 skyColor(vec3 d){
+        float h = max(d.y, 0.0);
+        vec3 c = mix(uHorizon, uMid, smoothstep(0.0, 0.20, h));
+        c = mix(c, uZenith, smoothstep(0.16, 0.66, h));
+        float lat = dot(d, uGalAxis);
+        float az = atan(d.z, d.x);
+        float warp = fbm(vec2(az * 1.7, lat * 3.1));
+        float band = exp(-pow((lat + (warp - 0.5) * 0.055) / 0.125, 2.0));
+        float dust = fbm(vec2(az * 5.2, lat * 11.0));
+        float lane = smoothstep(0.42, 0.62, fbm(vec2(az * 2.9, lat * 6.0) + 17.0));
+        c += uGal * band * (0.35 + 0.75 * dust) * (1.0 - 0.55 * lane) * 0.55;
+        c += uGal * band * band * 0.12;
+        float s = starField(d, 150.0) + 0.55 * starField(d + 0.21, 90.0);
+        c += vec3(0.86, 0.90, 1.0) * s * (0.85 + 0.75 * band);
+        return c;
+      }
+      void main(){
+        vec3 V = normalize(vW - cameraPosition);
+        vec2 p = vW.xz;
+        float t = uTime;
+        vec2 g = vec2(0.0);
+        g += vec2(0.62,0.32)*0.0034*cos(dot(p,vec2(0.62,0.32))*0.34 - t*0.30);
+        g += vec2(-0.28,0.92)*0.0026*cos(dot(p,vec2(-0.28,0.92))*0.62 - t*0.42);
+        g += vec2(0.94,-0.24)*0.0014*cos(dot(p,vec2(0.94,-0.24))*1.35 - t*0.70);
+        float dist = length(vW - cameraPosition);
+        g *= 1.0 - 0.45*smoothstep(40.0, 380.0, dist);
+        vec3 N = normalize(vec3(-g.x*2.6, 1.0, -g.y*2.6));
+        float ndv = clamp(dot(N, -V), 0.0, 1.0);
+        float F = 0.02 + 0.98*pow(1.0 - ndv, 4.6);
+        vec3 R = reflect(V, N); R.y = max(R.y, 0.0015);
+        vec3 col = mix(vec3(0.004,0.006,0.011), skyColor(normalize(R)), clamp(F*0.98 + 0.06, 0.0, 0.995));
+        float fog = 1.0 - exp(-dist*0.0011);
+        col = mix(col, uHorizon*0.55, clamp(fog,0.0,1.0));
+        gl_FragColor = vec4(col, 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`
+  });
+  const water = new THREE.Mesh(new THREE.PlaneGeometry(5000, 5000, 1, 1), waterMat);
+  water.rotation.x = -Math.PI/2;
+  water.renderOrder = -30;
+  scene.add(water);
+
+  /* ---------- 远岸 ---------- */
+  function shoreLine(z, baseY, amp, seed){
+    const N = 130, pos = [], col = [];
+    const r2 = mulberry32(seed);
+    const ph = [r2()*6.28, r2()*6.28, r2()*6.28];
+    const hAt = x => baseY + amp*(0.55*Math.abs(Math.sin(x*0.0042 + ph[0])) + 0.28*Math.abs(Math.sin(x*0.0111 + ph[1])) + 0.14*Math.abs(Math.sin(x*0.027 + ph[2])));
+    const c0 = new THREE.Color(0x070c15), c1 = new THREE.Color(0x03050a);
+    for (let i=0;i<N;i++){
+      const x0 = -2600 + (5200/N)*i, x1 = -2600 + (5200/N)*(i+1);
+      const y0 = hAt(x0), y1 = hAt(x1);
+      pos.push(x0, y0, z, x1, y1, z, x1, -40, z);
+      pos.push(x0, y0, z, x1, -40, z, x0, -40, z);
+      col.push(c0.r,c0.g,c0.b, c0.r,c0.g,c0.b, c1.r,c1.g,c1.b);
+      col.push(c0.r,c0.g,c0.b, c1.r,c1.g,c1.b, c1.r,c1.g,c1.b);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos,3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(col,3));
+    const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors:true, fog:false, side:THREE.DoubleSide }));
+    m.renderOrder = -35;
+    scene.add(m);
+  }
+  shoreLine(-420, -1, 13, 7);
+  shoreLine(-900, -1, 26, 19);
+
+  /* ---------- 渔舟 · 醉卧 ---------- */
+  const boat = new THREE.Group();
+  const dark = new THREE.MeshStandardMaterial({ color:0x0a0f18, roughness:0.95 });
+  const hull = new THREE.Mesh(new THREE.CapsuleGeometry(0.62, 3.4, 6, 14), dark);
+  hull.rotation.z = Math.PI/2; hull.scale.set(1, 1, 0.40); hull.position.y = 0.18;
+  boat.add(hull);
+  const deck = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.08, 1.0), dark);
+  deck.position.y = 0.42; boat.add(deck);
+  const canopy = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.66, 1.9, 14, 1, true, 0, Math.PI), dark);
+  canopy.rotation.z = Math.PI/2; canopy.rotation.y = Math.PI/2; canopy.position.set(0.35, 0.46, 0);
+  canopy.material = dark.clone(); canopy.material.side = THREE.DoubleSide;
+  boat.add(canopy);
+  const sleeper = new THREE.Mesh(new THREE.CapsuleGeometry(0.19, 0.9, 4, 8), dark);
+  sleeper.rotation.z = Math.PI/2; sleeper.position.set(-0.9, 0.60, 0.1);
+  boat.add(sleeper);
+  const oar = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.6, 6), dark);
+  oar.position.set(1.6, 0.55, 0.2); oar.rotation.z = 1.15; oar.rotation.x = 0.2;
+  boat.add(oar);
+  boat.position.set(-7.5, 0.0, -23.0);
+  boat.rotation.y = 0.55;
+  boat.scale.setScalar(1.0);
+  scene.add(boat);
+
+  /* 船影：翻转一份，压低不透明度，直接叠在水面上 */
+  const boatRefl = boat.clone(true);
+  boatRefl.scale.y *= -1;
+  boatRefl.position.y = -0.02;
+  boatRefl.renderOrder = 6;
+  boatRefl.traverse(o=>{
+    if (o.isMesh || o.isLine){
+      o.material = o.material.clone();
+      o.material.transparent = true;
+      o.material.opacity = 0.15;
+      o.material.depthWrite = false;
+      o.material.depthTest = false;
+    }
+  });
+  boatRefl.children = boatRefl.children.filter(c => !(c.isPointLight));
+  scene.add(boatRefl);
+
+  /* 渔火：极淡 */
+  const flame = new THREE.PointLight(0xffb060, 0.55, 9, 2);
+  flame.position.set(0.4, 0.75, 0);
+  boat.add(flame);
+  const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 6), new THREE.MeshBasicMaterial({ color:0xffc98a }));
+  lamp.position.set(0.4, 0.75, 0);
+  boat.add(lamp);
+
+  /* ---------- 水面上的银河碎光 ---------- */
+  const SPARK_N = 900;
+  const sp = new Float32Array(SPARK_N*3), ss = new Float32Array(SPARK_N), sph = new Float32Array(SPARK_N);
+  for (let i=0;i<SPARK_N;i++){
+    sp[i*3]   = -70 + rnd()*140;
+    sp[i*3+1] = 0.02;
+    sp[i*3+2] = -120 + rnd()*110;
+    ss[i] = 0.6 + rnd()*1.6;
+    sph[i] = rnd()*6.283;
+  }
+  const sparkGeo = new THREE.BufferGeometry();
+  sparkGeo.setAttribute('position', new THREE.BufferAttribute(sp,3));
+  sparkGeo.setAttribute('aSize', new THREE.BufferAttribute(ss,1));
+  sparkGeo.setAttribute('aPhase', new THREE.BufferAttribute(sph,1));
+  const sparkMat = new THREE.ShaderMaterial({
+    uniforms:{ uTime:{value:0}, uPR:{value:Math.min(window.devicePixelRatio||1,2)} },
+    vertexShader:`
+      attribute float aSize, aPhase;
+      uniform float uTime, uPR;
+      varying float vA;
+      void main(){
+        vec3 p = position;
+        vec4 mv = modelViewMatrix * vec4(p,1.0);
+        gl_Position = projectionMatrix * mv;
+        gl_PointSize = aSize * uPR * (26.0 / max(-mv.z, 1.0)) * (0.6 + 0.4*sin(uTime*1.4 + aPhase));
+        vA = 0.35 + 0.35*sin(uTime*1.1 + aPhase*2.0);
+      }`,
+    fragmentShader:`
+      varying float vA;
+      void main(){
+        vec2 q = gl_PointCoord - 0.5;
+        float d = 1.0 - smoothstep(0.0, 0.5, length(q));
+        gl_FragColor = vec4(vec3(0.72,0.80,1.0), d*vA*0.5);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+    transparent:true, depthWrite:false, blending:THREE.AdditiveBlending
+  });
+  const sparks = new THREE.Points(sparkGeo, sparkMat);
+  sparks.frustumCulled = false;
+  scene.add(sparks);
+
+  /* ---------- 相机 ---------- */
+  const cam = { mx:0, my:0, tmx:0, tmy:0 };
+  window.addEventListener('pointermove', (e)=>{
+    cam.tmx = (e.clientX/window.innerWidth - 0.5)*2;
+    cam.tmy = (e.clientY/window.innerHeight - 0.5)*2;
+  }, { passive:true });
+  function updateCamera(t){
+    cam.mx = lerp(cam.mx, cam.tmx, 0.04);
+    cam.my = lerp(cam.my, cam.tmy, 0.04);
+    const dx = Math.sin(t*0.043)*0.7;
+    const narrow = window.innerWidth/window.innerHeight < 0.85;
+    camera.position.set(dx + cam.mx*1.1, 1.55 + Math.sin(t*0.061+0.8)*0.05 - cam.my*0.22, 0.6 + Math.sin(t*0.027)*0.8);
+    /* 竖屏：视线左移并抬高，船与银河同框 */
+    camera.lookAt(dx*0.8 + cam.mx*2.6 + (narrow ? -12 : 0), (narrow ? 3.3 : 2.55) - cam.my*0.8, -70);
+  }
+
+  let qScale = 1;
+  function applyFov(){
+    const aspect = window.innerWidth/window.innerHeight;
+    const hFov = 2*Math.atan(Math.tan(48*DEG*0.5) * (16/9));
+    let fov = 2*Math.atan(Math.tan(hFov*0.5)/aspect)/DEG;
+    fov = clamp(fov, 38, aspect < 0.85 ? 78 : 72);
+    camera.fov = fov; camera.aspect = aspect; camera.updateProjectionMatrix();
+  }
+  function onResize(){
+    applyFov();
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2) * qScale);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+  applyFov();
+  window.addEventListener('resize', onResize);
+
+  const clock = new THREE.Clock();
+  let firstFrame = true, paused = false, simT = 0, fpsAcc = 0, fpsN = 0;
+  const fpsEl = document.getElementById('fps');
+  const btnPause = document.getElementById('btnPause');
+  const btnQuality = document.getElementById('btnQuality');
+  btnPause.addEventListener('click', ()=>{ paused = !paused; btnPause.textContent = paused ? '继续' : '暂停'; });
+  btnQuality.addEventListener('click', ()=>{ qScale = qScale > 1 ? 1 : 1.5; btnQuality.textContent = '画质：' + (qScale > 1 ? '高' : '标准'); onResize(); });
+  document.getElementById('btnReset').addEventListener('click', ()=>{ cam.tmx = cam.tmy = 0; cam.mx = cam.my = 0; simT = 0; });
+
+  function tick(){
+    const dt = Math.min(clock.getDelta(), 0.05);
+    if (!paused) simT += dt;
+    const t = simT;
+
+    updateCamera(t);
+    sky.position.copy(camera.position);
+    skyU.uTime.value = t;
+    waterU.uTime.value = t;
+    sparkMat.uniforms.uTime.value = t;
+
+    boat.position.y = Math.sin(t*0.42)*0.035;
+    boat.rotation.z = Math.sin(t*0.37+1.0)*0.012;
+    flame.intensity = 0.45 + 0.12*Math.sin(t*3.1) + 0.06*Math.sin(t*7.7);
+
+    renderer.render(scene, camera);
+
+    fpsAcc += dt; fpsN++;
+    if (fpsAcc > 0.5){ fpsEl.textContent = Math.round(fpsN/fpsAcc) + ' FPS'; fpsAcc = 0; fpsN = 0; }
+    if (firstFrame){ firstFrame = false; veil.classList.add('hide'); setTimeout(()=>{ veil.style.display='none'; }, 2200); }
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+</script>
+</body>
+</html>

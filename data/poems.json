@@ -2157,7 +2157,7 @@
       "visualBrief": "冷雪空山、寒江孤舟与垂钓蓑笠翁",
       "textReview": "待版本校勘",
       "sceneStatus": "prototype",
-      "scenePath": "scenes/jiangxue/river-snow.html",
+      "scenePath": "scenes/jiangxue/snow-mountains.html",
       "model": "GPT-6",
       "tools": [
         "WebGL1",
@@ -2189,12 +2189,13 @@
       },
       "scenes": [
         {
-          "id": "river-snow",
-          "title": "寒江独钓 · 风雪空山",
-          "path": "scenes/jiangxue/river-snow.html",
+          "id": "snow-mountains",
+          "title": "千山飞绝 · 寒江独钓",
+          "path": "scenes/jiangxue/snow-mountains.html",
           "model": "DeepSeek-V4.1-Flash",
           "tools": [
-            "WebGL1",
+            "three.js r160",
+            "Custom GLSL",
             "Vanilla JS"
           ],
           "status": "prototype"
@@ -5646,13 +5647,13 @@
       },
       "scenes": [
         {
-          "id": "starry-lake",
-          "title": "星河水镜",
-          "path": "scenes/tilongyang-xianqingcaohu/starry-lake.html",
+          "id": "starlit-boat",
+          "title": "星河在水 · 满船清梦",
+          "path": "scenes/tilongyang-xianqingcaohu/starlit-boat.html",
           "model": "DeepSeek-V4.1-Flash",
           "tools": [
-            "WebGL1",
-            "Canvas2D",
+            "three.js r160",
+            "Custom GLSL",
             "Vanilla JS"
           ],
           "status": "prototype"
