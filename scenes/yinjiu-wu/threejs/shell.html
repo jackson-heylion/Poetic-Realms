@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- 自动生成的独立成品。修改 threejs/ 源码后运行 node scripts/pack-yinjiu-wu-three.mjs。 -->
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#d9bd8b" />
+    <title>饮酒·其五 · 采菊东篱，悠然南山</title>
+    <meta
+      name="description"
+      content="采菊东篱下，悠然见南山。陶渊明《饮酒·其五》的实时三维诗境。"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23d9bd8b'/%3E%3Ctext x='16' y='24' text-anchor='middle' font-size='22' fill='%233b2c14'%3E菊%3C/text%3E%3C/svg%3E"
+    />
+    <!-- SCENE_STYLE -->
+  </head>
+  <body>
+    <canvas
+      id="canvas"
+      aria-label="秋日黄昏，陶渊明在东篱菊丛旁俯身采菊，远处夕照南山，飞鸟结伴归林"
+    ></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="poem">
+      <span class="title">饮酒·其五</span>
+      <span class="dynasty">魏晋 · 陶渊明</span>
+      <span class="verse">采菊东篱下，</span>
+      <span class="verse">悠然见南山。</span>
+    </div>
+    <div class="hint">拖动环顾 · 滚轮推近 · 空格暂停 · 1 近观 / 2 远望</div>
+    <div id="fps">— FPS</div>
+    <div id="poem-full" hidden>
+      <p>结庐在人境，而无车马喧。</p>
+      <p>问君何能尔？心远地自偏。</p>
+      <p>采菊东篱下，悠然见南山。</p>
+      <p>山气日夕佳，飞鸟相与还。</p>
+      <p>此中有真意，欲辩已忘言。</p>
+      <p class="src">
+        正文据维基文库《陶渊明集》卷三电子文本整理，未逐字校勘纸本，异文以「欲辩／欲辨」为要。
+      </p>
+    </div>
+    <nav id="bar" aria-label="诗境控制">
+      <a
+        class="back"
+        href="../../catalog.html?poem=yinjiu-wu"
+        target="_top"
+        aria-label="返回诗境馆藏"
+        >← 返回诗境</a
+      >
+      <div id="views" role="group" aria-label="选择视点">
+        <button type="button" data-view="near" aria-pressed="false">近观采菊</button>
+        <button type="button" data-view="far" aria-pressed="true">悠然南山</button>
+      </div>
+      <button id="text" type="button" aria-expanded="false">全文</button>
+      <button id="pause" type="button" aria-pressed="false">暂停</button>
+      <label>画质
+        <select id="quality" aria-label="画面精度">
+          <option value="0">流畅</option>
+          <option value="1">标准</option>
+          <option value="2" selected>精细</option>
+        </select>
+      </label>
+      <button id="reset" type="button">视角归位 ↺</button>
+    </nav>
+    <div id="veil" role="status">
+      <span class="seal">境</span>
+      <p id="loading-text">日夕气佳，南山将见</p>
+      <p id="error" hidden></p>
+      <button id="retry" type="button" hidden>重新入境 →</button>
+    </div>
+    <!-- SCENE_ENGINE -->
+    <!-- SCENE_SCRIPT -->
+  </body>
+</html>
