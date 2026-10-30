@@ -51,12 +51,15 @@ for(const p of data.poems){
 const audit=JSON.parse(read("data/source-audit.json"));
 ok(audit.schemaVersion===1,"cross-reference audit schema should be v1");
 for(const id of Object.keys(audit.entries||{}))ok(ids.has(id),"unreferenced source-audit id: "+id);
-const index=read("index.html"),js=read("assets/app.js");
+const index=read("index.html"),catalog=read("catalog.html"),js=read("assets/app.js");
 ok(index.includes('href="assets/site.css"'),"homepage stylesheet not relative");
-ok(index.includes('src="assets/app.js"'),"homepage script not relative");
+ok(index.includes('src="assets/stage.js"'),"theatre script not loaded");
 ok(index.includes("scenes/jiangxue.html"),"homepage demo missing");
+ok(existsSync(new URL("../catalog.html",import.meta.url)),"catalog.html is missing");
+ok(catalog.includes('src="assets/app.js"'),"catalogue script not relative");
+ok(catalog.includes('href="assets/site.css"'),"catalogue stylesheet not relative");
 try{new Script(js,{filename:"assets/app.js"});}catch(e){errors.push("app.js syntax: "+e.message)}
-for(const scriptPath of ["assets/agent-prompt.js","assets/gallery.js"]){
+for(const scriptPath of ["assets/poems-data.js","assets/agent-prompt.js","assets/clipboard.js","assets/stage.js","assets/gallery.js"]){
  try{new Script(read(scriptPath),{filename:scriptPath});}catch(e){errors.push(scriptPath+" syntax: "+e.message)}
 }
 ok(existsSync(new URL("../gallery.html",import.meta.url)),"gallery.html is missing");

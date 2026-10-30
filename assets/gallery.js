@@ -53,7 +53,7 @@ async function init() {
 
     $("#gallery-title").textContent = "《" + poem.title + "》";
     $("#gallery-verse").textContent = poem.excerpt;
-    $("#gallery-detail").href = "./?poem=" + encodeURIComponent(poem.id);
+    $("#gallery-detail").href = "catalog.html?poem=" + encodeURIComponent(poem.id);
     document.title = poem.title + " · 展厅 · 诗境";
 
     scenes = (Array.isArray(poem.scenes) ? poem.scenes : []).filter((s) =>

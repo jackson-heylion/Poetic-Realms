@@ -1,30 +1,41 @@
-/* 一诗一句、一条要求：供静态展馆一键复制的极简创作提示词。 */
+/* 一条提示词走完全程：给 AI 的创作要求 + 做完之后怎么把作品交回仓库。
+   诗句摘录自带句末标点，这里不再补句号。 */
 (function (root) {
   "use strict";
+
+  var REPO = "https://github.com/jackson-heylion/Poetic-Realms";
 
   function buildPrompt(poem) {
     if (!poem || typeof poem.excerpt !== "string" || !poem.excerpt.trim()) {
       throw new TypeError("缺少诗句");
     }
-    return "使用html制作3d动态写实场景：" + poem.excerpt.trim() + "。";
-  }
-
-  function buildSubmissionPrompt(poem) {
-    if (!poem || !/^[a-z0-9-]+$/.test(String(poem.id || ""))) {
+    if (!/^[a-z0-9-]+$/.test(String(poem.id || ""))) {
       throw new TypeError("缺少有效作品 ID");
     }
+    var title = typeof poem.title === "string" && poem.title.trim() ? poem.title.trim() : "";
+    var author = [poem.dynasty, poem.author].filter(function (x) {
+      return typeof x === "string" && x.trim();
+    }).join(" · ");
+    var line = title ? "《" + title + "》" + (author ? "　" + author : "") : "";
+
     return [
-      "请把为《" + poem.title + "》制作的一个或多个 3D 动态场景 HTML 交到这个 GitHub 仓库：",
-      "https://github.com/jackson-heylion/Poetic-Realms",
+      "使用html制作3d动态写实场景：" + poem.excerpt.trim(),
       "",
-      "作品 ID：" + poem.id,
-      "诗句：" + poem.excerpt,
+      "场景完成后，把作品提交回诗境仓库：",
+      REPO,
       "",
-      "保留已有作品，每个新 HTML 分别存为 scenes/" + poem.id + "/<作品英文名>.html；",
-      "在 data/poems.json 对应作品的 scenes 数组，为每个 HTML 分别追加一项（id、title、path、model、tools、status），让网站可以切换浏览所有版本。",
-      "请提交 Pull Request 并返回链接。若没有 GitHub 写入权限，说明原因并提供文件和提交步骤。"
+      (line ? "作品：" + line + "　" : "") + "作品 ID：" + poem.id,
+      "",
+      "交付步骤：",
+      "1. 单个 HTML 文件，存为 scenes/" + poem.id + "/<作品英文名>.html。不引 CDN、不请求远程接口、不引用站点样式，file:// 双击即可离线打开。",
+      "2. 优先真实三维 WebGL（WebGL1 兼容主流手机），并处理 WebGL 不可用、Shader 编译失败与 context lost。",
+      "3. 在 data/poems.json 找到作品 ID 为 " + poem.id + " 的条目，向 scenes 数组追加一项：id、title、path、model、tools、status（prototype）。新 id 与 path 不得与已有版本重复，也不要覆盖别人的文件。",
+      "4. 运行 node scripts/validate.mjs，通过后从最新 main 切分支提交 Pull Request。",
+      "5. 回复里给出 PR 链接、所用模型与工具、实测帧率与已知缺陷。",
+      "",
+      "没有仓库写入权限就停下说明原因，给出改好的文件和手动提交步骤，不要声称已经提交。"
     ].join("\n");
   }
 
-  root.PoeticRealmsAgentPrompt = Object.freeze({ buildPrompt, buildSubmissionPrompt });
+  root.PoeticRealmsAgentPrompt = Object.freeze({ buildPrompt: buildPrompt, repo: REPO });
 })(globalThis);

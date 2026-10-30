@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f7f5">
+<meta name="description" content="诗境馆藏：检索中国古典诗词，复制创作提示词，走进已建成的 3D 诗境展厅。">
+<title>馆藏 · 诗境 Poetic Realms</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/poems-data.js" defer></script>
+<script src="assets/agent-prompt.js" defer></script>
+<script src="assets/clipboard.js" defer></script>
+<script src="assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#catalog">跳至诗词目录</a>
+
+<header class="topbar">
+  <a class="brand" href="./" aria-label="诗境首页"><b>诗境</b><span>POETIC REALMS</span></a>
+  <nav class="topnav" aria-label="主导航">
+    <a href="./">放映厅</a>
+    <a href="catalog.html" aria-current="page">馆藏</a>
+    <a href="#tasks">共建</a>
+    <a href="https://github.com/jackson-heylion/Poetic-Realms" target="_blank" rel="noopener">GitHub ↗</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow num">CATALOGUE</p>
+    <h1>山河入诗，<em>一念成境。</em></h1>
+    <p>所选诗词均可检索、可创作。复制提示词交给 AI 生成三维场景；提示词里已写明作品做完后怎么交回仓库。</p>
+    <div class="metrics num">
+      <span><b id="metric-total">—</b>入藏诗词</span>
+      <span><b id="metric-scenes">—</b>已建场景</span>
+      <span><b id="metric-tasks">—</b>待认领任务</span>
+    </div>
+    <label class="search">
+      <span class="glyph" aria-hidden="true">⌕</span>
+      <input id="search" type="search" placeholder="搜索诗题、诗人、名句、景观…" autocomplete="off" aria-label="搜索诗词">
+      <kbd>/</kbd>
+    </label>
+  </section>
+
+  <section id="catalog" aria-label="诗词目录">
+    <div class="filterbar">
+      <div id="popular" style="display:contents"></div>
+      <button class="chip" id="toggle-advanced" type="button" aria-expanded="false">筛选 ＋</button>
+      <span class="spacer"></span>
+      <span class="count num" id="showing">—</span>
+      <button class="chip" id="reset" type="button">重置</button>
+    </div>
+
+    <div class="advanced" id="advanced">
+      <div class="group"><span class="label">朝代</span><select id="dynasty"><option value="">全部</option></select></div>
+      <div class="group"><span class="label">体裁</span><select id="form"><option value="">全部</option></select></div>
+      <div class="group"><span class="label">难度</span><select id="hardness"><option value="">全部</option><option>H1</option><option>H2</option><option>H3</option><option>H4</option><option>H5</option></select></div>
+      <div class="group"><span class="label">状态</span><select id="status"><option value="">全部</option><option value="prototype">可体验</option><option value="available">待创作</option></select></div>
+      <div class="group"><span class="label">模型</span><select id="model"><option value="">全部</option></select></div>
+      <div class="group"><span class="label">工具</span><select id="tool"><option value="">全部</option></select></div>
+      <div class="group"><span class="label">景观</span><select id="theme"><option value="">全部</option></select></div>
+    </div>
+
+    <div class="grid" id="catalog-grid" aria-live="polite">
+      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+    </div>
+    <div class="more"><button class="btn" id="more" type="button" hidden>加载更多 ↓</button></div>
+  </section>
+
+  <section class="tasks" id="tasks" aria-label="共建任务">
+    <div class="section-head">
+      <h4>待认领的创作任务</h4>
+    </div>
+    <p class="prose">复制提示词交给 AI 生成场景，同一段提示词里也写明了做完之后怎么把 HTML 交回仓库。同一首诗可以收录多个版本。</p>
+    <div id="task-list"></div>
+    <p class="prose" style="margin-top:18px">
+      <a class="outlined-link" href="https://github.com/jackson-heylion/Poetic-Realms/issues?q=is%3Aissue+is%3Aopen+label%3Ascene" target="_blank" rel="noopener">在 GitHub 查看全部任务 ↗</a>
+      &nbsp;·&nbsp;
+      <a href="./">回到放映厅 ↗</a>
+    </p>
+  </section>
+</main>
+
+<footer><div class="wrap foot">
+  <span>古典文字 · 数字山河 · 开放共建</span>
+  <span>摘句仅为策展入口，原文校勘状态见各诗详情</span>
+</div></footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="诗境详情" hidden>
+  <div class="drawer-head">
+    <div><h2 id="detail-title"></h2><div class="sub" id="detail-sub"></div></div>
+    <button class="btn btn-icon" id="close-detail" type="button" aria-label="关闭详情" style="margin-left:auto">×</button>
+  </div>
+  <div id="detail-body"></div>
+</aside>
+
+<div id="copy-status" role="status" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

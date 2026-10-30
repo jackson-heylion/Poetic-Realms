@@ -6,39 +6,67 @@ const read = file => readFileSync(new URL("../" + file, import.meta.url), "utf8"
 const sandbox = {};
 runInNewContext(read("assets/agent-prompt.js"), sandbox, {filename:"assets/agent-prompt.js"});
 const build = sandbox.PoeticRealmsAgentPrompt?.buildPrompt;
-const submit = sandbox.PoeticRealmsAgentPrompt?.buildSubmissionPrompt;
-assert.equal(typeof submit, "function", "missing submission generator");
 assert.equal(typeof build, "function", "missing generator");
+assert.equal(sandbox.PoeticRealmsAgentPrompt?.buildSubmissionPrompt, undefined,
+  "creation and submission prompts must be merged into one");
 
 const works = JSON.parse(read("data/poems.json")).poems;
 assert(works.length > 0, "empty catalog");
 
 for (const poem of works) {
-  const expected = "使用html制作3d动态写实场景：" + poem.excerpt.trim() + "。";
-  assert.equal(build(poem), expected, poem.id + " unexpected extra instructions");
-  const homework=submit(poem);
-  for (const token of ["Poetic-Realms", "作品 ID：" + poem.id, poem.excerpt, "scenes/" + poem.id + "/<作品英文名>.html", "data/poems.json", "scenes 数组", "Pull Request"]) {
-    assert(homework.includes(token), poem.id + " submit prompt missing: " + token);
+  const prompt = build(poem);
+  const head = prompt.split("\n")[0];
+  assert.equal(head, "使用html制作3d动态写实场景：" + poem.excerpt.trim(), poem.id + " creation line changed");
+  assert(!prompt.includes("。。") && !prompt.includes("！。") && !prompt.includes("？。"),
+    poem.id + " duplicated sentence mark");
+  for (const token of [
+    "https://github.com/jackson-heylion/Poetic-Realms",
+    "作品 ID：" + poem.id,
+    "scenes/" + poem.id + "/<作品英文名>.html",
+    "data/poems.json",
+    "scenes 数组",
+    "node scripts/validate.mjs",
+    "Pull Request"
+  ]) {
+    assert(prompt.includes(token), poem.id + " prompt missing: " + token);
   }
-  assert(!homework.includes("/claim"), poem.id + " submission should not impose issue claim workflow");
+  assert(!prompt.includes("/claim"), poem.id + " prompt should not impose issue claim workflow");
   assert(Array.isArray(poem.scenes), poem.id + " scene list missing");
 }
 assert.throws(() => build({}), /诗句/, "missing excerpt must fail");
+assert.throws(() => build({excerpt:"千山鸟飞绝。"}), /作品 ID/, "missing work id must fail");
 
-const index = read("index.html"), app = read("assets/app.js");
-const first = index.indexOf('src="assets/agent-prompt.js"');
-const second = index.indexOf('src="assets/app.js"');
-assert(first >= 0 && second > first, "prompt generator must load first");
-for (const needle of ['class="copy-agent-btn"', 'class="task-copy"', 'class="detail-copy"', 'class="copy-submit-btn"', 'class="task-submit"', 'class="detail-submit"', 'data-copy-submission', 'addEventListener("click",handleCopyClick)']) {
+const index = read("index.html");
+const catalog = read("catalog.html");
+const app = read("assets/app.js");
+const stage = read("assets/stage.js");
+
+const order = ["assets/poems-data.js", "assets/agent-prompt.js", "assets/clipboard.js", "assets/stage.js"]
+  .map(f => index.indexOf('src="' + f + '"'));
+assert(order.every((at, i) => at >= 0 && (i === 0 || at > order[i - 1])), "theatre must load shared scripts first");
+for (const needle of ['class="theater"', 'id="stage-frame"', 'src="scenes/jiangxue.html"', 'id="stage-next"', 'id="copy-status"']) {
+  assert(index.includes(needle), "homepage missing: " + needle);
+}
+for (const needle of ["stage-next", "shuffled(", "history.replaceState"]) {
+  assert(stage.includes(needle), "theatre logic missing: " + needle);
+}
+
+for (const needle of ['src="assets/app.js"', 'id="catalog-grid"', 'id="copy-status"', 'id="search"']) {
+  assert(catalog.includes(needle), "catalogue page missing: " + needle);
+}
+for (const needle of ['class="copy-btn', 'data-copy="', 'addEventListener("click", PoeticRealmsClipboard.handleCopyClick)']) {
   assert(app.includes(needle), "missing copy UI: " + needle);
 }
-assert(index.includes('id="copy-status"'), "missing clipboard feedback");
-const gallery = read("gallery.html"), controller=read("assets/gallery.js");
-assert(gallery.includes('id="gallery-frame"')&&gallery.includes('id="gallery-options"'),"missing multi-scene viewer");
-assert(controller.includes('setSelected(')&&controller.includes('offset('),"scene version switch missing");
-assert(app.includes("gallery.html?poem="),"scene links must open gallery");
-const sample=works.find(p=>p.scenes.length>0);
-assert(sample&&sample.scenes[0].path==="scenes/jiangxue.html","legacy prototype should be preserved");
-const two={...sample,scenes:[...sample.scenes,{id:"alternative",title:"另一种诗境",path:"scenes/jiangxue/alternative.html",model:"自选",tools:[],status:"prototype"}]};
-assert(two.scenes.length===2&&two.scenes.map(x=>x.path).length===2,"multiple HTML paths allowed");
-console.log("PASS " + works.length + " minimal creation and submission prompts, scene gallery integration");
+assert(!app.includes("data-copy-submission") && !app.includes("buildSubmissionPrompt"),
+  "secondary submission action should be gone");
+
+const gallery = read("gallery.html"), controller = read("assets/gallery.js");
+assert(gallery.includes('id="gallery-frame"') && gallery.includes('id="gallery-options"'), "missing multi-scene viewer");
+assert(controller.includes("setSelected(") && controller.includes("offset("), "scene version switch missing");
+assert(app.includes("gallery.html?poem=") && stage.includes("gallery.html?poem="), "scene links must open gallery");
+
+const sample = works.find(p => p.scenes.length > 0);
+assert(sample && sample.scenes[0].path === "scenes/jiangxue.html", "legacy prototype should be preserved");
+const two = {...sample, scenes:[...sample.scenes, {id:"alternative", title:"另一种诗境", path:"scenes/jiangxue/alternative.html", model:"自选", tools:[], status:"prototype"}]};
+assert(two.scenes.length === 2 && two.scenes.map(x => x.path).length === 2, "multiple HTML paths allowed");
+console.log("PASS " + works.length + " merged creation + submission prompts, fullscreen theatre, catalogue and gallery");
