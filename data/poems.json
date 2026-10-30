@@ -318,7 +318,7 @@
       "hardness": "H2",
       "visualBrief": "秋菊篱笆、南山远景与缓慢云影",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -346,7 +346,21 @@
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "chrysanthemum-southern-hill",
+          "title": "东篱日暮 · 采菊见南山",
+          "path": "scenes/yinjiu-wu/chrysanthemum-southern-hill.html",
+          "model": "WorkBuddy Agent（运行环境未提供模型版本号）",
+          "tools": [
+            "Three.js r160",
+            "WebGL 2",
+            "HTML/CSS/JavaScript",
+            "Playwright-core 1.64.1（无头 Chrome 采样）"
+          ],
+          "status": "prototype"
+        }
+      ]
     },
     {
       "id": "chile-ge",
