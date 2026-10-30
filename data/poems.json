@@ -2185,6 +2185,17 @@
             "Vanilla JS"
           ],
           "status": "prototype"
+        },
+        {
+          "id": "river-snow",
+          "title": "寒江独钓 · 风雪空山",
+          "path": "scenes/jiangxue/river-snow.html",
+          "model": "DeepSeek-V4.1-Flash",
+          "tools": [
+            "WebGL1",
+            "Vanilla JS"
+          ],
+          "status": "prototype"
         }
       ]
     },

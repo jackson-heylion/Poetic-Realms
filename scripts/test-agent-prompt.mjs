@@ -69,5 +69,6 @@ assert(app.includes("gallery.html?poem=") && stage.includes("gallery.html?poem="
 const sample = works.find(p => p.scenes.length > 0);
 assert(sample && sample.scenes[0].path === "scenes/jiangxue.html", "legacy prototype should be preserved");
 const two = {...sample, scenes:[...sample.scenes, {id:"alternative", title:"另一种诗境", path:"scenes/jiangxue/alternative.html", model:"自选", tools:[], status:"prototype"}]};
-assert(two.scenes.length === 2 && two.scenes.map(x => x.path).length === 2, "multiple HTML paths allowed");
+assert(two.scenes.length === sample.scenes.length + 1 && new Set(two.scenes.map(x => x.path)).size === two.scenes.length,
+  "multiple HTML paths allowed");
 console.log("PASS " + works.length + " merged creation + submission prompts, fullscreen theatre, catalogue and gallery");
