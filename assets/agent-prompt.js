@@ -6,7 +6,7 @@
     if (!poem || typeof poem.excerpt !== "string" || !poem.excerpt.trim()) {
       throw new TypeError("缺少诗句");
     }
-    return "根据以下诗句自由发挥，用单个 HTML 文件生成一个 3D 动态场景：\n\n" + poem.excerpt.trim();
+    return "使用html制作3d动态写实场景：" + poem.excerpt.trim() + "。";
   }
 
   function buildSubmissionPrompt(poem) {

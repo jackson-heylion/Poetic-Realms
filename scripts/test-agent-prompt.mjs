@@ -14,7 +14,7 @@ const works = JSON.parse(read("data/poems.json")).poems;
 assert(works.length > 0, "empty catalog");
 
 for (const poem of works) {
-  const expected = "根据以下诗句自由发挥，用单个 HTML 文件生成一个 3D 动态场景：\n\n" + poem.excerpt.trim();
+  const expected = "使用html制作3d动态写实场景：" + poem.excerpt.trim() + "。";
   assert.equal(build(poem), expected, poem.id + " unexpected extra instructions");
   const homework=submit(poem);
   for (const token of ["Poetic-Realms", "作品 ID：" + poem.id, poem.excerpt, "scenes/" + poem.id + "/<作品英文名>.html", "data/poems.json", "scenes 数组", "Pull Request"]) {
