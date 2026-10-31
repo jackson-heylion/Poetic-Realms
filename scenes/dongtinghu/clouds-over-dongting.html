@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#253c43">
+<link rel="icon" href="data:,">
+<meta name="description" content="气蒸云梦泽，波撼岳阳城。走入孟浩然笔下的洞庭：蒸云、涌浪与烟中城阙。离线可用的独立三维诗境。">
+<title>云梦蒸波 · 望洞庭湖赠张丞相</title>
+<style>
+  :root { color-scheme: dark; font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif; color: #f5edda; background: #253c43; }
+  * { box-sizing: border-box; }
+  body { margin: 0; overflow: hidden; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+  canvas:active { cursor: grabbing; }
+  canvas:focus-visible { outline: 2px solid #ead3a2; outline-offset: -5px; }
+  .shade { position: fixed; inset: 0; pointer-events: none; background: linear-gradient(180deg, #152b345e, transparent 27%, transparent 60%, #0f2636b8); }
+  header { position: fixed; top: max(34px, env(safe-area-inset-top)); left: 4vw; text-shadow: 0 2px 12px #0008; pointer-events: none; }
+  h1 { font-weight: 400; font-size: clamp(18px, 2vw, 25px); letter-spacing: .14em; margin: 0 0 12px; }
+  header p { margin: 0; font-size: 13px; letter-spacing: .28em; }
+  .poetry { position: fixed; left: 4vw; bottom: 112px; text-shadow: 0 2px 16px #0008; pointer-events: none; }
+  blockquote { font-size: clamp(25px, 3vw, 42px); line-height: 1.65; letter-spacing: .16em; font-weight: 400; margin: 0; }
+  blockquote span { display: block; }
+  footer { position: fixed; bottom: max(25px, env(safe-area-inset-bottom)); left: 4vw; right: 4vw; display: flex; justify-content: space-between; align-items: end; gap: 20px; font: 12px/1.7 -apple-system, "PingFang SC", sans-serif; }
+  .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  button, select, summary { font: inherit; color: #f5edda; border: 1px solid #d7dfd066; background: #17313cdd; border-radius: 3px; cursor: pointer; min-height: 38px; padding: 7px 12px; }
+  button:hover, select:hover, summary:hover { background: #35515b; }
+  :focus-visible { outline: 2px solid #ead3a2; outline-offset: 4px; }
+  ::selection { color: #142f3b; background: #ead3a2; }
+  label { display: flex; align-items: center; gap: 8px; }
+  select { max-width: 110px; }
+  .hint { text-align: right; color: #e3e2d5; white-space: nowrap; }
+  #fps { font-variant-numeric: tabular-nums; }
+  details { position: fixed; right: 4vw; top: max(30px, env(safe-area-inset-top)); width: min(350px, 90vw); font: 13px/1.9 -apple-system, "PingFang SC", sans-serif; }
+  summary { width: fit-content; margin-left: auto; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  .reading { padding: 18px 22px; margin-top: 10px; background: #17313cf5; border: 1px solid #d7dfd04d; max-height: 67vh; overflow-y: auto; scrollbar-color: #b3b69e #17313c; }
+  .reading p { margin: 0 0 14px; }
+  .reading .full-poem { font: 16px/2.2 "Songti SC", "STSong", serif; }
+  a { color: #ead3a2; text-underline-offset: 4px; }
+  #notice { position: fixed; left: 50%; top: 42%; transform: translate(-50%, -50%); max-width: 85vw; width: 360px; padding: 22px; background: #17313cf5; font: 14px/1.9 -apple-system, "PingFang SC", sans-serif; text-align: center; }
+  #notice[hidden] { display: none; }
+  #notice button { margin-top: 12px; }
+  @media (max-width: 600px) {
+    header { top: max(26px, env(safe-area-inset-top)); left: 6vw; }
+    h1 { font-size: 17px; letter-spacing: .06em; max-width: 75vw; }
+    header p { font-size: 12px; }
+    details { top: 103px; right: 6vw; }
+    .poetry { left: 6vw; bottom: 155px; }
+    blockquote { font-size: 27px; letter-spacing: .08em; }
+    footer { left: 6vw; right: 6vw; bottom: max(20px, env(safe-area-inset-bottom)); display: block; }
+    .controls { gap: 6px; }
+    button, select, summary { min-height: 42px; padding: 7px 9px; }
+    .hint { margin-top: 10px; text-align: left; font-size: 11px; }
+  }
+  @media (max-height: 480px) { .poetry { bottom: 85px; } blockquote { font-size: 22px; } header { top: 18px; } details { top: 18px; } footer { bottom: 14px; } }
+</style>
+</head>
+<body>
+<canvas id="scene" tabindex="0" aria-label="洞庭湖三维动态场景。拖动或方向键环顾，滚轮缩放，空格暂停。"></canvas>
+<div class="shade"></div>
+<header><h1>望洞庭湖赠张丞相</h1><p>唐 · 孟浩然</p></header>
+<div class="poetry"><blockquote><span>气蒸云梦泽，</span><span>波撼岳阳城。</span></blockquote></div>
+<details><summary>读诗与创作</summary><div class="reading">
+  <p class="full-poem">八月湖水平，涵虚混太清。<br>气蒸云梦泽，波撼岳阳城。<br>欲济无舟楫，端居耻圣明。<br>坐观垂钓者，空有羡鱼情。</p>
+  <p>以湖天相接、云气蒸腾、巨浪临城为诗意依据。晨光、远山和城楼形制是艺术化营造，并非唐代岳阳城的历史复原。</p>
+  <p>正文据馆藏所录《全唐诗》社区电子转录，界面用简体呈现，尚未与纸本逐字校勘。<a href="https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.7000.json" target="_blank" rel="noopener noreferrer">查看文本来源</a></p>
+  <p>全部景物、纹理与光照由程序生成，无外部素材。GPT-6（Codex）· 原生 WebGL 1.0 / GLSL ES 1.00。</p>
+</div></details>
+<footer>
+  <div class="controls"><button id="pause" type="button" aria-pressed="false">暂停</button><button id="reset" type="button">归位</button><label>画质 <select id="quality" aria-label="画质"><option value="low">流畅</option><option value="medium" selected>均衡</option><option value="high">细腻</option></select></label></div>
+  <div class="hint"><span id="instruction">拖动环顾 · 滚轮远近 · 空格暂停</span><br><span id="fps" aria-live="off">正在展开湖天…</span></div>
+</footer>
+<div id="notice" role="alert" hidden><span id="error"></span><br><button id="retry" type="button">重新打开</button></div>
+<script>
+"use strict";
+// 文学出处见“读诗与创作”；几何、噪声纹理与着色器均为本作品原创。
+const canvas = document.querySelector("#scene"), fpsLabel = document.querySelector("#fps");
+const pauseButton = document.querySelector("#pause"), quality = document.querySelector("#quality");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+if(matchMedia("(pointer: coarse)").matches)document.querySelector("#instruction").textContent="轻拖环顾 · 点击暂停，静观湖天";
+// 渲染状态：时间以秒计，视角以弧度计，父页面可见性用于停止 iframe 后台渲染。
+const state = { time: 0, yaw: 0, pitch: 0, zoom: 1, paused: reducedMotion.matches, visible: true, lost: false, frame: 0, last: 0, frames: 0, sampleStart: 0 };
+let gl;
+function fail(message) {
+  document.querySelector("#error").textContent = message;
+  document.querySelector("#notice").hidden = false;
+  fpsLabel.textContent = "场景未能运行";
+}
+document.querySelector("#retry").onclick = () => location.reload();
+const vertex = `precision highp float;
+attribute vec2 aPosition;
+varying vec2 vScreen;
+void main(){ vScreen=aPosition; gl_Position=vec4(aPosition,0.,1.); }`;
+const shared = `precision highp float;
+uniform float uTime, uAspect, uZoom, uWind;
+uniform vec3 uEye, uRight, uUp, uForward;
+uniform sampler2D uNoise;
+const vec3 SUN=vec3(-.36,.23,-.904);
+const vec3 HAZE=vec3(.64,.68,.64);
+float noise3(vec3 p){
+  vec3 i=floor(p),f=fract(p); f=f*f*(3.-2.*f);
+  float slice=mod(i.z,49.);
+  vec2 tile=vec2(mod(slice,7.),floor(slice/7.));
+  vec2 uv=(tile*34.+1.5+mod(i.xy,32.)+f.xy)/256.;
+  vec2 rg=texture2D(uNoise,uv).rg;return mix(rg.r,rg.g,f.z);
+}
+float fbm(vec3 p){ return .55*noise3(p)+.28*noise3(p*2.03+7.1)+.17*noise3(p*4.07+13.); }
+vec3 atmosphere(vec3 rd){
+  float h=max(rd.y,0.),sun=max(dot(rd,SUN),0.);
+  vec3 col=mix(HAZE,vec3(.24,.38,.45),pow(h,.48));
+  col+=vec3(.46,.28,.10)*pow(sun,8.)+vec3(1.,.72,.32)*pow(sun,450.);
+  return col;
+}
+float wave(vec2 p){
+  float t=uTime*uWind;
+  float h=sin(dot(p,vec2(.24,.11))-t*1.55)*.34;
+  h+=sin(dot(p,vec2(-.17,.33))-t*1.93)*.21;
+  h+=sin(dot(p,vec2(.48,.28))-t*2.6+sin(p.x*.09))*.105;
+  h+=sin(dot(p,vec2(.93,-.5))-t*3.3)*.042;
+  h+=sin(dot(p,vec2(1.9,.7))-t*4.5)*.018;
+  return h;
+}`;
+const landscapeFragment = shared + `
+varying vec2 vScreen;
+uniform int uCloudSteps;
+vec3 clouds(vec3 rd){
+  vec3 col=atmosphere(rd); float alpha=0.; vec3 sum=vec3(0.);
+  if(rd.y>0.){
+    for(int i=0;i<14;i++){
+      if(i>=uCloudSteps) break;
+      float layer=(float(i)+.5)/float(uCloudSteps);
+      vec3 p=uEye+rd*(35.+layer*240.);
+      p.x+=uTime*1.7; p.z+=uTime*.65;
+      float shape=smoothstep(14.,24.,p.y)*(1.-smoothstep(65.,90.,p.y));
+      vec3 q=p*vec3(.022,.06,.022);
+      float d=smoothstep(.40,.68,fbm(q))*shape;
+      float light=clamp((fbm(q+SUN*vec3(.18,.48,.18))-.39)*3.1,0.,1.);
+      vec3 tint=mix(vec3(.32,.40,.42),vec3(1.02,.91,.70),light);
+      tint+=vec3(.24,.15,.06)*pow(max(dot(rd,SUN),0.),8.);
+      float a=d*.42; sum+=(1.-alpha)*a*tint; alpha+=(1.-alpha)*a;
+    }
+    col=col*(1.-alpha)+sum;
+    col=mix(HAZE,col,smoothstep(0.,.12,rd.y));
+  }
+  // 湿润的远岸与低矮山影；相交高度在三维视线空间中计算。
+  float az=atan(rd.x,-rd.z);
+  float ridge=.012+.012*sin(az*13.)+.009*sin(az*31.+1.)+.004*sin(az*71.);
+  float mountain=(1.-smoothstep(ridge-.002,ridge+.003,rd.y))*smoothstep(-.013,.005,rd.y);
+  col=mix(col,vec3(.40,.49,.49),mountain*.48);
+  return col;
+}
+void main(){
+  vec3 rd=normalize(uForward+(uRight*vScreen.x*uAspect+uUp*vScreen.y)*.445/uZoom);
+  vec3 col;
+  if(rd.y<-.001){
+    float dist=-uEye.y/rd.y;
+    for(int i=0;i<5;i++){vec3 p=uEye+rd*dist; dist=(wave(p.xz)-uEye.y)/rd.y;}
+    dist=clamp(dist,0.,6000.); vec3 p=uEye+rd*dist;
+    float e=.065+dist*.0008;
+    vec3 normal=normalize(vec3(wave(p.xz-vec2(e,0.))-wave(p.xz+vec2(e,0.)),2.*e,wave(p.xz-vec2(0.,e))-wave(p.xz+vec2(0.,e))));
+    vec3 refl=reflect(rd,normal);
+    float fresnel=.035+.965*pow(1.-max(dot(-rd,normal),0.),5.);
+    vec3 reflection=atmosphere(refl);
+    float c=fbm(vec3(refl.xz/max(refl.y,.08)*2.4+vec2(uTime*.012),1.));
+    reflection=mix(reflection,vec3(.68,.69,.63),smoothstep(.38,.7,c)*.5);
+    col=mix(vec3(.075,.19,.22),reflection,.27+fresnel*.65);
+    float sparkle=pow(max(dot(reflect(-SUN,normal),-rd),0.),100.);
+    col+=vec3(1.6,1.05,.43)*sparkle*.75;
+    float crest=smoothstep(.28,.55,wave(p.xz));
+    float lace=smoothstep(.57,.79,fbm(vec3(p.xz*.9+uTime*.13,uTime*.12)));
+    float shore=exp(-pow((p.z+108.)/4.,2.))*smoothstep(-15.,3.,p.x);
+    float foam=crest*lace*.38+shore*lace*.5;
+    col=mix(col,vec3(.73,.79,.73),foam*exp(-dist*.006));
+    float mist=1.-exp(-dist*.0024);
+    col=mix(col,HAZE,mist*.8);
+    float steam=fbm(vec3(p.xz*.026+vec2(uTime*.025),uTime*.035));
+    col=mix(col,vec3(.76,.77,.69),smoothstep(.48,.78,steam)*mist*.43);
+  }else col=clouds(rd);
+  col=pow(max(col,0.),vec3(.92));
+  float vignette=1.-.17*dot(vScreen*.65,vScreen*.65);
+  gl_FragColor=vec4(col*vignette,1.);
+}`;
+const cityVertex = shared + `
+attribute vec3 aPosition, aNormal, aColor;
+uniform float uMirror;
+varying vec3 vColor,vNormal,vWorld;
+void main(){
+  vec3 p=aPosition;
+  if(uMirror>0.){p.y=-p.y; p.x+=sin(p.y*7.+uTime*2.)*.23+sin(p.y*17.-uTime)*.08;}
+  vec3 rel=p-uEye; float z=dot(rel,uForward),f=uZoom/.445;
+  gl_Position=vec4(dot(rel,uRight)*f/uAspect,dot(rel,uUp)*f,z*1.0004-.20004,z);
+  vWorld=p; vNormal=aNormal; vColor=aColor;
+}`;
+const cityFragment = shared + `
+uniform float uMirror;
+varying vec3 vColor,vNormal,vWorld;
+void main(){
+  float light=.45+.55*max(dot(normalize(vNormal),SUN),0.);
+  float grain=noise3(vWorld*2.4)*.16;
+  vec3 col=vColor*(light+grain);
+  // 石砌墙体与瓦面细节采用世界坐标，避免贴图网络依赖。
+  float row=floor(vWorld.y*2.5),joint=step(.92,fract(vWorld.y*2.5));
+  joint=max(joint,step(.965,fract(vWorld.x*.85+mod(row,2.)*.5)));
+  if(vColor.b>.21) col*=1.-joint*.17;
+  float dist=length(vWorld-uEye),fog=1.-exp(-dist*.0042);
+  col=mix(col,HAZE,fog);
+  float steam=fbm(vec3(vWorld.xz*.035+uTime*.024,vWorld.y*.06-uTime*.025));
+  col=mix(col,HAZE,smoothstep(.45,.8,steam)*exp(-max(vWorld.y,0.)*.25)*.42);
+  float alpha=1.;
+  if(uMirror>0.){alpha=.27*exp(vWorld.y*.28); col=mix(col,vec3(.27,.39,.40),.4);}
+  gl_FragColor=vec4(pow(col,vec3(.92)),alpha);
+}`;
+function program(vs, fs) {
+  function compile(type, source) {
+    const shader=gl.createShader(type); gl.shaderSource(shader,source); gl.compileShader(shader);
+    if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)) throw new Error("着色器编译失败："+gl.getShaderInfoLog(shader));
+    return shader;
+  }
+  const p=gl.createProgram(),v=compile(gl.VERTEX_SHADER,vs),f=compile(gl.FRAGMENT_SHADER,fs);
+  gl.attachShader(p,v); gl.attachShader(p,f); gl.linkProgram(p); gl.deleteShader(v); gl.deleteShader(f);
+  if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error("三维程序链接失败："+gl.getProgramInfoLog(p));
+  return p;
+}
+// 顶点字段依次为世界坐标、表面法向量、线性材质颜色；长度均使用场景米制比例。
+const vertices=[];
+function triangle(a,b,c,color){
+  const ab=b.map((v,i)=>v-a[i]),ac=c.map((v,i)=>v-a[i]);
+  const n=normalize([ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]]);
+  for(const p of [a,b,c]) vertices.push(...p,...n,...color);
+}
+function quad(a,b,c,d,color){ triangle(a,b,c,color); triangle(a,c,d,color); }
+function box(x,y,z,w,h,d,color){
+  const p=[[x-w/2,y,z-d/2],[x+w/2,y,z-d/2],[x+w/2,y+h,z-d/2],[x-w/2,y+h,z-d/2],[x-w/2,y,z+d/2],[x+w/2,y,z+d/2],[x+w/2,y+h,z+d/2],[x-w/2,y+h,z+d/2]];
+  for(const face of [[4,5,6,7],[1,0,3,2],[0,4,7,3],[5,1,2,6],[3,7,6,2]]) quad(...face.map(i=>p[i]),color);
+}
+function roof(x,y,z,w,d,h){
+  // 四坡屋顶由曲线檐口连接短脊；檐角上翘是艺术化建筑语汇。
+  const tile=[.20,.26,.26],rim=[.29,.29,.23];
+  const corners=[[-w/2,-d/2],[w/2,-d/2],[w/2,d/2],[-w/2,d/2]];
+  const ridge=[[-w*.27,0],[w*.27,0],[w*.27,0],[-w*.27,0]];
+  for(let side=0;side<4;side++) for(let i=0;i<14;i++){
+    const point=(j,t)=>{const c=corners[j%4],r=ridge[j%4],yy=y+h*(1-t)*(1-t)+Math.pow(t,8)*.55;return [x+r[0]*(1-t)+c[0]*t,yy,z+r[1]*(1-t)+c[1]*t];};
+    for(let row=0;row<6;row++){
+      const a=i/14,b=(i+1)/14,t0=row/6,t1=(row+1)/6;
+      const edge=(s,t)=>{const l=point(side,t),r=point(side+1,t);return l.map((v,k)=>v*(1-s)+r[k]*s);};
+      quad(edge(a,t0),edge(b,t0),edge(b,t1),edge(a,t1),i%2?tile:[.22,.28,.28]);
+    }
+    if(i===0){const a=point(side,1),b=point(side+1,1);quad(a,b,b.map((v,k)=>v-(k===1?.16:0)),a.map((v,k)=>v-(k===1?.16:0)),rim);}
+  }
+  box(x,y+h,z,w*.55,.14,.20,rim);
+}
+function pavilion(x,z,scale=1){
+  box(x,2.6,z,12*scale,.8,9*scale,[.51,.49,.39]);
+  for(let level=0;level<3;level++){
+    const y=3.4+level*3.5*scale,w=(10-level*1.45)*scale,d=(7-level*.85)*scale;
+    box(x,y,z,w*.83,2.9*scale,d*.8,[.45,.32,.21]);
+    for(let i=-2;i<=2;i++){
+      box(x+i*w*.18,y,z+d*.45,.16*scale,2.9*scale,.2,[.31,.20,.13]);
+      if(i<2)box(x+(i+.5)*w*.18,y+.65*scale,z+d*.411,w*.10,1.45*scale,.08,[.15,.20,.19]);
+    }
+    box(x,y+.4,z+d*.51,w*1.08,.14,.18,[.42,.29,.16]);
+    for(let i=-6;i<=6;i++)box(x+i*w/12,y,z+d*.51,.075,.65*scale,.075,[.40,.28,.17]);
+    roof(x,y+2.7*scale,z,w*1.3,d*1.45,1.65*scale);
+  }
+}
+function normalize(v){const n=Math.hypot(...v)||1;return v.map(x=>x/n);}
+function buildCity(){
+  box(68,-.4,-139,156,3.0,60,[.44,.46,.39]);
+  box(68,0,-108,156,3.5,3,[.45,.47,.42]);
+  for(let i=0;i<65;i++)box(-9+i*2.4,3.5,-108,1.25,.85,2.7,[.42,.43,.37]);
+  for(let i=0;i<28;i++){
+    const x=-6+i*5.2,z=-124-(i%3)*8,h=2.2+(Math.sin(i*23.)+1)*1.2;
+    box(x,2.6,z,4.1,h,5,[.44,.40,.30]); roof(x,2.6+h,z,5.4,6.5,1.6);
+  }
+  pavilion(30,-112,1.25); pavilion(96,-122,.65);
+  // 远侧城门与岸线；几何合批，不逐屋增加 draw call。
+  box(-9,0,-114,8,4,14,[.42,.45,.40]); roof(-9,4,-114,10,13,2.3);
+}
+function noiseTexture(){
+  // 三维噪声按 49 张切片存入图集；每片留一格环绕边界，红绿通道保存相邻深度。
+  const lattice=new Uint8Array(32*32*49),pixels=new Uint8Array(256*256*4);let seed=78321;
+  for(let i=0;i<lattice.length;i++){seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;lattice[i]=seed>>>24;}
+  for(let z=0;z<49;z++)for(let y=0;y<34;y++)for(let x=0;x<34;x++){
+    const pixel=(((Math.floor(z/7)*34+y)*256)+(z%7)*34+x)*4;
+    const cell=((y+31)%32)*32+(x+31)%32;
+    pixels[pixel]=lattice[z*1024+cell];pixels[pixel+1]=lattice[((z+1)%49)*1024+cell];pixels[pixel+3]=255;
+  }
+  gl.bindTexture(gl.TEXTURE_2D,gl.createTexture());gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,256,256,0,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+}
+let landscape,city,screenBuffer,cityBuffer;
+function resize(){
+  const cap=quality.value==="high"?1600:quality.value==="medium"?1152:760;
+  const dpr=Math.min(devicePixelRatio||1,quality.value==="high"?1.5:1);
+  const ratio=Math.min(dpr,cap/innerWidth,1100/innerHeight);
+  canvas.width=Math.max(1,Math.round(innerWidth*ratio)); canvas.height=Math.max(1,Math.round(innerHeight*ratio));
+  if(gl&&!state.lost)gl.viewport(0,0,canvas.width,canvas.height);
+  state.sampleStart=0; state.frames=0; if(state.paused)render(performance.now());
+}
+function bindAttribute(p,name,size,stride,offset){
+  const a=gl.getAttribLocation(p,name); if(a<0)return;
+  gl.enableVertexAttribArray(a); gl.vertexAttribPointer(a,size,gl.FLOAT,false,stride,offset);
+}
+function uniforms(p,right,up,forward){
+  const scalar=(n,v)=>gl.uniform1f(gl.getUniformLocation(p,n),v);
+  scalar("uTime",state.time); scalar("uAspect",innerWidth/innerHeight); scalar("uZoom",state.zoom); scalar("uWind",1.);
+  for(const [n,v] of [["uEye",[0,4.2,-2]],["uRight",right],["uUp",up],["uForward",forward]])gl.uniform3fv(gl.getUniformLocation(p,n),v);
+  gl.uniform1i(gl.getUniformLocation(p,"uNoise"),0);
+}
+function render(now){
+  if(state.lost||!gl)return;
+  const sway=state.paused?0:Math.sin(state.time*.22)*.003;
+  const yaw=state.yaw+(innerWidth/innerHeight<.85?.20:0),pitch=state.pitch+.018+sway;
+  const forward=[Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch),-Math.cos(yaw)*Math.cos(pitch)];
+  const right=[Math.cos(yaw),0,Math.sin(yaw)],up=[-Math.sin(yaw)*Math.sin(pitch),Math.cos(pitch),Math.cos(yaw)*Math.sin(pitch)];
+  gl.clear(gl.DEPTH_BUFFER_BIT); gl.disable(gl.DEPTH_TEST); gl.disable(gl.BLEND);
+  gl.useProgram(landscape); gl.bindBuffer(gl.ARRAY_BUFFER,screenBuffer); bindAttribute(landscape,"aPosition",2,0,0); uniforms(landscape,right,up,forward);
+  gl.uniform1i(gl.getUniformLocation(landscape,"uCloudSteps"),quality.value==="high"?14:quality.value==="low"?6:10);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+  gl.useProgram(city); gl.bindBuffer(gl.ARRAY_BUFFER,cityBuffer);
+  for(const [n,o] of [["aPosition",0],["aNormal",12],["aColor",24]])bindAttribute(city,n,3,36,o);
+  uniforms(city,right,up,forward); gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+  gl.uniform1f(gl.getUniformLocation(city,"uMirror"),1); gl.drawArrays(gl.TRIANGLES,0,vertices.length/9);
+  gl.disable(gl.BLEND); gl.enable(gl.DEPTH_TEST); gl.uniform1f(gl.getUniformLocation(city,"uMirror"),0); gl.drawArrays(gl.TRIANGLES,0,vertices.length/9);
+  if(state.paused){fpsLabel.textContent="已静止 · 可拖动环顾";return;}
+  if(!state.sampleStart)state.sampleStart=now;
+  state.frames++;
+  if(now-state.sampleStart>=1200){fpsLabel.textContent=(state.frames*1000/(now-state.sampleStart)).toFixed(0)+" FPS · 洞庭湖上";state.frames=0;state.sampleStart=now;}
+}
+function active(){return !state.paused&&!document.hidden&&state.visible&&!state.lost;}
+function tick(now){
+  state.frame=0; if(!active())return;
+  state.time+=state.last?Math.min((now-state.last)/1000,.06):0;state.last=now;render(now);state.frame=requestAnimationFrame(tick);
+}
+function sync(){
+  cancelAnimationFrame(state.frame); state.frame=0; state.last=0;state.sampleStart=0;state.frames=0;
+  pauseButton.textContent=state.paused?"继续":"暂停"; pauseButton.setAttribute("aria-pressed",String(state.paused));
+  if(active())state.frame=requestAnimationFrame(tick);else if(!document.hidden&&state.visible&&!state.lost)render(performance.now());
+}
+pauseButton.onclick=()=>{state.paused=!state.paused;sync();};
+document.querySelector("#reset").onclick=()=>{state.yaw=0;state.pitch=0;state.zoom=1;if(!active())render(performance.now());};
+quality.onchange=resize;
+let drag=null;
+canvas.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY,yaw:state.yaw,pitch:state.pitch};canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener("pointermove",e=>{if(!drag)return;state.yaw=Math.max(-.5,Math.min(.5,drag.yaw-(e.clientX-drag.x)*.0017));state.pitch=Math.max(-.13,Math.min(.17,drag.pitch+(e.clientY-drag.y)*.0013));if(!active())render(performance.now());});
+canvas.addEventListener("pointerup",()=>{drag=null;});canvas.addEventListener("pointercancel",()=>{drag=null;});
+canvas.addEventListener("wheel",e=>{e.preventDefault();state.zoom=Math.max(.7,Math.min(1.6,state.zoom-e.deltaY*.0007));if(!active())render(performance.now());},{passive:false});
+document.addEventListener("keydown",e=>{
+  if(e.target.closest("button,select,summary,a"))return;
+  if(e.code==="Space"){e.preventDefault();pauseButton.click();}
+  const directions={ArrowLeft:[-.04,0],ArrowRight:[.04,0],ArrowUp:[0,.025],ArrowDown:[0,-.025]};
+  if(directions[e.key]){e.preventDefault();state.yaw=Math.max(-.5,Math.min(.5,state.yaw+directions[e.key][0]));state.pitch=Math.max(-.13,Math.min(.17,state.pitch+directions[e.key][1]));if(!active())render(performance.now());}
+});
+addEventListener("resize",resize);document.addEventListener("visibilitychange",sync);
+addEventListener("message",e=>{if(e.source!==parent||e.origin!==location.origin||e.data?.type!=="poetic-realms-visibility"||typeof e.data.visible!=="boolean")return;state.visible=e.data.visible;sync();});
+reducedMotion.addEventListener("change",e=>{state.paused=e.matches;sync();});
+canvas.addEventListener("webglcontextlost",e=>{e.preventDefault();state.lost=true;cancelAnimationFrame(state.frame);state.frame=0;fail("三维画布连接已中断。请重新打开作品恢复场景。");});
+canvas.addEventListener("webglcontextrestored",()=>location.reload());
+try{
+  gl=canvas.getContext("webgl",{alpha:false,antialias:false,powerPreference:"high-performance"});
+  if(!gl)throw new Error("此浏览器无法启动 WebGL。请启用硬件加速或换用支持 WebGL 的浏览器。");
+  if(!gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER,gl.HIGH_FLOAT).precision)throw new Error("当前设备不支持本场景所需的高精度着色器。请换用较新的浏览器或设备。");
+  landscape=program(vertex,landscapeFragment);city=program(cityVertex,cityFragment);
+  screenBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,screenBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  buildCity();cityBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,cityBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.STATIC_DRAW);
+  noiseTexture();if(innerWidth<600)quality.value="low";resize();render(performance.now());sync();
+}catch(error){state.lost=true;cancelAnimationFrame(state.frame);fail(error.message);console.error(error);}
+</script>
+</body>
+</html>
