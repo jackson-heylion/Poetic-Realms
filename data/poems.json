@@ -322,12 +322,12 @@
       "scenePath": null,
       "model": "MiniMax-M3.1-Flash",
       "tools": [
-            "three.js r160",
-            "Custom GLSL",
-            "CanvasTexture",
-            "WebGL2",
-            "Vanilla JS"
-          ],
+        "three.js r160",
+        "Custom GLSL",
+        "CanvasTexture",
+        "WebGL2",
+        "Vanilla JS"
+      ],
       "issueNumber": null,
       "sources": [
         {
@@ -367,6 +367,20 @@
           ],
           "status": "prototype",
           "description": "傍晚的东篱下，竹篱围着一畦金菊，篱边有人俯身采菊；篱外山气渐起，南山在暮色里显出层叠轮廓，飞鸟相与还。茅舍形制、菊种、菜畦与雾色均为艺术加工，不作东晋庄园的历史复原。"
+        },
+        {
+          "id": "east-fence-sunset",
+          "title": "东篱斜阳 · 采菊见山",
+          "path": "scenes/yinjiu-wu/east-fence-sunset.html",
+          "model": "WorkBuddy（DeepSeek-V4.1-Flash）",
+          "tools": [
+            "three.js r160（仓库 vendor 内嵌）",
+            "Custom GLSL",
+            "Node.js 打包脚本",
+            "Playwright-core 实测"
+          ],
+          "status": "prototype",
+          "description": "秋暮斜阳下，竹篱自画面右下伸向中景，篱边菊带与俯身采菊的人；西侧茅舍与竹树，南面四层山影与山岚，归鸟沿一条曲线飞向远山。天光、山形与屋制为写意，不作东晋庄园的历史复原。"
         }
       ]
     },

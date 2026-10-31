@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>饮酒·其五 · 东篱斜阳 | 一诗一境</title>
+    <meta
+      name="description"
+      content="陶渊明《饮酒·其五》：东篱斜阳，采菊见山。可离线打开的动态 Three.js 诗境。"
+    />
+    <!-- SCENE_STYLE -->
+  </head>
+  <body>
+    <canvas id="scene" aria-label="东篱斜阳的三维诗境"></canvas>
+
+    <header class="plate">
+      <p class="eyebrow">POETIC REALMS / 一诗一境</p>
+      <h1>饮酒 · 其五</h1>
+      <p class="byline">魏晋 · 陶渊明</p>
+      <blockquote>
+        <span>采菊东篱下，</span><span>悠然见南山。</span>
+      </blockquote>
+      <p class="note">篱、菊、人据诗句敷设；山形、屋制与衣冠为写意，不作复原。</p>
+    </header>
+
+    <button class="ghost" id="read" type="button" aria-expanded="false">
+      读全诗
+    </button>
+
+    <div class="hint" id="hint">拖动环顾 · 滚轮远近 · 空格静观</div>
+    <div class="meter" id="meter" aria-hidden="true">—</div>
+
+    <nav class="dock" aria-label="诗境控制">
+      <a class="dock-btn" href="../../index.html">← 返回放映厅</a>
+      <button class="dock-btn" id="view-near" type="button">近观采菊</button>
+      <button class="dock-btn" id="view-far" type="button" aria-pressed="true">
+        远望南山
+      </button>
+      <button class="dock-btn" id="quiet" type="button" aria-pressed="false">
+        静观
+      </button>
+      <button class="dock-btn" id="pause" type="button" aria-pressed="false">
+        暂停
+      </button>
+      <label class="dock-quality">
+        画质
+        <select id="quality">
+          <option value="high">精细</option>
+          <option value="normal" selected>标准</option>
+          <option value="low">省电</option>
+        </select>
+      </label>
+    </nav>
+
+    <section class="sheet" id="sheet" hidden aria-label="全诗">
+      <div class="sheet-inner">
+        <h2>饮酒 · 其五</h2>
+        <p class="sheet-meta">魏晋 · 陶渊明</p>
+        <div class="sheet-text" id="sheet-text"></div>
+        <p class="sheet-source">
+          正文依维基文库《饮酒二十首》其五电子文本；「欲辩／欲辨」有异文，未逐字校勘纸本。
+        </p>
+        <button class="sheet-close" id="sheet-close" type="button">
+          收起
+        </button>
+      </div>
+    </section>
+
+    <div class="veil" id="veil" role="status" aria-live="polite">
+      <p class="veil-title">东篱斜阳</p>
+      <p class="veil-text" id="veil-text">正在入境……</p>
+      <button class="veil-retry" id="retry" type="button" hidden>
+        重新入境
+      </button>
+    </div>
+
+    <noscript>
+      <p class="noscript">
+        此诗境需要 JavaScript 与 WebGL。<a href="../../catalog.html"
+          >返回馆藏</a
+        >
+      </p>
+    </noscript>
+
+    <!-- SCENE_ENGINE -->
+    <!-- SCENE_SCRIPT -->
+  </body>
+</html>
