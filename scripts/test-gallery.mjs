@@ -15,12 +15,24 @@ class NodeStub {
     this.hidden = true;
     this.textContent = "";
     this.src = "";
-    this.contentDocument = { querySelector: () => ({ tagName: "CANVAS" }) };
+    this.parentElement = null;
+    this.contentDocument = {
+      events: {},
+      querySelector: () => ({ tagName: "CANVAS" }),
+      addEventListener(type, handler) {
+        this.events[type] = handler;
+      },
+    };
   }
   addEventListener(type, handler) {
     this.events[type] = handler;
   }
   append(child) {
+    if (child.parentElement)
+      child.parentElement.items = child.parentElement.items.filter(
+        (item) => item !== child,
+      );
+    child.parentElement = this;
     this.items.push(child);
   }
   replaceChildren(...children) {
@@ -86,12 +98,26 @@ async function setup(search, catalogue = [poem]) {
     "gallery-copy",
   ];
   const nodes = Object.fromEntries(ids.map((id) => ["#" + id, new NodeStub()]));
+  const arrowHome = new NodeStub();
+  arrowHome.append(nodes["#gallery-arrows"]);
   const document = {
     title: "",
+    events: {},
+    fullscreenElement: null,
     body: new NodeStub(),
     querySelector: (key) => nodes[key],
     createElement: () => new NodeStub(),
-    addEventListener() {},
+    addEventListener(type, handler) {
+      this.events[type] = handler;
+    },
+    async exitFullscreen() {
+      this.fullscreenElement = null;
+      this.events.fullscreenchange();
+    },
+  };
+  nodes["#gallery-stage"].requestFullscreen = async () => {
+    document.fullscreenElement = nodes["#gallery-stage"];
+    document.events.fullscreenchange();
   };
   const url = "https://example.test/Poetic-Realms/gallery.html" + search;
   const history = {
@@ -121,10 +147,12 @@ async function setup(search, catalogue = [poem]) {
     },
   });
   await new Promise((resolve) => setImmediate(resolve));
-  return { nodes, history };
+  return { nodes, history, document, arrowHome };
 }
 
-const { nodes, history } = await setup("?poem=jiangxue&scene=alternate");
+const { nodes, history, document, arrowHome } = await setup(
+  "?poem=jiangxue&scene=alternate",
+);
 const frame = nodes["#gallery-frame"],
   options = nodes["#gallery-options"];
 assert.equal(options.items.length, 2);
@@ -150,6 +178,53 @@ assert.equal(
   poem.transcription.text[1],
 );
 
+await nodes["#gallery-fullscreen"].events.click();
+assert.equal(document.fullscreenElement, nodes["#gallery-stage"]);
+assert.equal(nodes["#gallery-arrows"].parentElement, document.fullscreenElement);
+assert.equal(nodes["#gallery-arrows"].hidden, false);
+assert.equal(nodes["#gallery-fullscreen"].textContent, "退出全屏 ⤢");
+assert.equal(nodes["#gallery-fullscreen"].attributes["aria-label"], "退出全屏欣赏");
+nodes["#gallery-next"].events.click();
+assert.equal(frame.src, scenes[1].path, "fullscreen next button switches version");
+assert.equal(nodes["#gallery-fullscreen"].hidden, false, "exit remains available while loading");
+frame.events.load();
+
+function key(key, options = {}) {
+  return {
+    key,
+    prevented: false,
+    stopped: false,
+    preventDefault() { this.prevented = true; },
+    stopPropagation() { this.stopped = true; },
+    ...options,
+  };
+}
+const previous = key("ArrowLeft");
+frame.contentDocument.events.keydown(previous);
+assert.equal(frame.src, scenes[0].path, "iframe focus retains fullscreen navigation");
+assert(previous.prevented && previous.stopped);
+frame.events.load();
+const next = key("ArrowRight");
+document.events.keydown(next);
+assert.equal(frame.src, scenes[1].path);
+assert(next.prevented && next.stopped);
+const modified = key("ArrowLeft", { ctrlKey: true });
+document.events.keydown(modified);
+assert.equal(modified.prevented, false);
+const editing = key("ArrowLeft", { target: { closest: () => ({}) } });
+frame.contentDocument.events.keydown(editing);
+assert.equal(editing.prevented, false);
+frame.contentDocument.querySelector = () => null;
+frame.events.load();
+assert.equal(nodes["#gallery-fullscreen"].hidden, false, "failed version still allows fullscreen exit");
+await nodes["#gallery-fullscreen"].events.click();
+assert.equal(document.fullscreenElement, null);
+assert.equal(nodes["#gallery-arrows"].parentElement, arrowHome);
+assert.equal(nodes["#gallery-fullscreen"].textContent, "全屏欣赏 ⤢");
+const ordinary = key("ArrowLeft");
+document.events.keydown(ordinary);
+assert.equal(ordinary.prevented, false, "ordinary scene keyboard controls are preserved");
+
 const missing = await setup("?poem=unknown");
 assert.equal(missing.nodes["#gallery-recover"].hidden, false);
 assert.equal(missing.nodes["#gallery-frame"].src, "");
@@ -165,5 +240,5 @@ assert.equal(empty.nodes["#gallery-recover"].hidden, false);
 const failed = await setup("?poem=jiangxue", Error("offline"));
 assert.equal(failed.nodes["#gallery-recover"].hidden, false);
 console.log(
-  "PASS gallery: version switching, deep link, full text, invalid links, unbuilt poem and loading failure",
+  "PASS gallery: version switching, fullscreen controls and iframe keyboard navigation, deep links, full text and loading failure",
 );

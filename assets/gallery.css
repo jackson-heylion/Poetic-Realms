@@ -129,7 +129,25 @@
 .gallery-stage:fullscreen {
   width: 100%;
   height: 100%;
+  min-height: 0;
+  margin: 0;
   aspect-ratio: auto;
+}
+.gallery-stage .gallery-arrows {
+  position: absolute;
+  z-index: 2;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+}
+.gallery-stage .gallery-arrows .icon-button {
+  width: 48px;
+  height: 48px;
+  color: inherit;
+  border-color: #f8f5eb66;
+  background: #172029cc;
+}
+.gallery-stage .gallery-arrows .icon-button:hover {
+  background: #172029;
 }
 .gallery-caption {
   display: flex;

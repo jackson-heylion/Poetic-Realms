@@ -281,7 +281,9 @@
 .stage-noscript a {
   text-decoration: underline;
 }
-.is-quiet .stage-panel,
+.is-quiet .stage-info,
+.is-quiet .stage-pagination,
+.is-quiet .stage-hint,
 .is-quiet .stage-edition,
 .is-quiet .brand,
 .is-quiet .stage-topnav > a,

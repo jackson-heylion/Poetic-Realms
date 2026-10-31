@@ -8,6 +8,10 @@ let scenes = [];
 let current = -1;
 let timer = 0;
 const frame = $("#gallery-frame");
+const stage = $("#gallery-stage");
+const arrows = $("#gallery-arrows");
+const arrowHome = arrows.parentElement;
+const fullscreenButton = $("#gallery-fullscreen");
 let inView = false;
 
 function publishVisibility() {
@@ -29,7 +33,7 @@ function setMessage(message, recover = false) {
   $("#gallery-empty").hidden = false;
   $("#gallery-recover").hidden = !recover;
   frame.hidden = true;
-  $("#gallery-fullscreen").hidden = true;
+  syncFullscreen();
 }
 
 function setSelected(index) {
@@ -77,6 +81,32 @@ function offset(delta) {
     setSelected((current + delta + scenes.length) % scenes.length);
 }
 
+function onNavigationKey(event) {
+  if (document.fullscreenElement !== stage || scenes.length < 2) return;
+  if (event.altKey || event.metaKey || event.ctrlKey || event.shiftKey) return;
+  if (event.target?.closest?.("input, textarea, select, [contenteditable]"))
+    return;
+  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+  event.preventDefault();
+  event.stopPropagation();
+  offset(event.key === "ArrowRight" ? 1 : -1);
+}
+
+function syncFullscreen() {
+  const fullscreen = document.fullscreenElement === stage;
+  // 复用同一组切换按钮，确保它们处于浏览器的全屏容器内。
+  const arrowTarget = fullscreen ? stage : arrowHome;
+  if (arrows.parentElement !== arrowTarget) arrowTarget.append(arrows);
+  fullscreenButton.textContent = fullscreen ? "退出全屏 ⤢" : "全屏欣赏 ⤢";
+  fullscreenButton.setAttribute(
+    "aria-label",
+    fullscreen ? "退出全屏欣赏" : "全屏欣赏诗境",
+  );
+  // 切换期间保留退出入口，即使新画卷仍在加载或加载失败。
+  fullscreenButton.hidden =
+    !stage.requestFullscreen || (!fullscreen && frame.hidden);
+}
+
 function addParagraphs(target, paragraphs) {
   target.replaceChildren(
     ...paragraphs.map((text) => {
@@ -95,6 +125,8 @@ frame.addEventListener("load", () => {
       setMessage("这个版本暂未能打开，请独立打开或选择另一版本。", true);
       return;
     }
+    // iframe 获得焦点后，仍由全屏展厅处理版本切换。
+    frame.contentDocument.addEventListener("keydown", onNavigationKey, true);
   } catch {
     setMessage("这个版本暂未能打开，请返回馆藏重试。", true);
     return;
@@ -102,14 +134,14 @@ frame.addEventListener("load", () => {
   $("#gallery-empty").hidden = true;
   frame.hidden = false;
   publishVisibility();
-  $("#gallery-fullscreen").hidden = !$("#gallery-stage").requestFullscreen;
+  syncFullscreen();
 });
 $("#gallery-prev").addEventListener("click", () => offset(-1));
 $("#gallery-next").addEventListener("click", () => offset(1));
-$("#gallery-fullscreen").addEventListener("click", async () => {
+fullscreenButton.addEventListener("click", async () => {
   try {
     if (document.fullscreenElement) await document.exitFullscreen();
-    else await $("#gallery-stage").requestFullscreen();
+    else await stage.requestFullscreen();
   } catch {
     PoeticRealmsClipboard.toast(
       "浏览器暂不支持全屏，请使用「独立打开」。",
@@ -117,11 +149,8 @@ $("#gallery-fullscreen").addEventListener("click", async () => {
     );
   }
 });
-document.addEventListener("fullscreenchange", () => {
-  $("#gallery-fullscreen").textContent = document.fullscreenElement
-    ? "退出全屏 ⤢"
-    : "全屏欣赏 ⤢";
-});
+document.addEventListener("fullscreenchange", syncFullscreen);
+document.addEventListener("keydown", onNavigationKey, true);
 document.body.addEventListener("click", PoeticRealmsClipboard.handleCopyClick);
 
 async function init() {

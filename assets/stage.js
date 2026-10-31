@@ -25,7 +25,7 @@ function setQuiet(quiet) {
   toggle.querySelector(".stage-toggle-label").textContent = quiet
     ? "返境"
     : "静观";
-  if (quiet && $("#stage-panel").contains(document.activeElement))
+  if (quiet && $(".stage-info").contains(document.activeElement))
     toggle.focus();
 }
 
