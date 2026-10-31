@@ -318,10 +318,16 @@
       "hardness": "H2",
       "visualBrief": "秋菊篱笆、南山远景与缓慢云影",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
-      "model": null,
-      "tools": [],
+      "model": "MiniMax-M3.1-Flash",
+      "tools": [
+            "three.js r160",
+            "Custom GLSL",
+            "CanvasTexture",
+            "WebGL2",
+            "Vanilla JS"
+          ],
       "issueNumber": null,
       "sources": [
         {
@@ -346,7 +352,23 @@
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "east-fence-chrysanthemum",
+          "title": "东篱采菊 · 悠然见南山",
+          "path": "scenes/yinjiu-wu/east-fence-chrysanthemum.html",
+          "model": "MiniMax-M3.1-Flash",
+          "tools": [
+            "three.js r160",
+            "Custom GLSL",
+            "CanvasTexture",
+            "WebGL2",
+            "Vanilla JS"
+          ],
+          "status": "prototype",
+          "description": "傍晚的东篱下，竹篱围着一畦金菊，篱边有人俯身采菊；篱外山气渐起，南山在暮色里显出层叠轮廓，飞鸟相与还。茅舍形制、菊种、菜畦与雾色均为艺术加工，不作东晋庄园的历史复原。"
+        }
+      ]
     },
     {
       "id": "chile-ge",
