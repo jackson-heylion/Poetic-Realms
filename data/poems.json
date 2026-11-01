@@ -3803,10 +3803,16 @@
       "hardness": "H3",
       "visualBrief": "夜行稻田、明月、蝉鸣与蛙声",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
-      "model": null,
-      "tools": [],
+      "model": "WorkBuddy（DeepSeek-V4.1-Flash）",
+      "tools": [
+        "three.js r160",
+        "Custom GLSL",
+        "CanvasTexture",
+        "WebAudio",
+        "WebGL2"
+      ],
       "issueNumber": null,
       "sources": [
         {
@@ -3835,7 +3841,24 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "moonlit-rice-road",
+          "title": "明月别枝 · 夜行黄沙道中",
+          "path": "scenes/xijiangyue/moonlit-rice-road.html",
+          "model": "WorkBuddy（DeepSeek-V4.1-Flash）",
+          "tools": [
+            "three.js r160（仓库 vendor 内嵌）",
+            "Custom GLSL",
+            "CanvasTexture",
+            "WebAudio 合成音",
+            "Node.js 打包脚本",
+            "Playwright + Chrome 实测"
+          ],
+          "status": "prototype",
+          "description": "夜行黄沙道：稻海自两侧压向一条田埂，明月挂在东南，老樟探出的横枝上栖着两只喜鹊，隔一阵便掠过月面；溪上一座三折石桥，桥那头是社林边的茅店，檐下挂一盏灯。远山前压着一层雨云，田间浮着地气与流萤，另有合成蝉声与蛙声可开。山形、屋制、稻穗比例与鹊的动线均为艺术加工，不作宋代信州道路的复原。"
+        }
+      ]
     },
     {
       "id": "yuanxi",
