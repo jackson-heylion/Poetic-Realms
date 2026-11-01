@@ -3557,10 +3557,16 @@
       "hardness": "H4",
       "visualBrief": "乌云骤雨、西湖船舱与雨滴",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
-      "model": null,
-      "tools": [],
+      "model": "DeepSeek-V4.1-Flash",
+      "tools": [
+        "three.js r160",
+        "Custom GLSL",
+        "CanvasTexture",
+        "WebGL2",
+        "Vanilla JS"
+      ],
       "issueNumber": null,
       "sources": [
         {
@@ -3582,7 +3588,23 @@
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "ink-clouds-white-rain",
+          "title": "墨云白雨 · 望湖楼",
+          "path": "scenes/wanghulou/ink-clouds-white-rain.html",
+          "model": "DeepSeek-V4.1-Flash",
+          "tools": [
+            "three.js r160",
+            "Custom GLSL",
+            "CanvasTexture",
+            "WebGL2",
+            "Vanilla JS"
+          ],
+          "status": "prototype",
+          "description": "湖上孤舟视角：乌云压着西山，白雨斜落，雨珠弹入船舱；风过云开，水面转成天光。船制、楼阁形制与雨势节奏为艺术再现，不作北宋西湖的历史复原。"
+        }
+      ]
     },
     {
       "id": "chibi",
