@@ -173,8 +173,13 @@
   /* 被站点放映厅 iframe 嵌入时：让开宿主顶栏与底部信息层 */
   html.embedded .place,
   html.embedded .hint{ display:none; }
-  html.embedded .inscription,
-  html.embedded .hud{ top:calc(env(safe-area-inset-top,0px) + 86px); }
+  html.embedded .inscription{ top:calc(env(safe-area-inset-top,0px) + 86px); }
+  html.embedded .hud{
+    top:auto; left:0; right:0;
+    bottom:calc(env(safe-area-inset-bottom,0px) + 22px);
+    justify-content:center; pointer-events:none;
+  }
+  html.embedded .hud button{ pointer-events:auto; }
   @media (max-width:760px){
     html.embedded .inscription{ top:calc(env(safe-area-inset-top,0px) + 88px); }
     html.embedded .hud{ display:none; }
