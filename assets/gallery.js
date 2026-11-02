@@ -7,6 +7,8 @@ const requestedScene = params.get("scene") || "";
 let scenes = [];
 let current = -1;
 let timer = 0;
+let readyTimer = 0;
+let loadToken = 0;
 const frame = $("#gallery-frame");
 const stage = $("#gallery-stage");
 const arrows = $("#gallery-arrows");
@@ -70,10 +72,56 @@ function setSelected(index) {
   clearTimeout(timer);
   timer = window.setTimeout(
     () => setMessage("画卷暂未展开，可独立打开作品，或返回馆藏重试。", true),
-    15000,
+    20000,
   );
+  // 先取消隐藏再设 src：Safari 不解析 display:none 的 iframe，
+  // 会在空文档上触发 load，导致下面的就绪检查永远查不到 canvas。
+  frame.hidden = false;
+  void frame.offsetWidth; // 强制一次布局，确保"已显示"先落到样式树
   // 始终只保留一个渲染 iframe；重复选择当前版本也可重新载入。
   frame.src = scene.path;
+  waitForScene(++loadToken);
+}
+
+// iframe 的 load 只说明文档解析完，三维引擎可能还在路上；
+// 轮询等 canvas 或场景自报的 data-ready，别用一次性检查。
+function waitForScene(token) {
+  const started = Date.now();
+  const tick = () => {
+    if (token !== loadToken || current < 0) return;
+    let doc = null;
+    let ready = false;
+    try {
+      doc = frame.contentDocument;
+      ready = !!(
+        doc &&
+        (doc.querySelector("canvas") ||
+          doc.documentElement?.dataset.ready === "true")
+      );
+    } catch {
+      doc = null;
+    }
+    if (ready) {
+      clearTimeout(timer);
+      try {
+        doc.addEventListener("keydown", onNavigationKey, true);
+      } catch {
+        /* 取不到文档就只管显示 */
+      }
+      $("#gallery-empty").hidden = true;
+      frame.hidden = false;
+      publishVisibility();
+      syncFullscreen();
+      return;
+    }
+    if (Date.now() - started > 14000) {
+      setMessage("这个版本暂未能打开，请独立打开或选择另一版本。", true);
+      return;
+    }
+    readyTimer = window.setTimeout(tick, 180);
+  };
+  clearTimeout(readyTimer);
+  tick();
 }
 
 function offset(delta) {
@@ -117,24 +165,10 @@ function addParagraphs(target, paragraphs) {
   );
 }
 
+// iframe 重载（前进后退、重复选择同一版本）时重新等一次就绪
 frame.addEventListener("load", () => {
   if (current < 0) return;
-  clearTimeout(timer);
-  try {
-    if (!frame.contentDocument?.querySelector("canvas")) {
-      setMessage("这个版本暂未能打开，请独立打开或选择另一版本。", true);
-      return;
-    }
-    // iframe 获得焦点后，仍由全屏展厅处理版本切换。
-    frame.contentDocument.addEventListener("keydown", onNavigationKey, true);
-  } catch {
-    setMessage("这个版本暂未能打开，请返回馆藏重试。", true);
-    return;
-  }
-  $("#gallery-empty").hidden = true;
-  frame.hidden = false;
-  publishVisibility();
-  syncFullscreen();
+  waitForScene(++loadToken);
 });
 $("#gallery-prev").addEventListener("click", () => offset(-1));
 $("#gallery-next").addEventListener("click", () => offset(1));

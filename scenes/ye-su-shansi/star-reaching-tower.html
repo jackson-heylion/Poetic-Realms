@@ -771,7 +771,7 @@ function boot(THREE){
     const capB = new THREE.Mesh(capGeo, capMat); capB.position.y = -size * 0.78; g.add(capB);
     // 光晕
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: makeGlowTexture(96, 2.4), color: new THREE.Color('#ff9d4d'),
+      map: GLOW_TEX, color: new THREE.Color('#ff9d4d'),
       transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.62
     }));
     halo.scale.setScalar(size * 8.5);
@@ -804,6 +804,8 @@ function boot(THREE){
     t.colorSpace = THREE.SRGBColorSpace;
     return t;
   }
+
+  const GLOW_TEX = makeGlowTexture(96, 2.4);
 
   makeLantern(-3.5, -3.1, yTop2 - 0.55, 0.30);
   makeLantern(3.5, -3.1, yTop2 - 0.55, 0.30);
