@@ -86,7 +86,7 @@ function setSelected(index) {
 // iframe 的 load 只说明文档解析完，三维引擎可能还在路上；
 // 轮询等 canvas 或场景自报的 data-ready，别用一次性检查。
 function waitForScene(token) {
-  const started = performance.now();
+  const started = Date.now();
   const tick = () => {
     if (token !== loadToken || current < 0) return;
     let doc = null;
@@ -114,7 +114,7 @@ function waitForScene(token) {
       syncFullscreen();
       return;
     }
-    if (performance.now() - started > 14000) {
+    if (Date.now() - started > 14000) {
       setMessage("这个版本暂未能打开，请独立打开或选择另一版本。", true);
       return;
     }
