@@ -148,6 +148,7 @@
   </div>
 
 <script>if(window.self!==window.top)document.documentElement.classList.add("embed");</script>
+<script src="../../vendor/three-r160.min.js"></script>
 <script type="module">
 /* =========================================================
    落霞与孤鹜齐飞 · 秋水共长天一色
@@ -173,11 +174,14 @@ function fail(msg){
   const withTimeout = (p, ms) => Promise.race([
     p, new Promise((_, rej)=>setTimeout(()=>rej(new Error('timeout')), ms))
   ]);
-  let THREE = null;
+  let THREE = window.THREE || null;   // 同源离线副本先跑，CDN 只作兜底
   for (const url of CDN){
+    if (THREE) break;
     try { THREE = await withTimeout(import(url), 10000); break; } catch (e) { /* 换下一个镜像 */ }
   }
-  if (!THREE){ fail('未能载入 3D 引擎（baomitu / bootcdn / jsdelivr 三个镜像均不可用），请检查网络后刷新页面'); return; }
+  if (!THREE){ fail('未能载入三维引擎（离线副本与 CDN 均不可用），请检查网络后刷新。'); return; }
+  // 离线副本是同步就位的，等模块顶层的常量初始化完再起场景，避免 TDZ
+  await new Promise((resolve) => setTimeout(resolve, 0));
   try {
     boot(THREE);
   } catch (e){

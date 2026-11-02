@@ -74,9 +74,14 @@
         <div class="gallery-message" id="gallery-empty" role="status">
           <span class="empty-mark" aria-hidden="true">境</span>
           <p id="gallery-message">正在准备画卷…</p>
-          <a class="btn" id="gallery-recover" href="catalog.html" hidden
-            >返回馆藏 →</a
-          >
+          <div class="gallery-actions">
+            <button class="btn" id="gallery-retry" type="button" hidden>
+              重试 ↻
+            </button>
+            <a class="btn" id="gallery-recover" href="catalog.html" hidden
+              >返回馆藏 →</a
+            >
+          </div>
         </div>
         <iframe
           id="gallery-frame"

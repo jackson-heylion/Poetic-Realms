@@ -77,6 +77,7 @@ async function setup(search, catalogue = [poem]) {
     "gallery-frame",
     "gallery-message",
     "gallery-recover",
+    "gallery-retry",
     "gallery-fullscreen",
     "gallery-stage",
     "gallery-title",
