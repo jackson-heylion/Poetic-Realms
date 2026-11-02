@@ -1,0 +1,28 @@
+/* 放映厅负责题名、读诗入口、漫游与静观；作品只展示场景。
+ * 新作品可用 data-scene-ui 标记自带界面，下面兼容现有作品的命名。
+ * 不隐藏画布、氛围层、加载提示、错误提示与重试入口。
+ */
+html[data-poetic-realms-host="theater"] :is(
+  [data-scene-ui],
+  body > header,
+  body > footer,
+  body > details,
+  #hud,
+  .hud,
+  .poem,
+  .poetry,
+  .plate,
+  .inscription,
+  .place,
+  #bar,
+  .dock,
+  #ctrl,
+  #meta,
+  #fps,
+  .hint,
+  .meter,
+  .ghost,
+  .sheet
+) {
+  display: none !important;
+}

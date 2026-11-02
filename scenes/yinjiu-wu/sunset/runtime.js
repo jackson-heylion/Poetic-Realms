@@ -141,7 +141,7 @@ let last = 0,
   idle = 0;
 
 function wake() {
-  if (raf || PR.paused) return;
+  if (raf) return;
   last = 0;
   raf = requestAnimationFrame(tick);
 }
@@ -157,7 +157,7 @@ function tick(now) {
     PR.frame++;
   }
   PR.renderer.render(PR.scene, PR.camera);
-  if (!PR.ready && !PR.paused) {
+  if (!PR.ready) {
     PR.ready = true;
     veil.classList.add("ready");
   }
@@ -281,6 +281,8 @@ function bindChrome() {
       PR.ready = false;
       PR.build();
       PR.frame = 0;
+      // 暂停时也绘制一次新画质，关闭加载幕并保持动画暂停。
+      wake();
     }, 60);
   });
   retry.addEventListener("click", () => location.reload());
