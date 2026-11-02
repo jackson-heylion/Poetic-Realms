@@ -52,9 +52,6 @@
 .stage-top button {
   pointer-events: auto;
 }
-.stage-top .brand-name small {
-  color: #f8f5eb99;
-}
 .stage-topnav {
   display: flex;
   align-items: center;
@@ -92,24 +89,6 @@
   width: 16px;
   height: 16px;
 }
-.stage-edition {
-  position: absolute;
-  top: 144px;
-  left: 48px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #f8f5ebad;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  pointer-events: none;
-}
-.live-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #d4bda0;
-}
 .stage-panel {
   position: absolute;
   z-index: 3;
@@ -128,20 +107,11 @@
 .stage-info {
   max-width: min(760px, 72%);
 }
-.stage-kicker {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-  color: #f8f5ebb3;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-}
-.stage-rule {
-  width: 24px;
-  height: 1px;
-  background: #f8f5eb66;
-  flex: none;
+.stage-author {
+  margin: 0 0 16px;
+  color: #f8f5ebcc;
+  font-size: 13px;
+  letter-spacing: 0.06em;
 }
 .stage-info h1 {
   margin: 0 0 16px;
@@ -170,8 +140,8 @@
   margin-left: 24px;
 }
 .stage-links .text-button {
-  color: #f8f5eb99;
-  font-size: 11px;
+  color: #f8f5ebcc;
+  font-size: 12px;
 }
 .stage-links .text-button:hover {
   color: #fff;
@@ -181,16 +151,12 @@
   width: 224px;
 }
 .stage-pagination {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  color: #f8f5ebad;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-}
-.stage-pagination .num {
-  color: #f8f5eb;
+  margin: 0 0 12px;
+  color: #f8f5ebcc;
   font-size: 12px;
+  letter-spacing: 0.08em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 .stage-switcher {
   display: flex;
@@ -224,13 +190,6 @@
 .stage-next:hover {
   background: #e6e3d8;
   border-color: #e6e3d8;
-}
-.stage-hint {
-  display: block;
-  margin-top: 12px;
-  text-align: right;
-  color: #f8f5eb8c;
-  font-size: 10px;
 }
 .stage-loading {
   position: absolute;
@@ -286,7 +245,6 @@
 }
 .is-quiet .stage-info,
 .is-quiet .stage-controls,
-.is-quiet .stage-edition,
 .is-quiet .brand,
 .is-quiet .stage-topnav > a,
 .is-quiet .stage-veil {
@@ -306,10 +264,6 @@
   }
   .stage-topnav {
     gap: 24px;
-  }
-  .stage-edition {
-    left: 32px;
-    top: 120px;
   }
   .stage-panel {
     inset-inline: 32px;
@@ -349,11 +303,6 @@
   .stage-toggle-label {
     display: none;
   }
-  .stage-edition {
-    left: 24px;
-    top: 112px;
-    font-size: 9px;
-  }
   .stage-panel {
     inset-inline: 24px;
     bottom: max(24px, env(safe-area-inset-bottom));
@@ -368,14 +317,9 @@
     font-size: 32px;
     margin-bottom: 12px;
   }
-  .stage-kicker {
-    font-size: 10px;
+  .stage-author {
+    font-size: 12px;
     margin-bottom: 12px;
-  }
-  .stage-kicker #stage-scene {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
   .stage-verse {
     font-size: 14px;
@@ -393,12 +337,6 @@
     bottom: 64px;
     margin: 0;
   }
-  .stage-pagination > span:last-child {
-    display: none;
-  }
-  .stage-hint {
-    display: none;
-  }
   .stage-next {
     justify-content: center;
   }
@@ -410,9 +348,6 @@
   .stage-top {
     padding-block: 16px;
   }
-  .stage-edition {
-    display: none;
-  }
   .stage-panel {
     bottom: 24px;
   }
@@ -420,13 +355,10 @@
     font-size: 28px;
     margin-bottom: 8px;
   }
-  .stage-kicker {
+  .stage-author {
     margin-bottom: 8px;
   }
   .stage-verse {
     margin-bottom: 8px;
-  }
-  .stage-hint {
-    display: none;
   }
 }
