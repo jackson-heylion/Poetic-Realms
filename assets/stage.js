@@ -42,7 +42,6 @@ function show(index, updateUrl = true) {
   const { poem, scene } = order[cursor];
   $("#stage-title").textContent = poem.title.split("·")[0];
   $("#stage-meta").textContent = poem.dynasty + " · " + poem.author;
-  $("#stage-scene").textContent = scene.title;
   $("#stage-verse").textContent = poem.excerpt;
   $("#stage-count").textContent =
     String(cursor + 1).padStart(2, "0") +
@@ -173,7 +172,6 @@ async function start() {
     $("#stage-next").disabled = true;
     $("#stage-prev").disabled = true;
     $("#stage-count").textContent = "江雪 · 内置诗境";
-    $("#stage-scene").textContent = "寒江独钓";
     frame.src = frame.dataset.fallbackSrc;
     PoeticRealmsClipboard.toast(
       "馆藏暂未送达，先为你留一江雪景。刷新页面可重试。",
