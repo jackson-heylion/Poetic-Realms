@@ -872,7 +872,7 @@
       "hardness": "H3",
       "visualBrief": "高山寺楼、夜空繁星与高空眺望",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -898,7 +898,23 @@
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "star-reaching-tower",
+          "title": "危楼摘星 · 云海夜临",
+          "path": "scenes/ye-su-shansi/star-reaching-tower.html",
+          "model": "WorkBuddy（DeepSeek-V4.1-Flash）",
+          "tools": [
+            "three.js r160（baomitu / bootcdn / jsdelivr 三镜像回退）",
+            "Custom GLSL",
+            "CanvasTexture 程序化贴图",
+            "Vanilla JS",
+            "Playwright 1.64 + Chrome（ANGLE Metal）实测"
+          ],
+          "status": "prototype",
+          "description": "山巅一座重檐楼阁，四面栏杆前一排星辰低垂可摘，楼外是银灰色的云海与四层远山；月光自东南勾出檐口起翘，两盏檐灯随夜风轻晃。点画面中的亮星可将其摘下。楼阁形制取唐以来楼阁式样，斗拱、瓦垄与栏杆均为程序化简化；山形、云高、星等与星辰距离不作文物或天象复原。"
+        }
+      ]
     },
     {
       "id": "tianmu",
