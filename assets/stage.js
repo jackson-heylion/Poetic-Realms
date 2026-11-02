@@ -7,6 +7,7 @@ const toggle = $("#stage-toggle");
 let order = [];
 let cursor = -1;
 let loadTimer = 0;
+const embeddedStyles = new URL("assets/scene-embed.css", location.href).href;
 
 function shuffled(items) {
   const result = items.slice();
@@ -25,7 +26,7 @@ function setQuiet(quiet) {
   toggle.querySelector(".stage-toggle-label").textContent = quiet
     ? "返境"
     : "静观";
-  if (quiet && $(".stage-info").contains(document.activeElement))
+  if (quiet && $(".stage-panel").contains(document.activeElement))
     toggle.focus();
 }
 
@@ -61,14 +62,14 @@ function show(index, updateUrl = true) {
     frame.setAttribute("aria-busy", "true");
     $("#stage-loading").hidden = false;
     loadTimer = window.setTimeout(() => {
-      setLoaded();
+      $("#stage-loading").hidden = true;
       PoeticRealmsClipboard.toast(
         "画卷仍在准备，可点击「读诗 · 入境」独立查看。",
         false,
       );
     }, 15000);
     frame.src = scene.path;
-  } else setLoaded();
+  }
   if (updateUrl) {
     const url = new URL(location.href);
     url.searchParams.set("poem", poem.id);
@@ -78,37 +79,58 @@ function show(index, updateUrl = true) {
 }
 
 function onKey(event) {
+  if (event.altKey || event.metaKey || event.ctrlKey) return;
   const target = event.target;
   if (target?.closest?.("input, textarea, select, [contenteditable=true]"))
     return;
   if (event.key.toLowerCase() === "h") {
     event.preventDefault();
+    event.stopPropagation();
     setQuiet(!stage.classList.contains("is-quiet"));
   }
   if (event.key === "Escape") setQuiet(false);
-  if (event.altKey || event.metaKey || event.ctrlKey) return;
   if (event.key === "ArrowRight") {
     event.preventDefault();
+    event.stopPropagation();
     show(cursor + 1);
   }
   if (event.key === "ArrowLeft") {
     event.preventDefault();
+    event.stopPropagation();
     show(cursor - 1);
   }
 }
 
-frame.addEventListener("load", () => {
-  setLoaded();
-  // 画面获得焦点后，漫游快捷键仍可用；空格保留给独立场景的暂停交互。
+frame.addEventListener("load", async () => {
+  if (frame.src === "about:blank") return;
+  const sceneDocument = frame.contentDocument;
   try {
-    const document = frame.contentDocument;
-    const style = document.createElement("style");
-    // 放映厅已有诗文与漫游控件，避免独立作品的字幕和工具栏重叠。
-    style.textContent = ".poem,#bar,#fps,.hint{display:none!important}";
-    document.head.append(style);
-    document.addEventListener("keydown", onKey);
-  } catch {
-    /* 单独打开作品仍可操作。 */
+    if (!sceneDocument?.querySelector("canvas, #stage")) {
+      throw new Error("诗境未能载入画布或渲染容器");
+    }
+    // 嵌入模式只由放映厅设置，独立作品与展厅保留原有界面。
+    sceneDocument.documentElement.dataset.poeticRealmsHost = "theater";
+    const stylesheet = sceneDocument.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = embeddedStyles;
+    await new Promise((resolve, reject) => {
+      stylesheet.onload = resolve;
+      stylesheet.onerror = () => reject(new Error("嵌入样式未能载入"));
+      sceneDocument.head.append(stylesheet);
+    });
+    if (sceneDocument !== frame.contentDocument) return;
+    // 捕获阶段处理放映厅快捷键，避免方向键同时改变场景视角。
+    sceneDocument.addEventListener("keydown", onKey, true);
+    setLoaded();
+  } catch (error) {
+    if (sceneDocument !== frame.contentDocument) return;
+    clearTimeout(loadTimer);
+    $("#stage-loading").hidden = true;
+    PoeticRealmsClipboard.toast(
+      "画卷暂未展开，可点击「读诗 · 入境」重试。",
+      false,
+    );
+    console.error("放映厅嵌入失败", error);
   }
 });
 document.addEventListener("keydown", onKey);
@@ -152,6 +174,7 @@ async function start() {
     $("#stage-prev").disabled = true;
     $("#stage-count").textContent = "江雪 · 内置诗境";
     $("#stage-scene").textContent = "寒江独钓";
+    frame.src = frame.dataset.fallbackSrc;
     PoeticRealmsClipboard.toast(
       "馆藏暂未送达，先为你留一江雪景。刷新页面可重试。",
       false,

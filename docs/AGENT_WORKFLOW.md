@@ -73,3 +73,9 @@ https://github.com/jackson-heylion/Poetic-Realms
 同一首诗允许并存多个互不覆盖的 HTML：新作品放 `scenes/<poem-id>/<variant-id>.html`，旧 `scenes/<poem-id>.html` 保留不动；重复的 `id` 或文件路径会被 CI 拦截。
 
 全部版本登记在同一首诗的 `scenes[]` 里。`gallery.html?poem=<poem-id>` 可切换浏览，切换时只加载一个渲染 iframe，避免多 WebGL 实例同时运行；首页放映厅从全部已建场景中随机抽取，`?poem=<poem-id>&scene=<variant-id>` 可固定到某一版。
+
+## 8. 放映厅嵌入界面
+
+首页放映厅统一展示题名、作者、摘句、读诗入口、版本切换与静观。作品被放映厅加载时，宿主在其 `html` 上设置 `data-poetic-realms-host="theater"` 并加载 `assets/scene-embed.css`，收起作品自带的文字与工具栏；独立打开和 `gallery.html` 不设置此模式，保留作品完整操作。
+
+新作品请在自带题跋、工具栏、读诗面板与操作提示的外层标记 `data-scene-ui`，让宿主识别界面。画布、渲染容器、氛围层、加载提示、错误提示与重试按钮不得标记为界面，以免嵌入时失去画面或错误恢复入口。无需在作品内引用站点脚本或样式。

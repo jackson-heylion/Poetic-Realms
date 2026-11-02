@@ -21,6 +21,9 @@
   height: 100%;
   border: 0;
 }
+.stage-frame[aria-busy="true"] {
+  visibility: hidden;
+}
 .stage-veil {
   position: absolute;
   inset: 0;
@@ -282,8 +285,7 @@
   text-decoration: underline;
 }
 .is-quiet .stage-info,
-.is-quiet .stage-pagination,
-.is-quiet .stage-hint,
+.is-quiet .stage-controls,
 .is-quiet .stage-edition,
 .is-quiet .brand,
 .is-quiet .stage-topnav > a,
