@@ -102,16 +102,7 @@ function waitForScene(token) {
       doc = null;
     }
     if (ready) {
-      clearTimeout(timer);
-      try {
-        doc.addEventListener("keydown", onNavigationKey, true);
-      } catch {
-        /* 取不到文档就只管显示 */
-      }
-      $("#gallery-empty").hidden = true;
-      frame.hidden = false;
-      publishVisibility();
-      syncFullscreen();
+      sceneReady(doc);
       return;
     }
     if (Date.now() - started > 14000) {
@@ -164,6 +155,38 @@ function addParagraphs(target, paragraphs) {
     }),
   );
 }
+
+function sceneReady(doc) {
+  clearTimeout(timer);
+  clearTimeout(readyTimer);
+  if (doc) {
+    try {
+      // iframe 获得焦点后，仍由全屏展厅处理版本切换。
+      doc.addEventListener("keydown", onNavigationKey, true);
+    } catch {
+      /* 取不到文档就只管显示 */
+    }
+  }
+  $("#gallery-empty").hidden = true;
+  frame.hidden = false;
+  publishVisibility();
+  syncFullscreen();
+}
+
+// 场景首帧后自己会报一声；这条不依赖同源 DOM 访问，Safari 上也稳
+window.addEventListener?.("message", (event) => {
+  if (current < 0 || event.source !== frame.contentWindow) return;
+  const data = event.data;
+  if (!data || data.type !== "poetic-realms:scene-ready") return;
+  loadToken++; // 让还在跑的轮询停下
+  let doc = null;
+  try {
+    doc = frame.contentDocument;
+  } catch {
+    doc = null;
+  }
+  sceneReady(doc);
+});
 
 // iframe 重载（前进后退、重复选择同一版本）时重新等一次就绪
 frame.addEventListener("load", () => {

@@ -145,8 +145,13 @@ function boot(THREE){
     paused: false, t: 0, picked: 0
   };
 
-  // canvas 预置在 DOM 里：展厅 iframe 会在 load 事件时检查它的存在
-  const canvas = document.getElementById('gl');
+  // canvas 预置在 DOM 里：展厅 iframe 会检查它的存在；被移走时自建并补回，别让渲染器拿到 null
+  let canvas = document.getElementById('gl');
+  if (!canvas){
+    canvas = document.createElement('canvas');
+    canvas.id = 'gl';
+    document.getElementById('stage')?.appendChild(canvas);
+  }
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance', stencil: false });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1461,6 +1466,12 @@ function boot(THREE){
   setTimeout(() => {
     veil.classList.add('hide');
     document.documentElement.dataset.ready = 'true';
+    // 嵌在展厅里时主动报一声，父页面不必猜 iframe 内部有没有画出来
+    if (window.self !== window.top){
+      try {
+        window.parent.postMessage({ type: 'poetic-realms:scene-ready' }, '*');
+      } catch (e) { /* 父页面不可达就只靠自己显示 */ }
+    }
   }, 900);
 
   // 供外部检测
