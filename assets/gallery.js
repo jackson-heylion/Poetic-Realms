@@ -6,9 +6,12 @@ const requestedScene = params.get("scene") || "";
 /** @type {import('./types').Scene[]} */
 let scenes = [];
 let current = -1;
-let timer = 0;
 let readyTimer = 0;
 let loadToken = 0;
+// 三维引擎要现下载现编译，弱网下十几秒很正常，别拿桌面的节奏判死刑。
+const WAIT_HINT = 9000;
+const WAIT_SLOW = 30000;
+const WAIT_LIMIT = 75000;
 const frame = $("#gallery-frame");
 const stage = $("#gallery-stage");
 const arrows = $("#gallery-arrows");
@@ -34,7 +37,22 @@ function setMessage(message, recover = false) {
   $("#gallery-message").textContent = message;
   $("#gallery-empty").hidden = false;
   $("#gallery-recover").hidden = !recover;
+  const retry = $("#gallery-retry");
+  if (retry) retry.hidden = !recover;
+  syncFullscreen();
+}
+
+// 只是换一句等待中的话，不动 iframe，也不摆失败按钮
+function setLoading(message) {
+  setMessage(message);
+}
+
+// 确认打不开：收起 iframe 省电，后面由用户重试或独立打开
+function setFailure(message) {
+  setMessage(message, true);
   frame.hidden = true;
+  clearTimeout(readyTimer);
+  loadToken += 1;
   syncFullscreen();
 }
 
@@ -68,12 +86,7 @@ function setSelected(index) {
   url.searchParams.set("scene", scene.id);
   history.replaceState(null, "", url);
   frame.title = scene.title + " · 三维诗境";
-  setMessage("正在走入「" + scene.title + "」…");
-  clearTimeout(timer);
-  timer = window.setTimeout(
-    () => setMessage("画卷暂未展开，可独立打开作品，或返回馆藏重试。", true),
-    20000,
-  );
+  setLoading("正在走入「" + scene.title + "」…");
   // 先取消隐藏再设 src：Safari 不解析 display:none 的 iframe，
   // 会在空文档上触发 load，导致下面的就绪检查永远查不到 canvas。
   frame.hidden = false;
@@ -87,17 +100,27 @@ function setSelected(index) {
 // 轮询等 canvas 或场景自报的 data-ready，别用一次性检查。
 function waitForScene(token) {
   const started = Date.now();
+  const expected = scenes[current]?.path || "";
   const tick = () => {
     if (token !== loadToken || current < 0) return;
     let doc = null;
     let ready = false;
+    let notice = "";
+    let stale = false;
     try {
       doc = frame.contentDocument;
-      ready = !!(
-        doc &&
-        (doc.querySelector("canvas") ||
-          doc.documentElement?.dataset.ready === "true")
-      );
+      if (doc) {
+        // 刚换过 src 时 contentDocument 还可能停在上一份文档上
+        const path = doc.location?.pathname;
+        stale = !!path && !!expected && !path.endsWith(expected);
+        ready = !!(
+          !stale &&
+          (doc.querySelector("canvas") ||
+            doc.documentElement?.dataset.ready === "true")
+        );
+        if (!ready && !stale)
+          notice = doc.querySelector("#notice.show")?.textContent?.trim() || "";
+      }
     } catch {
       doc = null;
     }
@@ -105,11 +128,19 @@ function waitForScene(token) {
       sceneReady(doc);
       return;
     }
-    if (Date.now() - started > 14000) {
-      setMessage("这个版本暂未能打开，请独立打开或选择另一版本。", true);
+    // 场景自己已经说清是哪一步坏了（引擎没载入、WebGL 不可用），照原话转述
+    if (notice) {
+      setFailure(notice);
       return;
     }
-    readyTimer = window.setTimeout(tick, 180);
+    const waited = Date.now() - started;
+    if (waited > WAIT_LIMIT) {
+      setFailure("这个版本暂未能打开，请独立打开或选择另一版本。");
+      return;
+    }
+    if (waited > WAIT_SLOW) setLoading("这处诗境仍在载入，网络较慢时会多等一会儿…");
+    else if (waited > WAIT_HINT) setLoading("正在载入三维引擎…");
+    readyTimer = window.setTimeout(tick, 200);
   };
   clearTimeout(readyTimer);
   tick();
@@ -157,7 +188,6 @@ function addParagraphs(target, paragraphs) {
 }
 
 function sceneReady(doc) {
-  clearTimeout(timer);
   clearTimeout(readyTimer);
   if (doc) {
     try {
@@ -195,6 +225,7 @@ frame.addEventListener("load", () => {
 });
 $("#gallery-prev").addEventListener("click", () => offset(-1));
 $("#gallery-next").addEventListener("click", () => offset(1));
+$("#gallery-retry").addEventListener("click", () => setSelected(current));
 fullscreenButton.addEventListener("click", async () => {
   try {
     if (document.fullscreenElement) await document.exitFullscreen();

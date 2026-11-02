@@ -49,6 +49,7 @@ blockquote{margin:0;font-size:16px;line-height:2.1;letter-spacing:.14em;color:#2
 <div id="notice" role="alert"></div>
 <div id="veil"><div class="t">风雪将至</div></div>
 <script>if(window.self!==window.top)document.documentElement.classList.add("embed");</script>
+<script src="../../vendor/three-r160.min.js"></script>
 <script type="module">
 const CDN = [
   'https://lib.baomitu.com/three.js/0.160.0/three.module.min.js',
@@ -60,11 +61,14 @@ const errEl = document.getElementById('notice');
 function fail(msg){ errEl.className='show'; errEl.textContent = msg; veil.classList.add('hide'); }
 const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej)=>setTimeout(()=>rej(new Error('timeout')), ms))]);
 (async () => {
-  let THREE = null;
+  let THREE = window.THREE || null;   // 同源离线副本先跑，CDN 只作兜底
   for (const url of CDN){
+    if (THREE) break;
     try { THREE = await withTimeout(import(url), 10000); break; } catch (e) { /* 换下一个镜像 */ }
   }
-  if (!THREE){ fail('未能载入三维引擎（baomitu / bootcdn / jsdelivr 均不可用），请检查网络后刷新。'); return; }
+  if (!THREE){ fail('未能载入三维引擎（离线副本与 CDN 均不可用），请检查网络后刷新。'); return; }
+  // 离线副本是同步就位的，等模块顶层的常量初始化完再起场景，避免 TDZ
+  await new Promise((resolve) => setTimeout(resolve, 0));
   try { boot(THREE); } catch (e){ console.error(e); fail('场景初始化失败：' + (e && e.message ? e.message : '未知错误')); }
 })();
 
