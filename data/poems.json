@@ -5686,7 +5686,7 @@
       "hardness": "H4",
       "visualBrief": "潼关山河关隘、黄河怒涛",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -5712,7 +5712,24 @@
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "mountains-and-rivers",
+          "title": "峰峦聚河 · 潼关古道",
+          "path": "scenes/tongguan/mountains-and-rivers.html",
+          "model": "WorkBuddy（Kimi-K3.1-Pro）",
+          "tools": [
+            "three.js r160（仓库 vendor 内嵌）",
+            "Custom GLSL",
+            "CanvasTexture 程序化贴图",
+            "WebGL2",
+            "Vanilla JS",
+            "Node.js 单文件拼装"
+          ],
+          "status": "prototype",
+          "description": "黄河北岸群峰层层聚拢，南岸台地上的石关与蜿蜒古道临河而立；黄河以多组方向波、浪尖泡沫和岸边水雾表现怒涛。关城形制、地形尺度、气象与光照均为艺术加工，不作元代潼关的历史复原。"
+        }
+      ]
     },
     {
       "id": "tilongyang-xianqingcaohu",

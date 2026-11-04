@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta
+      name="description"
+      content="张养浩《山坡羊·潼关怀古》：群峰夹河，怒涛拍岸，古道入潼关。可离线运行的三维诗境。"
+    />
+    <title>山坡羊·潼关怀古 · 山河表里 | Poetic Realms</title>
+    <!-- SCENE_STYLE -->
+  </head>
+  <body>
+    <canvas
+      id="scene"
+      aria-label="群山夹峙黄河，波涛奔涌，古道通向潼关城"
+    ></canvas>
+    <div class="shade"></div>
+    <header class="plate" data-scene-ui>
+      <p class="kicker">POETIC REALMS · 山河表里</p>
+      <h1>山坡羊·潼关怀古</h1>
+      <p class="byline">元 · 张养浩</p>
+      <blockquote>
+        <span>峰峦如聚，波涛如怒，</span><span>山河表里潼关路。</span>
+      </blockquote>
+      <p class="note">
+        据诗句敷设群峰、黄河与关路；关城形制、地形尺度及光照为艺术加工，不作元代潼关的历史复原。
+      </p>
+    </header>
+    <button class="read" id="read" data-scene-ui type="button">读全曲</button>
+    <nav class="dock" data-scene-ui aria-label="诗境控制">
+      <a href="../../catalog.html?poem=tongguan" target="_top">← 诗境</a>
+      <button data-view="river" type="button">怒涛</button
+      ><button data-view="gate" type="button">关路</button>
+      <button data-view="wide" type="button" aria-pressed="true">山河</button>
+      <button id="pause" type="button" aria-pressed="false">暂停</button>
+      <label class="quality"
+        >画质
+        <select id="quality">
+          <option value="high">精细</option>
+          <option value="normal">标准</option>
+          <option value="low">省电</option>
+        </select></label
+      >
+    </nav>
+    <div class="hint" data-scene-ui>拖动环顾 · 滚轮远近 · 空格暂停</div>
+    <div class="meter" id="meter" data-scene-ui>— FPS</div>
+    <div class="veil" id="veil">
+      <h2>山河入眼</h2>
+      <p id="status">正在隆起群峰，唤起黄河……</p>
+      <button id="retry" type="button" hidden>重新入境</button>
+    </div>
+    <dialog id="text" data-scene-ui>
+      <h2>山坡羊·潼关怀古</h2>
+      <p>元 · 张养浩</p>
+      <div class="full">
+        峰峦如聚，波涛如怒，山河表里潼关路。<br />望西都，意踌躇，伤心秦汉经行处，宫阙万间都做了土。<br />兴，百姓苦；亡，百姓苦。
+      </div>
+      <p class="source">
+        正文据仓库所录维基文库电子文本，尚未逐字对纸本古籍校勘。场景只取首句山河意象，不将建筑与地形作为史实复原。
+      </p>
+      <button id="close" type="button">合上诗卷</button>
+    </dialog>
+    <!-- SCENE_ENGINE -->
+    <!-- SCENE_SCRIPT -->>
+  </body>
+</html>
