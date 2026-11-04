@@ -2129,7 +2129,7 @@
       "hardness": "H3",
       "visualBrief": "高山寺桃花与山下季节反差",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -2157,7 +2157,24 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "mountain-temple-peach",
+          "title": "山寺春迟 · 桃花始盛",
+          "path": "scenes/dalinsi/mountain-temple-peach.html",
+          "model": "WorkBuddy（claude-opus-6）",
+          "tools": [
+            "three.js r160（vendor 内联，离线可用）",
+            "Custom GLSL（天空 / 花瓣）",
+            "CanvasTexture 程序化贴图",
+            "WebGL2",
+            "Vanilla JS",
+            "Playwright-core 1.58 + Chrome（ANGLE Metal）实测"
+          ],
+          "status": "prototype",
+          "description": "山顶平台一座木构山寺，四株桃花正盛、花瓣随风飘落；山腰云带与远山层叠。切换「山下」机位可见谷地芳菲已尽、浓绿成林，与山上花期形成节候反差。山形、寺制、屋瓦、花候与云高均为程序化艺术加工，不作唐代庐山大林寺的历史复原。"
+        }
+      ]
     },
     {
       "id": "guyuan",
