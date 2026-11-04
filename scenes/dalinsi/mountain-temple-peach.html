@@ -14,7 +14,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 canvas:active{cursor:grabbing}
 #stage{position:fixed;inset:0}
 #vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 82% 70% at 58% 45%,transparent 44%,#1b2a2050 100%)}
-#navmask{position:fixed;top:0;left:0;width:min(620px,58vw);height:min(520px,56vh);pointer-events:none;background:linear-gradient(105deg,#f2ede2b8,#f2ede270 45%,transparent 82%)}
+#navmask{position:fixed;top:0;left:0;width:min(620px,58vw);height:min(520px,56vh);pointer-events:none;background:radial-gradient(ellipse 76% 72% at 6% 4%,#f5f0e6c9,transparent 72%)}
 #hud{position:fixed;top:46px;left:48px;max-width:min(370px,calc(100vw - 96px));pointer-events:none;text-shadow:0 1px 16px #fff9,0 2px 26px #ffffffaa;animation:rise 2.6s ease both}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .brand{font:10px/1 system-ui,sans-serif;letter-spacing:.34em;color:#5c6b5c}
@@ -61,7 +61,7 @@ blockquote{margin:22px 0 0;font-size:17px;line-height:2.25;letter-spacing:.14em;
   <div class="byline">唐 · 白居易</div>
   <blockquote>人间四月芳菲尽，<br>山寺桃花始盛开。</blockquote>
   <div class="rule"></div>
-  <p class="note">山下芳菲已歇，山上春色方来。拖动环视，滚轮或双指远近；<b>切换机位</b>可见山下与山寺两种节候。山形、寺制与花候为艺术加工，非唐代庐山复原。</p>
+  <p class="note">《游大林寺序》：环寺多清流苍石、短松瘦竹，寺中唯板屋木器。画面据此取板屋、溪石、松竹与短草；山形与寺之尺度仍属推想。拖动环视，滚轮或双指远近，<b>切换机位</b>看两种节候。</p>
 </div>
 <div id="fps" data-scene-ui>— FPS</div>
 <div id="bar" data-scene-ui>
@@ -147,6 +147,15 @@ const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 function smooth(a, b, v) { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
 // 山地高度场：山顶压出平台供寺院与桃树落脚，谷地缓降至地平线
+// 多频起伏，做沟壑与岩层；山顶平台仍压平供板屋落脚
+function fbm2(x, z) {
+  let v = 0, a = .5, f = 1;
+  for (let i = 0; i < 4; i++) {
+    v += a * Math.sin(x * f * .31 + 1.3) * Math.cos(z * f * .27 - .8);
+    f *= 2.07; a *= .5;
+  }
+  return v;
+}
 function height(x, z) {
   const d = Math.hypot(x * 0.95, z + 18);
   let h = 16 * Math.exp(-(d * d) / (2 * 20 * 20));
@@ -155,7 +164,9 @@ function height(x, z) {
   h += 5.5 * Math.exp(-((x + 44) ** 2 + (z + 50) ** 2) / (2 * 22 * 22));
   h += 4.2 * Math.exp(-((x - 50) ** 2 + (z + 54) ** 2) / (2 * 25 * 25));
   h += 0.85 * Math.sin(x * 0.16) * Math.cos(z * 0.13) + 0.4 * Math.sin(x * 0.43 + 1.2) * Math.cos(z * 0.31);
+  h += fbm2(x, z) * 1.15 * (1 - p * .9);
   h -= Math.max(0, z - 32) * 0.075;
+  h -= (1 - smooth(-120, -70, z)) * 20;   // 远边沉入雾中，避免矩形地形切出笔直地平线
   return h;
 }
 function tex(w, h, draw, rx, ry) {
@@ -189,24 +200,50 @@ const barkTex = tex(128, 256, (x, w, h) => {
   }
   x.globalAlpha = 1;
 }, 1, 3);
+// 木板屋面：序称「寺中唯板屋木器」，不用青瓦
 const roofTex = tex(256, 256, (x, w, h) => {
-  x.fillStyle = '#5b6a72'; x.fillRect(0, 0, w, h);
-  for (let i = 0; i < 32; i++) {
-    const px = i * w / 32;
-    x.fillStyle = rnd() > .5 ? '#84939b' : '#46545e'; x.fillRect(px, 0, w / 32 - 1, h);
-    x.fillStyle = '#8e9ba155'; x.fillRect(px + 1, 0, 1.2, h);
+  x.fillStyle = '#6a5a48'; x.fillRect(0, 0, w, h);
+  for (let j = 0; j < 16; j++) {
+    const py = j * h / 16;
+    x.fillStyle = rnd() > .5 ? '#7d6b55' : '#574a3c'; x.fillRect(0, py, w, h / 16 - 2);
+    x.fillStyle = '#382f2644'; x.fillRect(0, py + h / 16 - 2, w, 2);
+    for (let i = 0; i < 12; i++) {
+      x.fillStyle = '#a38d6e22'; x.fillRect(rnd() * w, py + 2, 12 + rnd() * 46, 1);
+    }
   }
-  for (let j = 0; j < 26; j++) { x.fillStyle = '#1e282e33'; x.fillRect(0, j * h / 26, w, 1.2); }
-}, 5, 3);
+}, 4, 3);
+// 竖向木板墙：板屋木器
 const wallTex = tex(256, 256, (x, w, h) => {
-  x.fillStyle = '#e2d8c1'; x.fillRect(0, 0, w, h);
-  for (let i = 0; i < 900; i++) {
-    x.fillStyle = rnd() > .5 ? '#c9bda3' : '#f0e8d6';
-    x.globalAlpha = .12 + rnd() * .3;
-    x.fillRect(rnd() * w, rnd() * h, 1 + rnd() * 9, 1 + rnd() * 5);
+  x.fillStyle = '#8a7358'; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 20; i++) {
+    const px = i * w / 20;
+    x.fillStyle = rnd() > .5 ? '#9b8366' : '#735f49'; x.fillRect(px, 0, w / 20 - 1.5, h);
+    x.fillStyle = '#43372a66'; x.fillRect(px + w / 20 - 1.5, 0, 1.5, h);
+    for (let k = 0; k < 7; k++) {
+      x.fillStyle = '#c3a98822'; x.fillRect(px + 1, rnd() * h, w / 20 - 3, 1);
+    }
+  }
+}, 3, 2);
+// 通用灰度凹凸与叶簇斑纹，给地表、木板与树冠补质感
+const bumpTex = tex(256, 256, (x, w, h) => {
+  x.fillStyle = '#808080'; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 9000; i++) {
+    const v = 95 + ((rnd() * 120) | 0);
+    x.fillStyle = 'rgb(' + v + ',' + v + ',' + v + ')';
+    x.fillRect(rnd() * w, rnd() * h, 1 + rnd() * 3, 1 + rnd() * 3);
+  }
+}, 24, 24);
+bumpTex.colorSpace = T.NoColorSpace || '';
+const leafTex = tex(256, 256, (x, w, h) => {
+  x.fillStyle = '#8fa271'; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 2600; i++) {
+    const r = rnd();
+    x.fillStyle = r < .4 ? '#a9b982' : r < .75 ? '#6f8a5b' : '#c1c99a';
+    x.globalAlpha = .22 + rnd() * .5;
+    x.beginPath(); x.ellipse(rnd() * w, rnd() * h, 1 + rnd() * 4, 1 + rnd() * 2.4, rnd() * 3, 0, 6.28); x.fill();
   }
   x.globalAlpha = 1;
-}, 2, 2);
+}, 3, 3);
 const flowerTex = tex(128, 128, (x) => {
   x.clearRect(0, 0, 128, 128);
   for (let i = 0; i < 5; i++) {
@@ -237,7 +274,7 @@ const sunTex = tex(128, 128, (x) => {
 });
 
 const scene = new T.Scene();
-scene.fog = new T.FogExp2(0xd9e2df, 0.0062);
+scene.fog = new T.FogExp2(0xe4ded2, 0.0082);
 const camera = new T.PerspectiveCamera(52, 1, 0.1, 700);
 const sunDir = new T.Vector3(-0.45, 0.36, 0.82).normalize();
 
@@ -263,22 +300,28 @@ sun.shadow.camera.top = 58; sun.shadow.camera.bottom = -58;
 sun.shadow.camera.near = 1; sun.shadow.camera.far = 260;
 sun.shadow.bias = -0.0008; sun.shadow.normalBias = 0.025;
 
-// 地面：高度场 + 顶点色区分草坡与裸岩
-const tg = new T.PlaneGeometry(240, 240, 128, 128);
+// 地面：多频高度场 + 顶点色 + 凹凸贴图区分草坡、土层与裸岩
+const tg = new T.PlaneGeometry(240, 240, 176, 176);
 tg.rotateX(-Math.PI / 2);
 const tp = tg.attributes.position, tc = [];
+const Cgrass = new T.Color(0.86, 0.93, 0.76);
+const Cearth = new T.Color(0.80, 0.71, 0.58);
+const Cstone = new T.Color(0.72, 0.74, 0.73);
+const Cspring = new T.Color(1.0, 0.97, 0.76);
 for (let i = 0; i < tp.count; i++) {
   const x = tp.getX(i), z = tp.getZ(i), y = height(x, z);
   tp.setY(i, y);
   const slope = Math.min(1, Math.hypot(height(x + 1, z) - height(x - 1, z), height(x, z + 1) - height(x, z - 1)) * .4);
-  const rock = clamp(slope * .7 + smooth(11.5, 15, y) * .34, 0, 1);
-  const c = new T.Color(0.88, 0.94, 0.82).lerp(new T.Color(0.80, 0.81, 0.79), rock);
+  const rock = clamp(slope * .78 + smooth(10.5, 14.5, y) * .3, 0, 1);
+  const c = Cgrass.clone().lerp(Cearth, smooth(.18, .8, slope) * .42).lerp(Cstone, rock);
+  // 山顶「涧草犹短」：初春嫩黄；谷地孟夏浓绿
+  c.lerp(Cspring, smooth(11, 14.2, y) * .16);
   c.multiplyScalar(.9 + rnd() * .16);
   tc.push(c.r, c.g, c.b);
 }
 tg.setAttribute('color', new T.Float32BufferAttribute(tc, 3));
 tg.computeVertexNormals();
-const ground = new T.Mesh(tg, new T.MeshStandardMaterial({ map: groundTex, vertexColors: true, roughness: 1, metalness: 0 }));
+const ground = new T.Mesh(tg, new T.MeshStandardMaterial({ map: groundTex, bumpMap: bumpTex, bumpScale: .3, vertexColors: true, roughness: 1, metalness: 0 }));
 ground.receiveShadow = true; scene.add(ground);
 
 // 远山三层剪影
@@ -289,21 +332,21 @@ for (let k = 0; k < 3; k++) {
   for (let i = 0; i < p.count; i++) {
     const x = p.getX(i);
     const y = 12 + 9 * Math.sin(x * .021 + k * 1.7) + 6 * Math.sin(x * .052 + k * 2.9) + 3 * Math.sin(x * .11 + k);
-    if (p.getY(i) > 0) p.setY(i, y - 23);
+    if (p.getY(i) > 0) p.setY(i, y - 23); else p.setY(i, -92);   // 底边压出视野，避免剪影切出笔直地平线
   }
   g.computeVertexNormals();
-  const m = new T.Mesh(g, new T.MeshBasicMaterial({ color: ridgeMats[k], transparent: true, opacity: .58 - k * .1, depthWrite: false, side: T.DoubleSide, fog: false }));
+  const m = new T.Mesh(g, new T.MeshBasicMaterial({ color: ridgeMats[k], transparent: true, opacity: .42 - k * .08, depthWrite: false, side: T.DoubleSide, fog: false }));
   m.position.set(0, 4 + k * 3, -110 - k * 46); scene.add(m);
 }
 
-// 山寺：台基、木柱、格窗、曲面青瓦顶、院墙山门与石径
+// 山寺：《游大林寺序》称「寺中唯板屋木器」，故用木板墙与木板两坡顶，不用青瓦；尺度与结构仍属推想
 function buildTemple() {
   const G = new T.Group();
   const stone = new T.MeshStandardMaterial({ color: 0x9c978a, roughness: .95 });
-  const wall = new T.MeshStandardMaterial({ map: wallTex, color: 0xf3ead7, roughness: .95 });
+  const wall = new T.MeshStandardMaterial({ map: wallTex, color: 0xe2d0b0, bumpMap: bumpTex, bumpScale: .14, roughness: .95 });
   const wood = new T.MeshStandardMaterial({ color: 0x8d3e2d, roughness: .82 });
   const dark = new T.MeshStandardMaterial({ color: 0x3b2c25, roughness: .9 });
-  const tile = new T.MeshStandardMaterial({ map: roofTex, color: 0xe3e9e8, roughness: .8, side: T.DoubleSide });
+  const tile = new T.MeshStandardMaterial({ map: roofTex, color: 0xd6c4a8, bumpMap: bumpTex, bumpScale: .18, roughness: .9, side: T.DoubleSide });
   function add(geo, mat, x, y, z) {
     const m = new T.Mesh(geo, mat); m.position.set(x, y, z);
     m.castShadow = true; m.receiveShadow = true; G.add(m); return m;
@@ -318,7 +361,7 @@ function buildTemple() {
     for (let j = 0; j < 3; j++) add(new T.BoxGeometry(1.7, .055, .15), wood, x, 1.9 + j * .65, 2.93);
   }
   add(new T.BoxGeometry(2.4, 2.9, .16), dark, 0, 2.35, 2.9);
-  // 两坡屋面，檐口与翼角上翘
+  // 木板两坡屋面，檐口与翼角略起翘（形制为推想，非考古复原）
   const nx = 20, nz = 12, pos = [], uv = [], idx = [];
   for (let j = 0; j <= nz; j++) for (let i = 0; i <= nx; i++) {
     const u = i / nx, v = j / nz, x = (u - .5) * 13.6, z = (v - .5) * 9.2;
@@ -340,8 +383,8 @@ function buildTemple() {
   for (let i = 0; i < 4; i++) add(new T.BoxGeometry(5.2, .2, .66), stone, 0, .42 - i * .1, 4.5 + i * .66);
   // 院墙与山门
   for (const x of [-7.2, 7.2]) {
-    add(new T.BoxGeometry(.5, 1.5, 10), wall, x, 1.65, -2);
-    add(new T.BoxGeometry(.75, .18, 10.4), tile, x, 2.48, -2);
+    add(new T.BoxGeometry(.42, 1.4, 10), wall, x, 1.6, -2);
+    add(new T.BoxGeometry(.66, .16, 10.4), tile, x, 2.38, -2);
   }
   for (const x of [-1.9, 1.9]) add(new T.CylinderGeometry(.19, .21, 3.2, 8), wood, x, 1.6, -7.4);
   add(new T.BoxGeometry(5.2, .34, 2.6), tile, 0, 3.35, -7.4);
@@ -357,6 +400,84 @@ for (let i = 0; i < 15; i++) {
   const s = new T.Mesh(new T.BoxGeometry(1.5 + rnd() * .5, .12, .9), pathMat);
   s.position.set(x, height(x, z) + .06, z); s.rotation.y = (rnd() - .5) * .16;
   s.receiveShadow = true; scene.add(s);
+}
+
+// 《游大林寺序》可核景物：环寺多清流苍石、短松瘦竹；山下聚落与山上节候不同
+const d4 = new T.Object3D();
+const streamMat = new T.MeshStandardMaterial({ color: 0x5f7f86, roughness: .45, metalness: .05, transparent: true, opacity: .56, side: T.DoubleSide });
+const sPos = [], sUv = [], sIdx = [];
+for (let i = 0; i <= 44; i++) {
+  const t = i / 44, z = -34 + t * 30, x = -10.5 + Math.sin(t * 3.3) * 2.1;
+  const w = .82 + Math.sin(t * 5.1) * .26;
+  for (const side of [-1, 1]) {
+    const px = x + side * w;
+    sPos.push(px, height(px, z) + .1, z); sUv.push(side < 0 ? 0 : 1, t * 6);
+  }
+}
+for (let i = 0; i < 44; i++) { const a = i * 2; sIdx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+const sg = new T.BufferGeometry();
+sg.setAttribute('position', new T.Float32BufferAttribute(sPos, 3));
+sg.setAttribute('uv', new T.Float32BufferAttribute(sUv, 2));
+sg.setIndex(sIdx); sg.computeVertexNormals();
+const stream = new T.Mesh(sg, streamMat); stream.receiveShadow = true; scene.add(stream);
+const darkRock = new T.InstancedMesh(new T.DodecahedronGeometry(.55, 0),
+  new T.MeshStandardMaterial({ color: 0x66736f, bumpMap: bumpTex, bumpScale: .3, roughness: 1 }), 28);
+for (let i = 0; i < 28; i++) {
+  const t = rnd(), z = -34 + t * 30;
+  const x = -10.5 + Math.sin(t * 3.3) * 2.1 + (rnd() > .5 ? 1.7 : -1.7);
+  d4.position.set(x, height(x, z) + .16, z);
+  d4.rotation.set(rnd(), rnd() * 6.28, rnd());
+  d4.scale.set(.5 + rnd() * 1.2, .4 + rnd() * .8, .5 + rnd() * 1.2);
+  d4.updateMatrix(); darkRock.setMatrixAt(i, d4.matrix);
+}
+darkRock.instanceMatrix.needsUpdate = true; darkRock.castShadow = true; darkRock.receiveShadow = true;
+scene.add(darkRock);
+// 短松：矮干 + 层叠针叶团
+const pineMat = new T.MeshStandardMaterial({ color: 0x40583f, roughness: 1 });
+const pineTrunk = new T.MeshStandardMaterial({ color: 0x53412f, roughness: 1 });
+for (const [px, pz, ps] of [[-13, -27, 1], [12.5, -27, .85], [-14.5, -10, .72]]) {
+  const gy = height(px, pz);
+  const tr = new T.Mesh(new T.CylinderGeometry(.13, .2, 1.6 * ps, 7), pineTrunk);
+  tr.position.set(px, gy + .8 * ps, pz); tr.castShadow = true; scene.add(tr);
+  for (let k = 0; k < 3; k++) {
+    const c = new T.Mesh(new T.SphereGeometry(1, 10, 8), pineMat);
+    c.position.set(px + (rnd() - .5) * 1.1 * ps, gy + (1.5 + k * .5) * ps, pz + (rnd() - .5) * 1.1 * ps);
+    c.scale.set((1.25 - k * .18) * ps, .42 * ps, (1.1 - k * .15) * ps);
+    c.castShadow = true; scene.add(c);
+  }
+}
+// 瘦竹：实例化细竿与窄叶
+const culms = new T.InstancedMesh(new T.CylinderGeometry(.035, .045, 2.7, 5),
+  new T.MeshStandardMaterial({ color: 0x93a86a, roughness: 1 }), 30);
+const blades = new T.InstancedMesh(new T.PlaneGeometry(.12, .6),
+  new T.MeshStandardMaterial({ color: 0x6f8b54, roughness: 1, side: T.DoubleSide }), 60);
+const clumps = [[-9.5, -20], [-12.5, -28], [11.5, -19], [14, -29]];
+for (let i = 0; i < 30; i++) {
+  const [cx, cz] = clumps[(i / 30 * 4) | 0];
+  const x = cx + (rnd() - .5) * 1.4, z = cz + (rnd() - .5) * 1.4, y = height(x, z);
+  d4.position.set(x, y + 1.35, z);
+  d4.rotation.set((rnd() - .5) * .12, rnd() * 6.28, (rnd() - .5) * .12);
+  d4.scale.setScalar(.8 + rnd() * .5); d4.updateMatrix(); culms.setMatrixAt(i, d4.matrix);
+}
+for (let i = 0; i < 60; i++) {
+  const [cx, cz] = clumps[(i / 60 * 4) | 0];
+  const x = cx + (rnd() - .5) * 1.7, z = cz + (rnd() - .5) * 1.7, y = height(x, z);
+  d4.position.set(x, y + 1.45 + rnd() * 1.15, z);
+  d4.rotation.set((rnd() - .5) * 1.1, rnd() * 6.28, (rnd() - .5) * 1.4);
+  d4.scale.setScalar(.7 + rnd() * .7); d4.updateMatrix(); blades.setMatrixAt(i, d4.matrix);
+}
+culms.instanceMatrix.needsUpdate = true; blades.instanceMatrix.needsUpdate = true;
+culms.castShadow = true; scene.add(culms, blades);
+// 山下聚落：序文「人物风候，与平地聚落不同」的对照物
+const hutWall = new T.MeshStandardMaterial({ color: 0xc9bda3, roughness: 1 });
+const hutRoof = new T.MeshStandardMaterial({ map: roofTex, color: 0xa08d72, roughness: .95 });
+for (const [vx, vz, vs] of [[-28, 32, 1], [-40, 44, .8], [30, 38, 1.1], [44, 50, .75]]) {
+  const vy = height(vx, vz);
+  const hut = new T.Mesh(new T.BoxGeometry(3.2 * vs, 2 * vs, 2.6 * vs), hutWall);
+  hut.position.set(vx, vy + vs, vz); hut.castShadow = true; hut.receiveShadow = true; scene.add(hut);
+  const rf = new T.Mesh(new T.ConeGeometry(2.7 * vs, 1.5 * vs, 4), hutRoof);
+  rf.position.set(vx, vy + 2.7 * vs, vz); rf.rotation.y = Math.PI / 4;
+  rf.castShadow = true; scene.add(rf);
 }
 
 // 桃树：合并枝干几何 + 实例化五瓣花，微风中整株轻摆
@@ -427,7 +548,7 @@ const peachTrees = peachSpots.map((s, i) => {
   scene.add(t); return t;
 });
 
-// 山下谷地：芳菲已尽，只剩浓绿与零星残瓣
+// 山下谷地：孟夏芳菲已尽，浓绿成林；远处聚落对应序文「与平地聚落不同」
 const crownGeo = new T.SphereGeometry(1, 14, 10);
 const cp = crownGeo.attributes.position;
 for (let i = 0; i < cp.count; i++) {
@@ -436,10 +557,10 @@ for (let i = 0; i < cp.count; i++) {
   cp.setXYZ(i, x * f, y * f * .82, z * f);
 }
 crownGeo.computeVertexNormals();
-const leafMat = new T.MeshStandardMaterial({ color: 0x9aa878, roughness: 1 });
+const leafMat = new T.MeshStandardMaterial({ color: 0xa9b98a, map: leafTex, bumpMap: bumpTex, bumpScale: .12, roughness: 1 });
 const trunksMat = new T.MeshStandardMaterial({ color: 0x6b5540, roughness: 1 });
 const VCOUNT = 62;
-const crowns = new T.InstancedMesh(crownGeo, leafMat, VCOUNT);
+const crowns = new T.InstancedMesh(crownGeo, leafMat, VCOUNT * 2);
 const trunks = new T.InstancedMesh(new T.CylinderGeometry(.09, .15, 2.2, 7), trunksMat, VCOUNT);
 const dummy2 = new T.Object3D(), lc = new T.Color();
 let placed = 0, guard = 0;
@@ -447,14 +568,18 @@ while (placed < VCOUNT && guard++ < 3000) {
   const x = (rnd() - .5) * 150, z = 4 + rnd() * 78, y = height(x, z);
   if (y > 7.5 || (Math.abs(x) < 17 && z < 6)) continue;
   const s = 1.2 + rnd() * 2.1;
+  const off = rnd() * 6.28;
   dummy2.position.set(x, y + 2.2 * s, z); dummy2.scale.set(s * 1.15, s, s * 1.1);
-  dummy2.rotation.set(0, rnd() * 6.28, 0); dummy2.updateMatrix(); crowns.setMatrixAt(placed, dummy2.matrix);
-  lc.setHSL(.22 + rnd() * .08, .26 + rnd() * .18, .3 + rnd() * .16); crowns.setColorAt(placed, lc);
+  dummy2.rotation.set(0, off, 0); dummy2.updateMatrix(); crowns.setMatrixAt(placed * 2, dummy2.matrix);
+  lc.setHSL(.22 + rnd() * .08, .26 + rnd() * .18, .3 + rnd() * .16); crowns.setColorAt(placed * 2, lc);
+  dummy2.position.set(x + Math.cos(off) * .7 * s, y + 2.7 * s, z + Math.sin(off) * .7 * s);
+  dummy2.scale.set(s * .78, s * .72, s * .8); dummy2.updateMatrix();
+  crowns.setMatrixAt(placed * 2 + 1, dummy2.matrix); crowns.setColorAt(placed * 2 + 1, lc.clone().multiplyScalar(.88));
   dummy2.position.set(x, y + 1.1 * s, z); dummy2.scale.set(s, s, s); dummy2.rotation.set(0, 0, 0);
   dummy2.updateMatrix(); trunks.setMatrixAt(placed, dummy2.matrix);
   placed++;
 }
-crowns.count = trunks.count = placed;
+crowns.count = placed * 2; trunks.count = placed;
 crowns.castShadow = true; crowns.receiveShadow = true;
 crowns.instanceMatrix.needsUpdate = true; trunks.instanceMatrix.needsUpdate = true;
 if (crowns.instanceColor) crowns.instanceColor.needsUpdate = true;
@@ -463,8 +588,9 @@ scene.add(crowns, trunks);
 // 平台近景：碎石与草簇补足地表质感
 const rockMat = new T.MeshStandardMaterial({ color: 0xb0b0a4, roughness: 1 });
 const rocks = new T.InstancedMesh(new T.DodecahedronGeometry(.32, 0), rockMat, 46);
-const grassMat = new T.MeshStandardMaterial({ color: 0x829761, roughness: 1, side: T.DoubleSide });
-const grass = new T.InstancedMesh(new T.ConeGeometry(.085, .55, 3), grassMat, 150);
+// 序称「涧草犹短」：山上只留矮草
+const grassMat = new T.MeshStandardMaterial({ color: 0x9aa96d, roughness: 1, side: T.DoubleSide });
+const grass = new T.InstancedMesh(new T.ConeGeometry(.07, .22, 3), grassMat, 120);
 const d3 = new T.Object3D(), rc = new T.Color();
 for (let i = 0; i < 46; i++) {
   let x, z, guard2 = 0;
@@ -475,9 +601,9 @@ for (let i = 0; i < 46; i++) {
   d3.updateMatrix(); rocks.setMatrixAt(i, d3.matrix);
   rc.setHSL(.12, .04, .5 + rnd() * .2); rocks.setColorAt(i, rc);
 }
-for (let i = 0; i < 150; i++) {
+for (let i = 0; i < 120; i++) {
   const x = (rnd() - .5) * 34, z = -32 + rnd() * 32;
-  d3.position.set(x, height(x, z) + .23, z);
+  d3.position.set(x, height(x, z) + .1, z);
   d3.rotation.set((rnd() - .5) * .3, rnd() * 6.28, (rnd() - .5) * .3);
   d3.scale.setScalar(.7 + rnd() * 1.1); d3.updateMatrix(); grass.setMatrixAt(i, d3.matrix);
 }
@@ -486,14 +612,54 @@ if (rocks.instanceColor) rocks.instanceColor.needsUpdate = true;
 rocks.castShadow = true; rocks.receiveShadow = true;
 scene.add(rocks, grass);
 
-// 山腰云带
+// 山腰云带：软云贴图三层漂移；固定朝 +Z，避免近距 billboard 的透视拉丝
+const bandTex = tex(512, 128, (x, w, h) => {
+  x.clearRect(0, 0, w, h);
+  for (let i = 0; i < 80; i++) {
+    const cx = rnd() * w, cy = h * (.22 + rnd() * .56), rx = 16 + rnd() * 72, ry = 7 + rnd() * 22;
+    const g = x.createRadialGradient(cx, cy, 1, cx, cy, rx);
+    g.addColorStop(0, 'rgba(255,255,255,.46)');
+    g.addColorStop(.52, 'rgba(248,252,252,.20)');
+    g.addColorStop(1, 'rgba(240,246,248,0)');
+    x.save(); x.translate(cx, cy); x.scale(1, ry / rx); x.translate(-cx, -cy);
+    x.fillStyle = g; x.beginPath(); x.arc(cx, cy, rx, 0, 6.28); x.fill(); x.restore();
+  }
+  // 上下边缘 alpha 归零，消除云带平面的几何硬边
+  const fade = x.createLinearGradient(0, 0, 0, h);
+  fade.addColorStop(0, 'rgba(0,0,0,0)'); fade.addColorStop(.24, 'rgba(0,0,0,1)');
+  fade.addColorStop(.76, 'rgba(0,0,0,1)'); fade.addColorStop(1, 'rgba(0,0,0,0)');
+  x.globalCompositeOperation = 'destination-in';
+  x.fillStyle = fade; x.fillRect(0, 0, w, h);
+  x.globalCompositeOperation = 'source-over';
+}, 1, 1);
+const bandSheets = [
+  { y: 9.8, z: -38, w: 230, h: 10, op: .5, speed: .0022 },
+  { y: 7.0, z: -92, w: 380, h: 24, op: .52, speed: .0012 }
+].map((c, i) => {
+  const map = bandTex.clone(); map.needsUpdate = true;
+  const m = new T.Mesh(new T.PlaneGeometry(c.w, c.h, 1, 1),
+    new T.MeshBasicMaterial({ map, transparent: true, depthWrite: false, opacity: c.op, side: T.DoubleSide, fog: false }));
+  m.position.set(0, c.y, c.z); m.renderOrder = 2 + i; m.frustumCulled = false;
+  scene.add(m);
+  return { mesh: m, speed: c.speed, level: i, phase: i * .31 };
+});
+// 山前云海：Sprite 软云群，只在山下机位显示；软边不会切出水平硬线
+const valleyClouds = [];
+for (let i = 0; i < 22; i++) {
+  const sp = new T.Sprite(new T.SpriteMaterial({ map: cloudTex, transparent: true, depthWrite: false, opacity: .5, fog: false }));
+  const w = 26 + rnd() * 34;
+  sp.position.set((rnd() - .5) * 140, 7 + rnd() * 4, -12 + rnd() * 34);
+  sp.scale.set(w, w * .32, 1);
+  sp.userData.speed = .18 + rnd() * .42;
+  scene.add(sp); valleyClouds.push(sp);
+}
 const clouds = [];
-for (let i = 0; i < 26; i++) {
-  const sp = new T.Sprite(new T.SpriteMaterial({ map: cloudTex, transparent: true, depthWrite: false, opacity: .95, fog: false }));
-  const w = 30 + rnd() * 46;
-  sp.position.set((rnd() - .5) * 140, 9 + rnd() * 6, -30 - rnd() * 55);
-  sp.scale.set(w, w * .42, 1);
-  sp.userData.speed = .25 + rnd() * .5;
+for (let i = 0; i < 16; i++) {
+  const sp = new T.Sprite(new T.SpriteMaterial({ map: cloudTex, transparent: true, depthWrite: false, opacity: .8, fog: false }));
+  const w = 26 + rnd() * 40;
+  sp.position.set((rnd() - .5) * 130, 9 + rnd() * 7, -38 - rnd() * 62);
+  sp.scale.set(w, w * .4, 1);
+  sp.userData.speed = .18 + rnd() * .42;
   scene.add(sp); clouds.push(sp);
 }
 
@@ -565,7 +731,7 @@ let paused = false;
 $('btnPause').onclick = () => { paused = !paused; $('btnPause').textContent = paused ? '继续' : '暂停'; };
 if (coarse) {
   const n = document.querySelector('.note');
-  if (n) n.innerHTML = '山下芳菲已歇，山上春色方来。拖动环视，双指远近；<b>切换机位</b>可见两种节候。山形、寺制与花候为艺术加工，非唐代庐山复原。';
+  if (n) n.innerHTML = '《游大林寺序》：环寺多清流苍石、短松瘦竹，寺中唯板屋木器。画面据此取板屋、溪石、松竹与短草；山形与寺之尺度仍属推想。拖动环视，双指远近，<b>切换机位</b>看两种节候。';
 }
 
 // 指针交互：拖动环视、滚轮与双指缩放
@@ -611,8 +777,19 @@ function frame(ts) {
     cam.target.z + cam.r * Math.cos(cam.yaw) * cpv);
   camera.lookAt(cam.target);
   petalMat.uniforms.uTime.value = time;
+  bandSheets.forEach((c) => {
+    c.mesh.material.map.offset.x = time * c.speed + c.phase;
+    c.mesh.visible = qi < 2 || c.level === 0;
+  });
   peachTrees.forEach((t) => { t.rotation.z = Math.sin(time * .55 + t.userData.phase) * .013; });
   clouds.forEach((c) => {
+    if (!c.visible) return;
+    c.position.x += c.userData.speed * dt;
+    if (c.position.x > 82) c.position.x = -82;
+  });
+  const farView = cam.r > 45;
+  valleyClouds.forEach((c, i) => {
+    c.visible = farView && (qi < 2 || i < 11);
     if (!c.visible) return;
     c.position.x += c.userData.speed * dt;
     if (c.position.x > 82) c.position.x = -82;
