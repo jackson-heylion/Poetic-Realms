@@ -21,7 +21,7 @@
       "hardness": "H2",
       "visualBrief": "秋晨河岸的芦苇、白露与对岸朦胧人影",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -50,7 +50,22 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "reeds-and-white-frost",
+          "title": "蒹葭苍苍 · 白露为霜",
+          "path": "scenes/shijing-jianjia/reeds-and-white-frost.html",
+          "model": "WorkBuddy（Tencent Hunyuan Hy）",
+          "tools": [
+            "three.js r160（仓库 vendor 离线副本 + baomitu / bootcdn / jsdelivr 10 秒镜像回退）",
+            "Custom GLSL",
+            "CanvasTexture 程序化噪声贴图",
+            "Vanilla JS"
+          ],
+          "status": "prototype",
+          "description": "秋晨河岸：近岸与远岸的程序化芦苇在风里整体摆动，芦花与叶尖凝着白霜细光；秋水以菲涅耳反射天光并泛起碎金，晨雾沿水面缓慢漂移，水中沙洲上一个若隐若现的人影。低日、雾层、沙洲与人影属艺术加工，不作先秦地望或史实复原。"
+        }
+      ]
     },
     {
       "id": "shijing-taoyao",
