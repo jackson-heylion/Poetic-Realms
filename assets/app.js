@@ -150,7 +150,7 @@ function renderFeatured() {
             encodeURIComponent(poem.scenes[0].id) +
             '" alt="' +
             esc(poem.visualBrief) +
-            '" width="480" height="600" loading="eager">' +
+            '" width="480" height="600" loading="eager" onerror="this.remove()">' +
             '<span class="cover-index num">' +
             String(index + 1).padStart(2, "0") +
             '</span><span class="cover-enter" aria-hidden="true">↗</span></div><div class="cover-caption"><h3>' +
