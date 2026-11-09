@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#b9c6ae">
+  <meta name="description" content="《忆江南·江南好》：日出江花红胜火，春来江水绿如蓝。可离线探索的三维春江。">
+  <link rel="icon" href="data:,">
+  <title>忆江南 · 春江初日 | Poetic Realms</title>
+  <!-- 本文件是维护用模板；独立成品由 scripts/pack-yijiangnan-dawn.mjs 生成。 -->
+  <!-- SCENE_STYLE -->
+</head>
+<body>
+  <canvas id="scene" tabindex="0" aria-label="春江日出三维场景，可拖动环顾、滚轮远近"></canvas>
+  <header class="inscription" data-scene-ui>
+    <h1>忆江南<span>· 江南好</span></h1>
+    <p class="author">唐 · 白居易</p>
+    <blockquote>日出江花红胜火，<br>春来江水绿如蓝。</blockquote>
+  </header>
+  <p class="gesture" id="gesture" data-scene-ui>拖动环顾 · 滚轮远近</p>
+  <nav class="controls" aria-label="场景控制" data-scene-ui>
+    <button id="read" type="button">读全词</button>
+    <button id="pause" type="button" aria-pressed="false">暂停</button>
+    <button id="reset" type="button">归位</button>
+    <select id="quality" aria-label="画质">
+      <option value="low">画质 · 省电</option>
+      <option value="normal" selected>画质 · 标准</option>
+      <option value="high">画质 · 精细</option>
+    </select>
+    <button id="quiet" type="button" aria-pressed="false">静观</button>
+  </nav>
+  <button id="restore" type="button" hidden data-scene-ui>显示题跋</button>
+  <dialog id="poem" data-scene-ui aria-labelledby="poem-title">
+    <button id="close-poem" type="button" aria-label="关闭全词">关闭</button>
+    <h2 id="poem-title">忆江南 · 江南好</h2>
+    <p class="author">唐 · 白居易</p>
+    <p class="full-poem">江南好，風景舊曾諳。<br>日出江花紅勝火，<br>春來江水綠如藍，<br>能不憶江南。</p>
+    <p class="source">正文保留电子转录的字形与标点，尚待古籍版本校勘。<a href="https://github.com/chinese-poetry/chinese-poetry/blob/master/%E5%85%A8%E5%94%90%E8%AF%97/poet.tang.49000.json" target="_blank" rel="noopener noreferrer">查看原文来源</a></p>
+    <p class="source">江花以红色春花表现；具体花种、山岸布局、柳树与飞鸟为艺术加工。</p>
+    <a class="back" href="../../gallery.html?poem=yijiangnan" target="_top">返回诗境展厅</a>
+  </dialog>
+  <div id="loading" role="status"><span id="loading-text">春江初日，正在入境……</span></div>
+  <div id="error" role="alert" hidden>
+    <p id="error-text"></p>
+    <button id="retry" type="button">重新载入</button>
+  </div>
+  <noscript>请启用 JavaScript 后打开三维诗境。</noscript>
+  <!-- SCENE_ENGINE -->
+  <!-- SCENE_SCRIPT -->
+</body>
+</html>

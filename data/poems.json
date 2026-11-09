@@ -2007,11 +2007,11 @@
       "hardness": "H3",
       "visualBrief": "江南水乡晨光、红花与碧水",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
-      "issueNumber": null,
+      "issueNumber": 45,
       "sources": [
         {
           "kind": "community-transcription",
@@ -2035,7 +2035,20 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "river-of-dawn",
+          "title": "春江初日 · 江花胜火",
+          "path": "scenes/yijiangnan/river-of-dawn.html",
+          "model": "GPT-6 (Codex)",
+          "tools": [
+            "three.js r160（内置，MIT）",
+            "WebGL / GLSL",
+            "Canvas 2D 程序化纹理"
+          ],
+          "status": "prototype"
+        }
+      ]
     },
     {
       "id": "qiantanghu",
