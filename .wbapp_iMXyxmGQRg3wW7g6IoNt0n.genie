@@ -1,5 +1,5 @@
 appId: wbapp_iMXyxmGQRg3wW7g6IoNt0n
 name: 诗境 · 诗词三维场景
-localDir: /Users/heylion/vscode/Poetic-Realms
+localDir: /Users/heylion/vscode/Poetic-Realms/output/tongguan-app
 appType: web
 entryHtml: index.html
