@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>山行 · 霜林停车</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { color-scheme: dark; background: #1d1410; color: #f7e7d2; font: 14px/1.6 system-ui, -apple-system, "PingFang SC", sans-serif; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  #stage { display: block; width: 100vw; height: 100dvh; touch-action: none; cursor: grab; outline: none; }
+  #stage:active { cursor: grabbing; }
+  #stage:focus-visible { outline: 2px solid #f3c894; outline-offset: -4px; }
+  header { position: fixed; top: max(6.5vh, calc(env(safe-area-inset-top) + 22px));
+    left: max(5vw, calc(env(safe-area-inset-left) + 22px)); width: min(34ch, 31vw); pointer-events: none;
+    font-family: "Songti SC", "Noto Serif CJK SC", STSong, SimSun, serif;
+    text-shadow: 0 1px 14px #1a0d06, 0 0 46px #1a0d06aa; }
+  header::before { content: ""; position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(74% 62% at -4% -2%, #170b0599 0%, #170b0555 34%, transparent 68%); }
+  .dynasty { margin: 0 0 .55em; color: #f0c79b; font-size: clamp(12px, 1.15vw, 15px); letter-spacing: .42em; }
+  h1 { margin: 0; font-size: clamp(34px, 4.1vw, 60px); font-weight: 600; letter-spacing: .3em; line-height: 1.1; }
+  blockquote { margin: 1.05em 0 0; padding: .1em 0 .1em .85em; border-left: 2px solid #c9793f;
+    font-size: clamp(14px, 1.42vw, 20px); line-height: 1.95; letter-spacing: .1em; color: #ffe9cf; }
+  .hint { margin: 1.35em 0 0; font-size: 12px; letter-spacing: .16em; color: #f2d7b6aa; }
+  .seal { display: inline-block; margin-top: 1.4em; padding: .38em .32em; writing-mode: vertical-rl;
+    font-size: 13px; letter-spacing: .22em; color: #dc6a45; border: 1px solid #c9502f; border-radius: 2px;
+    background: #7d1f1022; }
+  nav { position: fixed; right: max(2.6vw, calc(env(safe-area-inset-right) + 12px));
+    bottom: max(3vh, calc(env(safe-area-inset-bottom) + 12px)); display: flex; gap: 4px; padding: 4px;
+    border: 1px solid #f3d9b53d; border-radius: 9px; background: #170d09e0; backdrop-filter: blur(6px); }
+  nav button { min-height: 42px; padding: 0 13px; border: 0; border-radius: 6px; background: transparent;
+    color: #f7e7d2; font: inherit; letter-spacing: .06em; cursor: pointer; }
+  nav button:hover, nav button:focus-visible { background: #4a2c1c; }
+  #status { position: fixed; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: max-content;
+    max-width: 76vw; padding: 15px 24px; text-align: center; border-radius: 9px;
+    background: #170d09ee; border: 1px solid #f3d9b52e; }
+  #status p { margin: 0; }
+  #retry { margin-top: 10px; min-height: 38px; padding: 0 18px; border: 1px solid #c9793f; border-radius: 6px;
+    background: transparent; color: #f7e7d2; font: inherit; cursor: pointer; }
+  [hidden] { display: none !important; }
+  @media (max-width: 720px) {
+    header { width: min(72vw, 30ch); top: max(5vh, calc(env(safe-area-inset-top) + 16px)); }
+    h1 { font-size: clamp(28px, 8.4vw, 40px); }
+    blockquote { font-size: clamp(13px, 3.6vw, 15px); line-height: 1.85; letter-spacing: .04em; }
+    .hint, .seal { display: none; }
+    nav button { padding: 0 10px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="stage" tabindex="0" aria-label="深秋山路：枫林在斜阳里透亮，一辆车停在路边。拖动或按方向键环顾。"></canvas>
+<header data-scene-ui>
+  <p class="dynasty">唐 · 杜牧</p>
+  <h1>山行</h1>
+  <blockquote>停车坐爱枫林晚，<br>霜叶红于二月花。</blockquote>
+  <p class="hint">拖动环顾 · 双击归位 · 方向键微调</p>
+  <span class="seal" aria-hidden="true">霜林</span>
+</header>
+<nav data-scene-ui aria-label="场景控制">
+  <button id="pause" type="button">暂停</button>
+  <button id="quality" type="button">画质：精细</button>
+  <button id="reset" type="button">归位</button>
+</nav>
+<div id="status" role="status"><p id="message">正在点染霜林…</p><button id="retry" type="button" hidden>重试</button></div>
+<script>
+"use strict";
+/* 山行 · 霜林停车 —— 程序化 WebGL2 场景，无外部依赖。
+   岩坡、石径、枫树、车马、落叶与天光全部即时生成。天色、树种比例、车马形制为艺术处理，
+   不作唐代山道、车制或具体地望的复原。 */
+(() => {
+const TAU = Math.PI * 2;
+const HALF = 1.55;                 // 石径半宽（米）
+const ELEV = 0.238, AZ = -0.045;    // 落日高度角、方位角
+const SUN = [Math.sin(AZ) * Math.cos(ELEV), Math.sin(ELEV), Math.cos(AZ) * Math.cos(ELEV)];
+const SUN_H = (() => { const l = Math.hypot(SUN[0], SUN[2]); return [SUN[0] / l, SUN[2] / l]; })();
+const SUNC = [2.80, 1.55, 0.70];
+const SH_MIN = [-72, -12], SH_SIZE = 148;
+
+const SEED = Math.abs(Number(new URLSearchParams(location.search).get("seed"))) || 11;
+const rnd = (() => {
+  let a = SEED >>> 0;
+  return () => {
+    a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+})();
+const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
+const smooth01 = v => { v = clamp01(v); return v * v * (3 - 2 * v); };
+const hash2 = (x, y) => { const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return s - Math.floor(s); };
+function noise2(x, y) {
+  const ix = Math.floor(x), iy = Math.floor(y), fx = x - ix, fy = y - iy;
+  const ux = fx * fx * (3 - 2 * fx), uy = fy * fy * (3 - 2 * fy);
+  const a = hash2(ix, iy), b = hash2(ix + 1, iy), c = hash2(ix, iy + 1), d = hash2(ix + 1, iy + 1);
+  const top = a + (b - a) * ux;
+  return top + ((c + (d - c) * ux) - top) * uy;
+}
+const fbm = (x, y) => .55 * noise2(x, y) + .28 * noise2(x * 2.07 + 3.7, y * 2.07 - 1.3) + .17 * noise2(x * 4.3 - 2.1, y * 4.3 + 5.2);
+
+/* ---------- 地形与山路 ---------- */
+const pathX = z => 4.2 * Math.sin(z * .062) + 1.2 * Math.sin(z * .021 + 2.2);
+const pathY = z => .045 * z + .30 * Math.sin(z * .038 + .4);
+function height(x, z) {
+  const px = pathX(z), py = pathY(z), d = x - px, ad = Math.abs(d);
+  let h = py;
+  if (d > HALF + 1.4) { const u = d - HALF - 1.4; h += .62 * Math.pow(u, 1.06) + .008 * u * u; }
+  else if (d < -HALF - 1.4) { const u = -d - HALF - 1.4; h -= Math.min(17, .70 * Math.pow(u, 1.03)); }
+  const w = smooth01((ad - HALF - 1.2) / 8);
+  h += w * (1.9 * fbm(x * .028, z * .028) + .8 * fbm(x * .095 + 5.1, z * .095 - 2.3));
+  const far = smooth01((z - 80) / 75) * smooth01((ad - 6) / 14);
+  h += far * (12 + 24 * fbm(x * .013 + 1.7, z * .012));
+  return h;
+}
+const eye = [pathX(3.4) - .38, pathY(3.4) + 1.62, 3.4];
+const CART_Z = 21.0, CART_X = pathX(CART_Z) - 1.02;
+
+/* ---------- 枫树 ---------- */
+const PALETTE = [[.46, .058, .030], [.56, .100, .036], [.63, .176, .046], [.50, .120, .052], [.38, .048, .036], [.61, .240, .064]];
+const pick = n => PALETTE[Math.min(PALETTE.length - 1, Math.floor(n * PALETTE.length))];
+const trees = [];
+function addTree(x, z, h, seed, cards) {
+  for (const o of trees) if ((o.x - x) ** 2 + (o.z - z) ** 2 < 21) return false;
+  trees.push({ x, z, h, y: height(x, z), seed, cards });
+  return true;
+}
+function plant() {
+  // 手工定位的主景树：右坡成行，左侧近景留白给题跋
+  [[4.4, 7.0, 15.2, .11], [4.9, 14.0, 14.2, .27], [5.2, 22.0, 13.4, .41], [-6.4, 21.0, 13.6, .58],
+   [6.6, 32.0, 14.6, .66], [-8.6, 31.0, 13.9, .73], [5.8, 45.0, 13.0, .82], [-9.5, 44.0, 14.2, .91],
+   [-12.5, 58.0, 13.4, .37], [7.4, 60.0, 13.2, .63]]
+    .forEach(([dx, z, h, s]) => addTree(pathX(z) + dx, z, h, s, 84));
+  for (let i = 0; i < 1400 && trees.length < 118; i++) {
+    const z = -3 + Math.pow(rnd(), .82) * 146;
+    const x = -58 + rnd() * 108;
+    const px = pathX(z), dist = Math.hypot(x - eye[0], z - eye[2]), h = 7.5 + rnd() * 6.5;
+    if (Math.abs(x - px) < 4.7) continue;
+    if (x - px < -6 && z < 24) continue;                                   // 左侧近景留空
+    if (Math.hypot(x - CART_X, z - CART_Z) < 5.2) continue;
+    if (Math.abs(Math.atan2(x - eye[0], z - eye[2]) - AZ) < .10 && dist > 20 && dist < 120) continue;  // 落日方向留出光隙
+    addTree(x, z, h, rnd(), dist < 46 ? 84 : dist < 88 ? 30 : 12);
+  }
+}
+
+/* ---------- 车马几何 ---------- */
+const props = { pos: [], nrm: [], col: [] };
+const rotY = (x, z, yaw) => [x * Math.cos(yaw) + z * Math.sin(yaw), -x * Math.sin(yaw) + z * Math.cos(yaw)];
+function quad(a, b, c, d, na, nb, nc, nd, col) {
+  const P = props;
+  for (const [p, n] of [[a, na], [b, nb], [c, nc], [a, na], [c, nc], [d, nd]]) {
+    P.pos.push(p[0], p[1], p[2]);
+    P.nrm.push(n[0], n[1], n[2]);
+    P.col.push(col[0], col[1], col[2]);
+  }
+}
+function ellipsoid(ox, oy, oz, rx, ry, rz, pitch, yaw, col, seg = 10, ring = 6) {
+  const cp = Math.cos(pitch), sp = Math.sin(pitch), cy = Math.cos(yaw), sy = Math.sin(yaw);
+  const rot = (x, y, z) => { const y1 = y * cp - z * sp, z1 = y * sp + z * cp; return [x * cy + z1 * sy, y1, -x * sy + z1 * cy]; };
+  const at = (i, j) => {
+    const th = i / seg * TAU, ph = j / ring * Math.PI, st = Math.sin(ph), ct = Math.cos(ph);
+    const p = rot(rx * st * Math.cos(th), ry * ct, rz * st * Math.sin(th));
+    const n = rot(st * Math.cos(th) / rx, ct / ry, st * Math.sin(th) / rz);
+    const l = Math.hypot(n[0], n[1], n[2]);
+    return { p: [ox + p[0], oy + p[1], oz + p[2]], n: [n[0] / l, n[1] / l, n[2] / l] };
+  };
+  for (let j = 0; j < ring; j++) for (let i = 0; i < seg; i++) {
+    const a = at(i, j), b = at(i + 1, j), c = at(i + 1, j + 1), d = at(i, j + 1);
+    quad(a.p, b.p, c.p, d.p, a.n, b.n, c.n, d.n, col);
+  }
+}
+const BOX_FACES = [[0, 1, 3, 2], [4, 6, 7, 5], [0, 4, 5, 1], [2, 3, 7, 6], [0, 2, 6, 4], [1, 5, 7, 3]];
+function box(cx, cy, cz, sx, sy, sz, yaw, col) {
+  const n = [];
+  for (const sxx of [-1, 1]) for (const syy of [-1, 1]) for (const szz of [-1, 1]) {
+    const r = rotY(sxx * sx / 2, szz * sz / 2, yaw);
+    n.push([cx + r[0], cy + syy * sy / 2, cz + r[1]]);
+  }
+  const nx = [Math.cos(yaw), 0, -Math.sin(yaw)], nz = [Math.sin(yaw), 0, Math.cos(yaw)];
+  const fN = [[-nx[0], 0, -nx[2]], nx, [0, -1, 0], [0, 1, 0], [-nz[0], 0, -nz[2]], nz];
+  BOX_FACES.forEach((f, i) => quad(n[f[0]], n[f[1]], n[f[2]], n[f[3]], fN[i], fN[i], fN[i], fN[i], col));
+}
+function wheel(cx, cy, cz, r, width, yaw) {
+  const N = 16, tr = .055, dark = [.055, .038, .028];
+  const P = (lx, ly, lz) => { const q = rotY(lx, lz, yaw); return [cx + q[0], cy + ly, cz + q[1]]; };
+  for (let i = 0; i < N; i++) {
+    const a0 = i / N * TAU, a1 = (i + 1) / N * TAU;
+    const mid = (a0 + a1) / 2, c = Math.cos(mid), s = Math.sin(mid);
+    const radial = [0, c, s], axial = [Math.cos(yaw), 0, -Math.sin(yaw)];
+    const o0 = [P(-width / 2, (r + tr) * Math.cos(a0), (r + tr) * Math.sin(a0)), P(width / 2, (r + tr) * Math.cos(a0), (r + tr) * Math.sin(a0))];
+    const o1 = [P(-width / 2, (r + tr) * Math.cos(a1), (r + tr) * Math.sin(a1)), P(width / 2, (r + tr) * Math.cos(a1), (r + tr) * Math.sin(a1))];
+    const i0 = [P(-width / 2, (r - tr) * Math.cos(a0), (r - tr) * Math.sin(a0)), P(width / 2, (r - tr) * Math.cos(a0), (r - tr) * Math.sin(a0))];
+    const i1 = [P(-width / 2, (r - tr) * Math.cos(a1), (r - tr) * Math.sin(a1)), P(width / 2, (r - tr) * Math.cos(a1), (r - tr) * Math.sin(a1))];
+    quad(o0[0], i0[0], i1[0], o1[0], [-axial[0], 0, -axial[2]], [-axial[0], 0, -axial[2]], [-axial[0], 0, -axial[2]], [-axial[0], 0, -axial[2]], dark);
+    quad(o1[1], i1[1], i0[1], o0[1], axial, axial, axial, axial, dark);
+    quad(o1[0], o1[1], i1[1], i1[0], radial, radial, radial, radial, [.075, .052, .036]);
+    quad(i0[0], i0[1], o0[1], o0[0], [-radial[0], -c, -s], [-radial[0], -c, -s], [-radial[0], -c, -s], [-radial[0], -c, -s], [.045, .030, .022]);
+  }
+  for (let i = 0; i < 4; i++) {                       // 辐条
+    const a = i / 4 * TAU + .4, c = Math.cos(a), s = Math.sin(a);
+    const w = width * .30, hw = .038;
+    const p0 = P(-w, c * hw, s * hw), p1 = P(-w, c * (r - .06) - s * hw, s * (r - .06) + c * hw);
+    const p2 = P(-w, c * (r - .06) + s * hw, s * (r - .06) - c * hw), p3 = P(-w, -c * hw, -s * hw);
+    const p4 = P(w, c * hw, s * hw), p5 = P(w, c * (r - .06) - s * hw, s * (r - .06) + c * hw);
+    const p6 = P(w, c * (r - .06) + s * hw, s * (r - .06) - c * hw), p7 = P(w, -c * hw, -s * hw);
+    quad(p0, p1, p2, p3, [0, -s, c], [0, -s, c], [0, -s, c], [0, -s, c], dark);
+    quad(p4, p7, p6, p5, [0, s, -c], [0, s, -c], [0, s, -c], [0, s, -c], dark);
+  }
+  ellipsoid(cx, cy, cz, .085, .11, .11, 0, yaw, [.07, .048, .032], 8, 5);
+}
+function buildRig() {
+  const yaw = 2.72, base = [CART_X, pathY(CART_Z) + .02, CART_Z];
+  const wood = [.070, .046, .029], dark = [.046, .030, .021], straw = [.080, .060, .034];
+  const at = (x, y, z) => { const r = rotY(x, z, yaw); return [base[0] + r[0], base[1] + y, base[2] + r[1]]; };
+  const put = (x, y, z, sx, sy, sz, col) => { const p = at(x, y, z); box(p[0], p[1], p[2], sx, sy, sz, yaw, col); };
+  const ell = (x, y, z, rx, ry, rz, pitch, col) => { const p = at(x, y, z); ellipsoid(p[0], p[1], p[2], rx, ry, rz, pitch, yaw, col); };
+  put(0, .86, 0, 1.34, .10, 2.45, wood);          // 车板
+  put(0, .96, 1.18, 1.30, .34, .09, wood);        // 前后栏
+  put(0, .96, -1.18, 1.30, .34, .09, wood);
+  put(.65, .96, 0, .08, .34, 2.40, dark);
+  put(-.65, .96, 0, .08, .34, 2.40, dark);
+  for (let i = -2; i <= 2; i++) put(0, 1.17, i * .56, 1.18, .05, .18, straw);   // 卷席
+  for (const s of [-1, 1]) ell(s * .46, .44, 1.72, .048, .048, 1.14, .32, dark);   // 车辕垂地
+  // 拱形苫布
+  for (let i = 0; i < 7; i++) {
+    const a0 = Math.PI * (i / 7), a1 = Math.PI * ((i + 1) / 7);
+    const pt = (a, z) => at(Math.cos(a) * .72, 1.00 + Math.sin(a) * .52, z);
+    const nr = a => { const r = rotY(Math.cos(a), 0, yaw); return [r[0], Math.sin(a), r[1]]; };
+    const n0 = nr(a0), n1 = nr(a1);
+    quad(pt(a0, -1.12), pt(a1, -1.12), pt(a1, 1.12), pt(a0, 1.12), n0, n1, n1, n0, straw);
+  }
+  for (const s of [-1, 1]) put(0, 1.02, s * 1.12, 1.44, .06, .05, dark);
+  wheel(base[0] + rotY(-.74, 0, yaw)[0], base[1] + .66, base[2] + rotY(-.74, 0, yaw)[1], .66, .11, yaw);
+  wheel(base[0] + rotY(.74, 0, yaw)[0], base[1] + .66, base[2] + rotY(.74, 0, yaw)[1], .66, .11, yaw);
+}
+
+/* ---------- 枝干管状网格 ---------- */
+function tubeGeometry(sides, rings) {
+  const v = [], idx = [];
+  for (let j = 0; j <= rings; j++) {
+    const t = j / rings, r = 1 - .78 * Math.pow(t, 1.35), bend = .12 * Math.sin(t * 2.6);
+    for (let i = 0; i <= sides; i++) {
+      const a = i / sides * TAU, c = Math.cos(a), s = Math.sin(a);
+      v.push(c * r, t, s * r + bend, c, 0, s);
+      if (i === sides || j === rings) continue;
+      const p = j * (sides + 1) + i;
+      idx.push(p, p + sides + 1, p + 1, p + sides + 1, p + sides + 2, p + 1);
+    }
+  }
+  return { data: v, index: idx };
+}
+
+/* ---------- 树冠图集：每格约合 2 米见方的一丛枫叶 ---------- */
+function buildLeafAtlas() {
+  const T = 512, cv = document.createElement("canvas");
+  cv.width = cv.height = T * 2;
+  const g = cv.getContext("2d");
+  g.clearRect(0, 0, T * 2, T * 2);
+  for (let v = 0; v < 4; v++) {
+    const ox = (v % 2) * T, oy = Math.floor(v / 2) * T, cx = ox + T / 2, cy = oy + T / 2;
+    g.save();
+    g.beginPath();
+    g.rect(ox, oy, T, T);
+    g.clip();
+    g.strokeStyle = "rgba(40,26,17,.9)";
+    g.lineCap = "round";
+    for (let i = 0; i < 4; i++) {                 // 枝梢
+      const a = (i / 4 + rnd() * .22) * TAU, len = T * (.20 + rnd() * .20);
+      g.lineWidth = 3 + rnd() * 3;
+      g.beginPath();
+      g.moveTo(cx, cy);
+      g.quadraticCurveTo(cx + Math.cos(a - .35) * len * .55, cy + Math.sin(a - .35) * len * .55,
+        cx + Math.cos(a) * len, cy + Math.sin(a) * len);
+      g.stroke();
+    }
+    for (let i = 0; i < 70; i++) {
+      const a = rnd() * TAU, rr = Math.sqrt(rnd()) * T * .40;
+      const x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr * .94;
+      const rad = T * (.039 + rnd() * .020);
+      const br = .60 + rnd() * .40, warm = rnd();
+      g.save();
+      g.translate(x, y);
+      g.rotate(rnd() * TAU);
+      g.beginPath();
+      for (let k = 0; k <= 44; k++) {
+        const th = k / 44 * TAU;
+        const e = .40 + .60 * Math.pow(Math.abs(Math.cos(2.5 * th)), .34);
+        const q = rad * e * (1 + .05 * Math.sin(th * 53));
+        k ? g.lineTo(Math.cos(th) * q, Math.sin(th) * q) : g.moveTo(Math.cos(th) * q, Math.sin(th) * q);
+      }
+      g.closePath();
+      g.fillStyle = `rgba(${Math.round(255 * br)},${Math.round(255 * br * (.60 + .32 * warm))},${Math.round(255 * br * (.30 + .28 * warm))},1)`;
+      g.fill();
+      g.restore();
+    }
+    g.restore();
+  }
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cv);
+  gl.generateMipmap(gl.TEXTURE_2D);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  return tex;
+}
+
+/* ---------- 着色器 ---------- */
+const COMMON = `
+precision highp float;
+precision highp int;
+uniform vec3 uEye, uRight, uUp, uFwd, uSun, uSunCol;
+uniform vec2 uLens;
+uniform float uTime, uPixels;
+uniform sampler2D uShadow;
+uniform vec4 uShadowRect;
+
+float hash21(vec2 p) {
+  vec3 q = fract(vec3(p.xyx) * .1031);
+  q += dot(q, q.yzx + 33.33);
+  return fract((q.x + q.y) * q.z);
+}
+float noise2(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  f = f * f * (3. - 2. * f);
+  return mix(mix(hash21(i), hash21(i + vec2(1, 0)), f.x), mix(hash21(i + vec2(0, 1)), hash21(i + 1.), f.x), f.y);
+}
+float fbm2(vec2 p) {
+  mat2 m = mat2(1.62, 1.18, -1.18, 1.62);
+  float v = .55 * noise2(p);
+  p = m * p; v += .28 * noise2(p + 7.3);
+  p = m * p; v += .17 * noise2(p + 13.7);
+  return v;
+}
+vec4 project(vec3 p) {
+  vec3 q = p - uEye;
+  float z = dot(q, uFwd);
+  float n = .32, f = 420.;
+  return vec4(dot(q, uRight) / uLens.x, dot(q, uUp) / uLens.y, z * (f + n) / (f - n) - 2. * f * n / (f - n), z);
+}
+vec3 hazeColor(vec3 d) {
+  float s = max(dot(d, uSun), 0.);
+  vec3 c = mix(vec3(1.00, .58, .31), vec3(.64, .49, .44), smoothstep(-.03, .14, d.y));
+  c = mix(c, vec3(.155, .235, .415), smoothstep(.09, .48, d.y));
+  c += uSunCol * (.10 * pow(s, 4.) + .22 * pow(s, 40.));
+  return c;
+}
+float sunShadow(vec2 xz) {
+  vec2 uv = (xz - uShadowRect.xy) / uShadowRect.z;
+  if (uv.x < 0. || uv.y < 0. || uv.x > 1. || uv.y > 1.) return 1.;
+  return 1. - texture(uShadow, uv).r * .50;
+}
+vec3 applyFog(vec3 c, vec3 p) {
+  vec3 v = p - uEye;
+  float d = length(v);
+  vec3 dir = v / max(d, 1e-3);
+  float dens = .0029 * exp(-max(p.y + 3., 0.) * .045);
+  float amt = 1. - exp(-d * dens);
+  amt = max(amt, smoothstep(90., 340., d) * .55);
+  return mix(c, hazeColor(dir), clamp(amt, 0., .95));
+}
+vec3 aces(vec3 x) { return clamp((x * (2.51 * x + .03)) / (x * (2.43 * x + .59) + .14), 0., 1.); }
+`;
+
+const SKY_VS = `
+out vec2 vNdc;
+void main() {
+  vNdc = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2) * 2. - 1.;
+  gl_Position = vec4(vNdc, 1., 1.);
+}`;
+const SKY_FS = `
+in vec2 vNdc;
+out vec4 outColor;
+vec3 skyColor(vec3 d) {
+  vec3 c = hazeColor(d);
+  vec2 pp = d.xz / (max(d.y, 0.) + .10);
+  float warp = fbm2(pp * .30 + vec2(uTime * .004, 1.3));
+  float streak = fbm2(vec2(pp.x * .85, pp.y * 2.9) + warp * 1.7);
+  float cover = smoothstep(.52, .84, streak) * smoothstep(.012, .16, d.y);
+  vec3 lit = mix(vec3(.72, .50, .48), vec3(2.00, 1.18, .62), pow(max(dot(d, uSun), 0.), 2.4));
+  c = mix(c, lit, cover * .74);
+  float s = dot(d, uSun);
+  c += vec3(9., 5.6, 3.) * smoothstep(.99970, .99986, s);
+  return c;
+}
+void main() {
+  vec3 d = normalize(uFwd + uRight * (vNdc.x * uLens.x) + uUp * (vNdc.y * uLens.y));
+  outColor = vec4(skyColor(d), 1.);
+}`;
+
+const TERRAIN_VS = `
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNrm;
+out vec3 vPos, vNrm;
+void main() { vPos = aPos; vNrm = aNrm; gl_Position = project(aPos); }`;
+const LIT_FS = `
+in vec3 vPos, vNrm;
+out vec4 outColor;
+vec3 litter(vec2 p, vec3 base) {
+  const float S = .26;
+  vec2 g = p / S;
+  vec2 cell = floor(g);
+  float h = hash21(cell);
+  vec2 q = fract(g) - .5 - (vec2(hash21(cell + 11.3), hash21(cell + 27.1)) - .5) * .7;
+  float a = hash21(cell + 5.7) * 6.283;
+  q = mat2(cos(a), sin(a), -sin(a), cos(a)) * q;
+  q.y *= 2.1;
+  float m = smoothstep(.32, .20, length(q)) * step(.48, h);
+  vec3 leaf = mix(vec3(.30, .035, .020), vec3(.66, .21, .045), hash21(cell + 3.3));
+  return mix(base, leaf, m * .86);
+}
+void main() {
+  vec3 n = normalize(vNrm);
+  float slope = 1. - n.y;
+  vec2 side = abs(n.x) > abs(n.z) ? vec2(vPos.z, vPos.y) : vec2(vPos.x, vPos.y);
+  vec2 uv = mix(vPos.xz, side, smoothstep(.78, .38, n.y));
+  float n1 = fbm2(uv * .22), n2 = fbm2(uv * 1.15 + 4.3), n3 = noise2(uv * 6.7);
+  vec3 soil = mix(vec3(.045, .031, .020), vec3(.118, .083, .047), n1);
+  vec3 turf = mix(vec3(.050, .046, .024), vec3(.118, .100, .046), n2);
+  vec3 stone = mix(vec3(.070, .062, .055), vec3(.185, .160, .134), n2 * .65 + n1 * .35);
+  stone *= .72 + .56 * n3;
+  vec3 base = mix(soil, turf, smoothstep(.60, .26, slope));
+  base = mix(base, stone, smoothstep(.26, .58, slope));
+  base *= .74 + .52 * n3;
+  base = mix(base, base * 1.6, smoothstep(.25, .75, noise2(uv * 2.3) * noise2(uv * 15.0 + 3.1)));
+  n = normalize(n + vec3(noise2(uv * 9.1) - .5, 0., noise2(uv * 9.1 + 5.7) - .5) * .34);
+  base = litter(vPos.xz, base);
+  float sh = sunShadow(vPos.xz);
+  vec3 amb = mix(vec3(.030, .027, .025), vec3(.090, .118, .180), n.y * .5 + .5);
+  vec3 col = base * (amb + uSunCol * max(dot(n, uSun), 0.) * sh * 1.30);
+  vec3 V = normalize(uEye - vPos);
+  float sparkle = pow(max(dot(reflect(-uSun, n), V), 0.), 30.) * sh * smoothstep(.55, .95, fbm2(uv * 3.4));
+  col += uSunCol * sparkle * .05;
+  outColor = vec4(applyFog(col, vPos), 1.);
+}`;
+
+const ROAD_VS = `
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNrm;
+layout(location = 2) in vec2 aRd;
+out vec3 vPos, vNrm;
+out vec2 vRd;
+void main() { vPos = aPos; vNrm = aNrm; vRd = aRd; gl_Position = project(aPos); }`;
+const ROAD_FS = `
+in vec3 vPos, vNrm;
+in vec2 vRd;
+out vec4 outColor;
+vec3 litter(vec2 p, vec3 base) {
+  const float S = .25;
+  vec2 g = p / S;
+  vec2 cell = floor(g);
+  float h = hash21(cell);
+  vec2 q = fract(g) - .5 - (vec2(hash21(cell + 11.3), hash21(cell + 27.1)) - .5) * .6;
+  float a = hash21(cell + 5.7) * 6.283;
+  q = mat2(cos(a), sin(a), -sin(a), cos(a)) * q;
+  q.y *= 2.0;
+  float m = smoothstep(.31, .20, length(q)) * step(.52, h);
+  vec3 leaf = mix(vec3(.33, .040, .022), vec3(.70, .24, .050), hash21(cell + 3.3));
+  return mix(base, leaf, m * .90);
+}
+void main() {
+  float across = vRd.x, along = vRd.y;
+  float row = floor(along / .52);
+  float off = hash21(vec2(row, 3.7)) * .40;
+  vec2 g = vec2((across + off) / .30, along / .38);
+  g += (vec2(noise2(g * 1.9), noise2(g * 1.9 + 7.3)) - .5) * .30;
+  vec2 cell = floor(g), f = fract(g);
+  float gap = min(min(f.x, 1. - f.x) * .30, min(f.y, 1. - f.y) * .38);
+  float joint = smoothstep(.004, .030, gap);
+  float tint = hash21(cell * 1.7 + 2.3);
+  vec3 stone = mix(vec3(.062, .050, .036), vec3(.140, .112, .078), tint);
+  stone = mix(stone, vec3(.125, .090, .052), step(.72, tint) * .55);
+  stone *= .82 + .34 * fbm2(cell * 3.1 + vPos.xz * 2.8);
+  vec3 col = mix(vec3(.070, .054, .036), stone, joint);
+  col *= 1. - .22 * exp(-pow((abs(across) - .62) / .24, 2.));
+  col = mix(col, vec3(.062, .048, .031), step(.80, hash21(cell + 9.1)) * .85);
+  col = mix(col, vec3(.072, .055, .034), exp(-pow(across / .34, 2.)) * .30);
+  col = mix(col, vec3(.070, .054, .034), smoothstep(1.22, 1.55, abs(across)) * .92);
+  col = litter(vPos.xz, col);
+  vec3 n = normalize(vNrm);
+  float sh = sunShadow(vPos.xz);
+  vec3 amb = mix(vec3(.034, .030, .026), vec3(.098, .128, .192), n.y * .5 + .5);
+  vec3 lit = col * (amb + uSunCol * max(dot(n, uSun), 0.) * sh * 1.10);
+  vec3 V = normalize(uEye - vPos);
+  float glint = pow(max(dot(reflect(-uSun, n), V), 0.), 42.) * sh * smoothstep(.62, .98, fbm2(vPos.xz * 7.1));
+  outColor = vec4(applyFog(lit + uSunCol * glint * .10, vPos) * vec3(1.05, .97, .86), 1.);
+}`;
+
+const BRANCH_VS = `
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNrm;
+layout(location = 2) in vec3 aBase;
+layout(location = 3) in vec3 aDir;
+layout(location = 4) in float aLen;
+layout(location = 5) in float aRad;
+layout(location = 6) in vec3 aTint;
+out vec3 vPos, vNrm, vTint;
+void main() {
+  vec3 up = normalize(aDir);
+  vec3 helper = abs(up.y) > .92 ? vec3(1., 0., 0.) : vec3(0., 1., 0.);
+  vec3 rt = normalize(cross(helper, up));
+  vec3 fw = cross(up, rt);
+  vec3 p = aBase + rt * (aPos.x * aRad) + fw * (aPos.z * aRad) + up * (aPos.y * aLen);
+  vNrm = normalize(rt * aNrm.x + fw * aNrm.z + up * aNrm.y);
+  vPos = p; vTint = aTint;
+  gl_Position = project(p);
+}`;
+const BRANCH_FS = `
+in vec3 vPos, vNrm, vTint;
+out vec4 outColor;
+void main() {
+  vec3 n = normalize(vNrm);
+  float grain = fbm2(vec2(vPos.x * 9. + vPos.z * 7., vPos.y * 2.6));
+  float streak = fbm2(vec2(vPos.x * 26. + vPos.z * 19., vPos.y * 1.1));
+  vec3 bark = vTint * (.55 + .75 * grain) * (.75 + .45 * streak);
+  float sh = sunShadow(vPos.xz);
+  vec3 amb = mix(vec3(.032, .028, .026), vec3(.098, .125, .185), n.y * .5 + .5);
+  vec3 col = bark * (amb + uSunCol * max(dot(n, uSun), 0.) * sh * 1.2);
+  vec3 V = normalize(uEye - vPos);
+  col += uSunCol * pow(1. - max(dot(n, V), 0.), 3.) * .10 * (1. - sh * .5);
+  outColor = vec4(applyFog(col, vPos), 1.);
+}`;
+
+const PROP_VS = `
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNrm;
+layout(location = 2) in vec3 aCol;
+out vec3 vPos, vNrm, vCol;
+void main() { vPos = aPos; vNrm = aNrm; vCol = aCol; gl_Position = project(aPos); }`;
+const PROP_FS = `
+in vec3 vPos, vNrm, vCol;
+out vec4 outColor;
+void main() {
+  vec3 n = normalize(vNrm);
+  vec3 V = normalize(uEye - vPos);
+  float sh = sunShadow(vPos.xz);
+  vec3 amb = mix(vec3(.050, .044, .040), vec3(.140, .175, .250), n.y * .5 + .5);
+  float diff = max(dot(n, uSun), 0.) * sh;
+  vec3 col = vCol * (amb * .95 + uSunCol * diff * .80);
+  float rim = pow(1. - max(dot(n, V), 0.), 5.5);
+  col += uSunCol * rim * .055 * (1. - sh * .4);
+  outColor = vec4(applyFog(col, vPos), 1.);
+}`;
+
+const FOLIAGE_VS = `
+layout(location = 0) in vec3 aCenter;
+layout(location = 1) in float aSize;
+layout(location = 2) in float aSeed;
+layout(location = 3) in float aPhase;
+layout(location = 4) in vec3 aTint;
+layout(location = 5) in vec3 aNrm;
+layout(location = 6) in float aAO;
+out vec2 vUv;
+out vec3 vWorld, vNrm, vTint;
+out float vSeed, vAO;
+void main() {
+  const vec2 C[6] = vec2[6](vec2(-1., -1.), vec2(1., -1.), vec2(1., 1.), vec2(-1., -1.), vec2(1., 1.), vec2(-1., 1.));
+  vec2 corner = C[gl_VertexID];
+  float a = aSeed * 6.283 + sin(uTime * .19 + aPhase * 9.) * .10;
+  vec3 R = uRight * cos(a) + uUp * sin(a);
+  vec3 U = -uRight * sin(a) + uUp * cos(a);
+  float sway = sin(uTime * .55 + aPhase * 6.283) * .05 * aSize;
+  vec3 c = aCenter + vec3(sway, sway * .4, sway * .7);
+  vWorld = c + R * corner.x * aSize + U * corner.y * aSize;
+  vUv = corner; vTint = aTint; vSeed = aSeed; vNrm = aNrm; vAO = aAO;
+  gl_Position = project(vWorld);
+}`;
+const FOLIAGE_FS = `
+in vec2 vUv;
+in vec3 vWorld, vNrm, vTint;
+in float vSeed, vAO;
+uniform sampler2D uLeafTex;
+out vec4 outColor;
+void main() {
+  float tile = floor(mod(vSeed * 7.0, 4.0));
+  vec2 uv = vec2(mod(tile, 2.), floor(tile * .5)) * .5 + (vUv * .5 + .5) * .5;
+  vec4 tex = texture(uLeafTex, uv);
+  if (tex.a < .40) discard;
+  vec3 n = normalize(vNrm);
+  vec3 V = normalize(uEye - vWorld);
+  float sh = sunShadow(vWorld.xz);
+  float trans = pow(max(dot(V, uSun), 0.), 2.2);
+  vec3 alb = vTint * tex.rgb;
+  vec3 amb = mix(vec3(.050, .048, .055), vec3(.150, .190, .280), n.y * .5 + .5) * (.55 + .45 * vAO);
+  vec3 col = alb * (amb + uSunCol * max(dot(n, uSun), 0.) * sh * .50);
+  col += alb * uSunCol * trans * (.55 + .45 * vAO) * .58;
+  col *= mix(.70, 1., smoothstep(.40, .82, tex.a));
+  outColor = vec4(applyFog(col, vWorld), 1.);
+}`;
+
+const FALL_VS = `
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in float aSize;
+layout(location = 2) in float aSeed;
+layout(location = 3) in vec3 aTint;
+out vec2 vUv;
+out vec3 vTint;
+out float vSeed, vFade;
+void main() {
+  const vec2 C[6] = vec2[6](vec2(-1., -1.), vec2(1., -1.), vec2(1., 1.), vec2(-1., -1.), vec2(1., 1.), vec2(-1., 1.));
+  vec2 corner = C[gl_VertexID];
+  float t = mod(uTime * (.30 + .32 * aSeed) + aSeed * 31., 21.);
+  vec3 c = aPos;
+  c.y -= t * (.44 + .30 * aSeed);
+  c.x += sin(t * .82 + aSeed * 19.) * 1.15;
+  c.z += cos(t * .61 + aSeed * 11.) * .95;
+  float a = aSeed * 6.283 + t * (1.1 + 1.6 * aSeed);
+  vec3 R = uRight * cos(a) + uUp * sin(a);
+  vec3 U = -uRight * sin(a) + uUp * cos(a);
+  gl_Position = project(c + R * corner.x * aSize + U * corner.y * aSize);
+  vUv = corner; vTint = aTint; vSeed = aSeed;
+  vFade = smoothstep(0., 1.6, t) * smoothstep(21., 18.5, t);
+}`;
+const FALL_FS = `
+in vec2 vUv;
+in vec3 vTint;
+in float vSeed, vFade;
+out vec4 outColor;
+float leafShape(vec2 p, float ang, float sz) {
+  float c = cos(ang), s = sin(ang);
+  p = mat2(c, s, -s, c) * p / sz;
+  float r = length(p);
+  float a = atan(p.y, p.x);
+  float edge = .40 + .60 * pow(abs(cos(2.5 * a)), .34);
+  edge *= 1. + .06 * sin(a * 53.);
+  float w = fwidth(r) * 1.2 + .012;
+  return smoothstep(w, -w, r - edge);
+}
+void main() {
+  float cov = leafShape(vUv, vSeed * 6.283, .62);
+  if (cov < .03) discard;
+  vec3 col = vTint * (uSunCol * .34 + vec3(.17, .14, .13));
+  outColor = vec4(col, cov * .92 * vFade);
+}`;
+
+const QUAD_VS = `
+out vec2 vUv;
+void main() {
+  vUv = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+  gl_Position = vec4(vUv * 2. - 1., 0., 1.);
+}`;
+const BRIGHT_FS = `
+in vec2 vUv;
+uniform sampler2D uSrc;
+out vec4 outColor;
+void main() {
+  vec3 c = texture(uSrc, vUv).rgb;
+  float l = dot(c, vec3(.299, .587, .114));
+  outColor = vec4(c * smoothstep(.75, 1.65, l), 1.);
+}`;
+const BLUR_FS = `
+in vec2 vUv;
+uniform sampler2D uSrc;
+uniform vec2 uDir;
+out vec4 outColor;
+void main() {
+  vec3 s = texture(uSrc, vUv).rgb * .227;
+  s += (texture(uSrc, vUv + uDir * 1.385).rgb + texture(uSrc, vUv - uDir * 1.385).rgb) * .316;
+  s += (texture(uSrc, vUv + uDir * 3.231).rgb + texture(uSrc, vUv - uDir * 3.231).rgb) * .070;
+  outColor = vec4(s, 1.);
+}`;
+const RAY_FS = `
+in vec2 vUv;
+uniform sampler2D uSrc;
+uniform vec2 uSunPos;
+uniform float uAspect;
+out vec4 outColor;
+void main() {
+  vec2 d = (vUv - uSunPos);
+  d.x *= uAspect;
+  float fade = exp(-length(d) * 2.6);
+  vec2 step = (vUv - uSunPos) * .42 / 11.;
+  vec3 sum = vec3(0.);
+  for (int i = 0; i < 11; i++) sum += texture(uSrc, vUv - step * float(i)).rgb;
+  outColor = vec4(sum / 11. * fade, 1.);
+}`;
+const COMP_FS = `
+in vec2 vUv;
+uniform sampler2D uScene, uBloom, uRays;
+uniform float uExposure;
+uniform vec2 uRes;
+out vec4 outColor;
+void main() {
+  vec3 c = texture(uScene, vUv).rgb;
+  c += texture(uBloom, vUv).rgb * .30;
+  c += texture(uRays, vUv).rgb * .75;
+  c = aces(c * uExposure);
+  c = pow(c, vec3(1. / 2.2));
+  vec2 q = vUv - .5;
+  c *= 1. - .40 * dot(q, q);
+  c += (hash21(vUv * uRes + fract(uTime)) - .5) * .011;
+  outColor = vec4(c, 1.);
+}`;
+
+/* ---------- 运行时 ---------- */
+const canvas = document.querySelector("#stage");
+const statusBox = document.querySelector("#status");
+const message = document.querySelector("#message");
+const retryBtn = document.querySelector("#retry");
+const pauseBtn = document.querySelector("#pause");
+const qualityBtn = document.querySelector("#quality");
+const resetBtn = document.querySelector("#reset");
+const gl = canvas.getContext("webgl2", { alpha: false, antialias: false, powerPreference: "high-performance" });
+let scene = null, raf = 0, elapsed = 1.2, last = 0, frames = 0, fps = 0, fpsT = 0;
+let yaw = 0, pitch = 0, pointer = null, hostVisible = true, running = false;
+let quality = matchMedia("(pointer: coarse), (max-width: 720px)").matches ? "low" : "high";
+let paused = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let leaves = 7, fallCount = 320;
+
+function makeProgram(vs, fs) {
+  const handle = gl.createProgram();
+  for (const [type, src] of [[gl.VERTEX_SHADER, vs], [gl.FRAGMENT_SHADER, fs]]) {
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, "#version 300 es\n" + COMMON + src);
+    gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+      const log = gl.getShaderInfoLog(sh);
+      gl.deleteShader(sh);
+      throw new Error("着色器编译失败：" + log);
+    }
+    gl.attachShader(handle, sh);
+    gl.deleteShader(sh);
+  }
+  gl.linkProgram(handle);
+  if (!gl.getProgramParameter(handle, gl.LINK_STATUS)) throw new Error("着色器链接失败：" + gl.getProgramInfoLog(handle));
+  const u = {};
+  for (const k of ["Eye", "Right", "Up", "Fwd", "Sun", "SunCol", "Lens", "Time", "Pixels", "Shadow", "ShadowRect",
+    "LeafTex", "Src", "Dir", "Scene", "Bloom", "Exposure", "Res"])
+    u[k] = gl.getUniformLocation(handle, "u" + k);
+  return { handle, u };
+}
+function buffer(data, target) {
+  const b = gl.createBuffer();
+  gl.bindBuffer(target || gl.ARRAY_BUFFER, b);
+  gl.bufferData(target || gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+  return b;
+}
+function attribute(loc, size, stride, offset, divisor) {
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, size, gl.FLOAT, false, stride, offset);
+  if (divisor) gl.vertexAttribDivisor(loc, divisor);
+}
+function makeTarget(w, h, hdr) {
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, hdr ? gl.RGBA16F : gl.RGBA8, w, h, 0, gl.RGBA, hdr ? gl.HALF_FLOAT : gl.UNSIGNED_BYTE, null);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  const fb = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+  return { fb, tex, w, h };
+}
+
+function build() {
+  const axis = (max, start, growth) => { const out = [0]; for (let v = start; v < max; v += Math.max(start, v * growth)) out.push(v); out.push(max); return out; };
+  const xs = [...axis(142, .72, .05).slice(1).map(v => -v).reverse(), ...axis(82, .72, .055)];
+  const zs = []; for (let z = -15; z < 0; z += .85) zs.push(z);
+  zs.push(...axis(205, .72, .052));
+
+  // 地形
+  const tv = [], ti = [];
+  for (let j = 0; j < zs.length; j++) for (let i = 0; i < xs.length; i++) {
+    const x = xs[i], z = zs[j], y = height(x, z), e = .45;
+    const nx = height(x - e, z) - height(x + e, z), nz = height(x, z - e) - height(x, z + e);
+    const l = Math.hypot(nx, 2 * e, nz);
+    tv.push(x, y, z, nx / l, 2 * e / l, nz / l);
+    if (i < xs.length - 1 && j < zs.length - 1) {
+      const p = j * xs.length + i;
+      ti.push(p, p + xs.length, p + 1, p + xs.length, p + xs.length + 1, p + 1);
+    }
+  }
+  const terrainVAO = gl.createVertexArray();
+  gl.bindVertexArray(terrainVAO);
+  const terrainPos = buffer(new Float32Array(tv));
+  attribute(0, 3, 24, 0); attribute(1, 3, 24, 12);
+  const terrainIdx = buffer(new Uint32Array(ti), gl.ELEMENT_ARRAY_BUFFER);
+
+  // 石径
+  const rv = [], ri = [], RS = 8;
+  let rows = 0, along = 0;
+  for (let z = -8; z <= 130; z += .75, rows++) {
+    if (rows) along += .75;
+    for (let i = 0; i <= RS; i++) {
+      const u = i / RS * 2 - 1, w = HALF * u;
+      const y = pathY(z) + .04 + .05 * (1 - u * u);
+      const dx = pathX(z + .6) - pathX(z - .6), dy = pathY(z + .6) - pathY(z - .6);
+      const l = Math.hypot(-dx, 1.2, -dy);
+      rv.push(pathX(z) + w, y, z, -dx / l, 1.2 / l, -dy / l, w, along);
+      if (i < RS && rows > 0) {
+        const p = rows * (RS + 1) + i;
+        ri.push(p, p - RS - 1, p + 1, p - RS - 1, p - RS, p + 1);
+      }
+    }
+  }
+  const roadVAO = gl.createVertexArray();
+  gl.bindVertexArray(roadVAO);
+  const roadPos = buffer(new Float32Array(rv));
+  attribute(0, 3, 32, 0); attribute(1, 3, 32, 12); attribute(2, 2, 32, 24);
+  const roadIdx = buffer(new Uint32Array(ri), gl.ELEMENT_ARRAY_BUFFER);
+
+  // 树
+  plant();
+  const tube = tubeGeometry(6, 5), branches = [];
+  for (const t of trees) {
+    branches.push({ b: [t.x, t.y - .25, t.z], d: [.05 * (hash2(t.seed, 1) - .5), 1, .05 * (hash2(t.seed, 2) - .5)], l: t.h * .54, r: t.h * .031 });
+    const n = 5 + Math.floor(hash2(t.seed, 9) * 3);
+    for (let i = 0; i < n; i++) {
+      const a = hash2(t.seed, i * 3.1) * TAU, up = .34 + hash2(t.seed, i * 5.7) * .5;
+      branches.push({
+        b: [t.x + Math.cos(a) * .12, t.y + t.h * (.42 + .26 * hash2(t.seed, i * 7.3)), t.z + Math.sin(a) * .12],
+        d: [Math.cos(a) * (1 - up), up * 1.6, Math.sin(a) * (1 - up)],
+        l: t.h * (.20 + .16 * hash2(t.seed, i * 11.1)), r: t.h * .012
+      });
+    }
+  }
+  const bData = [];
+  for (const b of branches) {
+    const l = Math.hypot(b.d[0], b.d[1], b.d[2]);
+    bData.push(b.b[0], b.b[1], b.b[2], b.d[0] / l, b.d[1] / l, b.d[2] / l, b.l, b.r, .040, .027, .020);
+  }
+  const branchVAO = gl.createVertexArray();
+  gl.bindVertexArray(branchVAO);
+  const branchPos = buffer(new Float32Array(tube.data));
+  attribute(0, 3, 24, 0); attribute(1, 3, 24, 12);
+  const branchIdx = buffer(new Uint32Array(tube.index), gl.ELEMENT_ARRAY_BUFFER);
+  const branchInst = buffer(new Float32Array(bData));
+  attribute(2, 3, 44, 0, 1); attribute(3, 3, 44, 12, 1); attribute(4, 1, 44, 24, 1);
+  attribute(5, 1, 44, 28, 1); attribute(6, 3, 44, 32, 1);
+
+  const cards = [];
+  for (const t of trees) {
+    const cy = t.y + t.h * .52, rx = t.h * .39, ry = t.h * .32;
+    for (let i = 0; i < t.cards; i++) {
+      const h1 = hash2(t.seed * 37, i * 1.7), h2 = hash2(t.seed * 53, i * 2.9), h3 = hash2(t.seed * 71, i * 4.3);
+      const th = h1 * TAU, ph = Math.acos(1 - 2 * h2), sp = Math.sin(ph);
+      const dir = [sp * Math.cos(th), Math.cos(ph) * .92, sp * Math.sin(th)];
+      const rr = .56 + .56 * Math.cbrt(h3);
+      const len = Math.hypot(dir[0] / rx, dir[1] / ry, dir[2] / rx);
+      const tint = pick(hash2(t.seed * 13, i));
+      const size = (t.cards > 20 ? 1.35 : 2.00) * (.85 + .30 * h3);
+      cards.push(
+        t.x + dir[0] * rx * rr, cy + dir[1] * ry * rr, t.z + dir[2] * rx * rr,
+        size, h3, t.seed,
+        tint[0] * (.7 + .5 * h1), tint[1] * (.7 + .5 * h1), tint[2] * (.7 + .5 * h1),
+        dir[0] / len, dir[1] / len, dir[2] / len, .45 + .55 * clamp01((dir[1] + 1) / 2)
+      );
+    }
+  }
+  const foliageVAO = gl.createVertexArray();
+  gl.bindVertexArray(foliageVAO);
+  buffer(new Float32Array(cards));
+  attribute(0, 3, 52, 0, 1); attribute(1, 1, 52, 12, 1); attribute(2, 1, 52, 16, 1); attribute(3, 1, 52, 20, 1);
+  attribute(4, 3, 52, 24, 1); attribute(5, 3, 52, 36, 1); attribute(6, 1, 52, 48, 1);
+
+  // 车马
+  buildRig();
+  for (let i = 0; i < 18; i++) {
+    const z = 3 + rnd() * 32, side = rnd() < .7 ? -1 : 1;
+    const x = pathX(z) + side * (1.70 + rnd() * .50);
+    const rr = .05 + rnd() * .09;
+    ellipsoid(x, height(x, z) - rr * .35, z, rr, rr * (.5 + rnd() * .25), rr * (.8 + rnd() * .4),
+      .2, rnd() * 3, [.075 + rnd() * .045, .066, .055], 7, 4);
+  }
+  const pIdx = [];
+  for (let i = 0; i < props.pos.length / 3; i++) pIdx.push(i);
+  const propVAO = gl.createVertexArray();
+  gl.bindVertexArray(propVAO);
+  buffer(new Float32Array(props.pos)); attribute(0, 3, 12, 0);
+  buffer(new Float32Array(props.nrm)); attribute(1, 3, 12, 0);
+  buffer(new Float32Array(props.col)); attribute(2, 3, 12, 0);
+  const propIdx = buffer(new Uint32Array(pIdx), gl.ELEMENT_ARRAY_BUFFER);
+
+  // 落叶
+  const fall = [];
+  for (let i = 0; i < 110; i++) {
+    const z = 1 + rnd() * 46, x = pathX(z) + (rnd() - .5) * 26;
+    const tint = pick(rnd());
+    fall.push(x, height(x, z) + 3 + rnd() * 8, z, .028 + rnd() * .022, rnd(), tint[0] * 1.6, tint[1] * 1.6, tint[2] * 1.6);
+  }
+  const fallVAO = gl.createVertexArray();
+  gl.bindVertexArray(fallVAO);
+  buffer(new Float32Array(fall));
+  attribute(0, 3, 32, 0, 1); attribute(1, 1, 32, 12, 1); attribute(2, 1, 32, 16, 1); attribute(3, 3, 32, 20, 1);
+
+  // 阴影：低日下树冠的长影
+  const N = 288, data = new Uint8Array(N * N * 4), elev = Math.tan(ELEV), step = SH_SIZE / N;
+  const sigma = r => r / Math.sin(ELEV) * .78;
+  for (const t of trees) {
+    const cy = t.y + t.h * .62, r = t.h * .30, L = cy / elev;
+    const scx = t.x - SUN_H[0] * L, scz = t.z - SUN_H[1] * L;
+    const sa = sigma(r), sp = r * 1.05;
+    const i0 = Math.max(0, Math.floor((scx - 2.6 * sa - SH_MIN[0]) / step));
+    const i1 = Math.min(N - 1, Math.ceil((scx + 2.6 * sa - SH_MIN[0]) / step));
+    const j0 = Math.max(0, Math.floor((scz - 2.6 * sa - SH_MIN[1]) / step));
+    const j1 = Math.min(N - 1, Math.ceil((scz + 2.6 * sa - SH_MIN[1]) / step));
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+      const dx = SH_MIN[0] + (i + .5) * step - scx, dz = SH_MIN[1] + (j + .5) * step - scz;
+      const al = dx * SUN_H[0] + dz * SUN_H[1], pe = -dx * SUN_H[1] + dz * SUN_H[0];
+      const occ = Math.exp(-(al * al / (2 * sa * sa) + pe * pe / (2 * sp * sp))) * .95;
+      const k = (j * N + i) * 4;
+      data[k] = Math.min(255, data[k] + occ * 255);
+    }
+  }
+  const shadowTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, shadowTex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, N, N, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.bindTexture(gl.TEXTURE_2D, null);
+  gl.bindVertexArray(null);
+
+  const leafTex = buildLeafAtlas();
+  return {
+    terrain: { vao: terrainVAO, count: ti.length },
+    road: { vao: roadVAO, count: ri.length },
+    branch: { vao: branchVAO, count: tube.index.length, n: branches.length },
+    foliage: { vao: foliageVAO, n: cards.length / 13 },
+    prop: { vao: propVAO, count: pIdx.length },
+    fall: { vao: fallVAO, n: 110 },
+    shadowTex, leafTex,
+    programs: {
+      sky: makeProgram(SKY_VS, SKY_FS), ground: makeProgram(TERRAIN_VS, LIT_FS), road: makeProgram(ROAD_VS, ROAD_FS),
+      branch: makeProgram(BRANCH_VS, BRANCH_FS), prop: makeProgram(PROP_VS, PROP_FS),
+      foliage: makeProgram(FOLIAGE_VS, FOLIAGE_FS), fall: makeProgram(FALL_VS, FALL_FS),
+      bright: makeProgram(QUAD_VS, BRIGHT_FS), blur: makeProgram(QUAD_VS, BLUR_FS),
+      rays: makeProgram(QUAD_VS, RAY_FS), composite: makeProgram(QUAD_VS, COMP_FS)
+    }
+  };
+}
+
+function initTargets() {
+  const hdr = !!(gl.getExtension("EXT_color_buffer_float") || gl.getExtension("EXT_color_buffer_half_float"));
+  const w = Math.max(1, canvas.width), h = Math.max(1, canvas.height);
+  if (scene.targets) {
+    for (const t of [scene.targets.scene, scene.targets.bloomA, scene.targets.bloomB, scene.targets.bloomC]) {
+      if (t) { gl.deleteTexture(t.tex); gl.deleteFramebuffer(t.fb); }
+    }
+    if (scene.targets.depth) gl.deleteRenderbuffer(scene.targets.depth);
+  }
+  const bw = Math.max(1, w >> 2), bh = Math.max(1, h >> 2);
+  scene.targets = { scene: makeTarget(w, h, hdr), bloomA: makeTarget(bw, bh, hdr), bloomB: makeTarget(bw, bh, hdr), bloomC: makeTarget(bw, bh, hdr), hdr };
+  gl.bindFramebuffer(gl.FRAMEBUFFER, scene.targets.scene.fb);
+  const depth = gl.createRenderbuffer();
+  gl.bindRenderbuffer(gl.RENDERBUFFER, depth);
+  gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT24, w, h);
+  gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depth);
+  scene.targets.depth = depth;
+  for (const t of [scene.targets.scene, scene.targets.bloomA, scene.targets.bloomB, scene.targets.bloomC]) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, t.fb);
+    if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      throw new Error("离屏缓冲不可用");
+    }
+  }
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  if (!scene.quad) scene.quad = gl.createVertexArray();
+}
+
+function resize() {
+  if (!scene) return;
+  const w = canvas.clientWidth || 1, h = canvas.clientHeight || 1;
+  const budget = quality === "high" ? 2.3e6 : 1.05e6;
+  const scale = Math.min(devicePixelRatio || 1, quality === "high" ? 2 : 1.25, Math.sqrt(budget / (w * h)));
+  canvas.width = Math.max(1, Math.round(w * scale));
+  canvas.height = Math.max(1, Math.round(h * scale));
+  leaves = quality === "high" ? 7 : 5;
+  fallCount = quality === "high" ? 110 : 60;
+  initTargets();
+  if (!running) draw();
+}
+
+function draw() {
+  const aspect = canvas.width / canvas.height;
+  const tanHalf = aspect < .85 ? .49 + (.85 - aspect) * .40 : .49;
+  const az = yaw + (aspect < .85 ? .055 : 0), el = pitch + .012 + Math.sin(elapsed * .21) * .0035;
+  const sx = Math.sin(az), cx = Math.cos(az), sy = Math.sin(el), cy = Math.cos(el);
+  const R = [cx, 0, -sx], U = [-sx * sy, cy, -cx * sy], F = [sx * cy, sy, cx * cy];
+  const px = eye[0] + Math.sin(elapsed * .31) * .018, py = eye[1] + Math.sin(elapsed * .47) * .012, pz = eye[2];
+  const lens = [tanHalf * aspect, tanHalf];
+  const sz = SUN[0] * F[0] + SUN[1] * F[1] + SUN[2] * F[2];
+  const sunUv = [
+    (SUN[0] * R[0] + SUN[1] * R[1] + SUN[2] * R[2]) / lens[0] / sz * .5 + .5,
+    (SUN[0] * U[0] + SUN[1] * U[1] + SUN[2] * U[2]) / lens[1] / sz * .5 + .5
+  ];
+  const bind = p => {
+    const u = p.u;
+    gl.useProgram(p.handle);
+    gl.uniform3fv(u.Eye, [px, py, pz]);
+    gl.uniform3fv(u.Right, R); gl.uniform3fv(u.Up, U); gl.uniform3fv(u.Fwd, F);
+    gl.uniform3fv(u.Sun, SUN); gl.uniform3fv(u.SunCol, SUNC);
+    gl.uniform2fv(u.Lens, lens); gl.uniform1f(u.Time, elapsed); gl.uniform1f(u.Pixels, canvas.height);
+    gl.uniform1i(u.Shadow, 0);
+    gl.uniform4f(u.ShadowRect, SH_MIN[0], SH_MIN[1], SH_SIZE, SH_SIZE);
+  };
+  const T = scene.targets;
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, scene.shadowTex);
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, T.scene.fb);
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.clearColor(0, 0, 0, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  gl.disable(gl.DEPTH_TEST);
+  gl.depthMask(false);
+  bind(scene.programs.sky);
+  gl.bindVertexArray(scene.quad);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthMask(true);
+
+  bind(scene.programs.ground);
+  gl.bindVertexArray(scene.terrain.vao);
+  gl.drawElements(gl.TRIANGLES, scene.terrain.count, gl.UNSIGNED_INT, 0);
+
+  bind(scene.programs.road);
+  gl.bindVertexArray(scene.road.vao);
+  gl.drawElements(gl.TRIANGLES, scene.road.count, gl.UNSIGNED_INT, 0);
+
+  bind(scene.programs.branch);
+  gl.bindVertexArray(scene.branch.vao);
+  gl.drawElementsInstanced(gl.TRIANGLES, scene.branch.count, gl.UNSIGNED_INT, 0, scene.branch.n);
+
+  bind(scene.programs.prop);
+  gl.bindVertexArray(scene.prop.vao);
+  gl.drawElements(gl.TRIANGLES, scene.prop.count, gl.UNSIGNED_INT, 0);
+
+  bind(scene.programs.foliage);
+  gl.activeTexture(gl.TEXTURE1);
+  gl.bindTexture(gl.TEXTURE_2D, scene.leafTex);
+  gl.uniform1i(scene.programs.foliage.u.LeafTex, 1);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindVertexArray(scene.foliage.vao);
+  gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, scene.foliage.n);
+
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.depthMask(false);
+  bind(scene.programs.fall);
+  gl.bindVertexArray(scene.fall.vao);
+  gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, fallCount);
+  gl.depthMask(true);
+  gl.disable(gl.BLEND);
+  gl.bindVertexArray(null);
+
+  // 泛光与光束
+  gl.disable(gl.DEPTH_TEST);
+  gl.bindVertexArray(scene.quad);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, T.bloomA.fb);
+  gl.viewport(0, 0, T.bloomA.w, T.bloomA.h);
+  gl.useProgram(scene.programs.bright.handle);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, T.scene.tex);
+  gl.uniform1i(scene.programs.bright.u.Src, 0);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, T.bloomB.fb);
+  gl.useProgram(scene.programs.rays.handle);
+  gl.bindTexture(gl.TEXTURE_2D, T.bloomA.tex);
+  gl.uniform1i(scene.programs.rays.u.Src, 0);
+  gl.uniform2f(scene.programs.rays.u.SunPos, sunUv[0], sunUv[1]);
+  gl.uniform1f(scene.programs.rays.u.Aspect, aspect);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, T.bloomC.fb);
+  gl.useProgram(scene.programs.blur.handle);
+  gl.bindTexture(gl.TEXTURE_2D, T.bloomB.tex);
+  gl.uniform1i(scene.programs.blur.u.Src, 0);
+  gl.uniform2f(scene.programs.blur.u.Dir, 1 / T.bloomB.w, 0);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, T.bloomB.fb);
+  gl.bindTexture(gl.TEXTURE_2D, T.bloomC.tex);
+  gl.uniform2f(scene.programs.blur.u.Dir, 0, 1 / T.bloomC.h);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  const comp = scene.programs.composite;
+  gl.useProgram(comp.handle);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, T.scene.tex);
+  gl.uniform1i(comp.u.Scene, 0);
+  gl.activeTexture(gl.TEXTURE1);
+  gl.bindTexture(gl.TEXTURE_2D, T.bloomA.tex);
+  gl.uniform1i(comp.u.Bloom, 1);
+  gl.activeTexture(gl.TEXTURE2);
+  gl.bindTexture(gl.TEXTURE_2D, T.bloomB.tex);
+  gl.uniform1i(comp.u.Rays, 2);
+  gl.uniform1f(comp.u.Exposure, .84);
+  gl.uniform2f(comp.u.Res, canvas.width, canvas.height);
+  gl.uniform1f(comp.u.Time, elapsed);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.enable(gl.DEPTH_TEST);
+}
+
+function loop(now) {
+  raf = requestAnimationFrame(loop);
+  const dt = last ? Math.min((now - last) / 1000, .06) : 0;
+  last = now;
+  if (!paused) { elapsed += dt; draw(); }
+  frames++;
+  if (now - fpsT > 900) { fps = frames * 1000 / (now - fpsT); frames = 0; fpsT = now; }
+  if (!document.documentElement.dataset.ready) document.documentElement.dataset.ready = "1";
+}
+function start() {
+  if (running) return;
+  running = true;
+  last = 0;
+  raf = requestAnimationFrame(loop);
+}
+function stop() {
+  running = false;
+  cancelAnimationFrame(raf);
+  raf = 0;
+  last = 0;
+}
+function showError(text) { message.textContent = text; retryBtn.hidden = false; statusBox.hidden = false; }
+
+function startup() {
+  if (!gl) return showError("此浏览器无法启动 WebGL 2。");
+  try {
+    scene = build();
+    resize();
+    statusBox.hidden = true;
+    start();
+  } catch (err) {
+    showError("霜林绘制失败。");
+    console.error(err);
+  }
+}
+
+pauseBtn.textContent = paused ? "播放" : "暂停";
+qualityBtn.textContent = quality === "high" ? "画质：精细" : "画质：流畅";
+pauseBtn.onclick = () => {
+  paused = !paused;
+  pauseBtn.textContent = paused ? "播放" : "暂停";
+  if (!paused) { elapsed += .001; draw(); }
+};
+qualityBtn.onclick = () => {
+  quality = quality === "high" ? "low" : "high";
+  qualityBtn.textContent = quality === "high" ? "画质：精细" : "画质：流畅";
+  resize();
+  draw();
+};
+resetBtn.onclick = () => { yaw = 0; pitch = 0; draw(); };
+retryBtn.onclick = () => location.reload();
+const look = (dx, dy) => {
+  yaw = Math.max(-.42, Math.min(.42, yaw + dx));
+  pitch = Math.max(-.20, Math.min(.24, pitch + dy));
+  if (paused) draw();
+};
+canvas.onpointerdown = e => {
+  if (pointer || !e.isPrimary || e.button !== 0) return;
+  canvas.setPointerCapture(e.pointerId);
+  pointer = { id: e.pointerId, x: e.clientX, y: e.clientY };
+};
+canvas.onpointermove = e => {
+  if (!pointer || pointer.id !== e.pointerId) return;
+  look((pointer.x - e.clientX) * .0022, (e.clientY - pointer.y) * .0022);
+  pointer.x = e.clientX;
+  pointer.y = e.clientY;
+};
+canvas.onlostpointercapture = e => { if (pointer && pointer.id === e.pointerId) pointer = null; };
+canvas.ondblclick = () => { yaw = 0; pitch = 0; };
+canvas.onkeydown = e => {
+  const step = { ArrowLeft: [-.045, 0], ArrowRight: [.045, 0], ArrowUp: [0, .045], ArrowDown: [0, -.045] }[e.key];
+  if (!step) return;
+  e.preventDefault();
+  look(step[0], step[1]);
+};
+addEventListener("resize", resize);
+document.addEventListener("visibilitychange", () => { if (document.hidden) stop(); else start(); });
+addEventListener("message", e => {
+  if (parent === window || e.source !== parent || (location.protocol !== "file:" && e.origin !== location.origin)) return;
+  if (!e.data || e.data.type !== "poetic-realms-visibility" || typeof e.data.visible !== "boolean") return;
+  if (hostVisible === e.data.visible) return;
+  hostVisible = e.data.visible;
+  if (hostVisible) start(); else stop();
+});
+canvas.addEventListener("webglcontextlost", e => { e.preventDefault(); stop(); scene = null; showError("三维画面暂时中断，正在等待恢复。"); });
+canvas.addEventListener("webglcontextrestored", startup);
+window.__shanxing = () => ({ fps: Math.round(fps), cards: scene ? scene.foliage.n : 0, branches: scene ? scene.branch.n : 0, props: scene ? scene.prop.count : 0, hdr: scene ? scene.targets.hdr : false, size: [canvas.width, canvas.height], quality, paused });
+startup();
+})();
+</script>
+</body>
+</html>

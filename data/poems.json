@@ -2685,7 +2685,7 @@
       "hardness": "H3",
       "visualBrief": "山路深秋枫林与晚照",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -2713,7 +2713,23 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "frost-maple-halt",
+          "title": "霜林停车 · 半山晚照",
+          "path": "scenes/shanxing/frost-maple-halt.html",
+          "model": "DeepSeek-V4.1-Flash",
+          "tools": [
+            "WebGL2",
+            "GLSL ES 3.00（自写地形/叶簇/光束着色器）",
+            "Canvas 2D 程序化枫叶图集",
+            "Vanilla JS（无外部库）",
+            "Playwright 1.63.0 + Chrome 156（ANGLE Metal）实测"
+          ],
+          "status": "prototype",
+          "description": "深秋傍晚的山道：石径自右下沿坡上行，一乘卸了牲口的车停在路边，枫树在低日里透出红斑；左侧谷口堆着薄雾与远山，落叶在光里翻飞。地形、树形、车制与天色均为程序化艺术处理，不作唐代山道、车制或具体地望的复原。"
+        }
+      ]
     },
     {
       "id": "jiangnanchun",
