@@ -1,0 +1,85 @@
+:root {
+  color-scheme: light;
+  --ink: #203b32;
+  --paper: #f3f0e5;
+  --muted: #405349;
+}
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #b9c6ae; }
+body { color: var(--ink); font-family: "Songti SC", "STSong", "Noto Serif CJK SC", SimSun, serif; -webkit-font-smoothing: antialiased; }
+::selection { background: #993b29; color: #fff9e9; }
+button, select, a { -webkit-tap-highlight-color: transparent; }
+button, select { color: var(--ink); font-family: -apple-system, "PingFang SC", system-ui, sans-serif; cursor: pointer; }
+button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid #7d3324; outline-offset: 4px; }
+button { touch-action: manipulation; }
+#scene { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; outline-offset: -4px; }
+#scene:active { cursor: grabbing; }
+.inscription {
+  position: fixed; top: max(44px, env(safe-area-inset-top)); left: max(48px, env(safe-area-inset-left));
+  pointer-events: none; max-width: calc(100vw - 70px);
+  text-shadow: 0 2px 12px #f3efd466;
+}
+h1 { margin: 0; font-size: clamp(29px, 2.6vw, 43px); line-height: 1.5; font-weight: 400; letter-spacing: .12em; }
+h1 span { font-size: .57em; letter-spacing: .12em; white-space: nowrap; }
+.author { margin: 9px 0 24px; color: var(--muted); font-size: 13px; line-height: 1.6; letter-spacing: .18em; }
+blockquote { margin: 0; font-size: clamp(18px, 1.8vw, 25px); line-height: 1.85; letter-spacing: .13em; }
+.gesture { position: fixed; bottom: 27px; left: 40px; margin: 0; padding: 5px 9px; background: #f3f0e5e8; border-radius: 2px; font: 11px/1.6 -apple-system, system-ui, sans-serif; letter-spacing: .09em; color: var(--ink); transition: opacity .6s; pointer-events: none; }
+.gesture.expired { opacity: 0; }
+.controls { position: fixed; right: max(26px, env(safe-area-inset-right)); bottom: max(22px, env(safe-area-inset-bottom)); display: flex; gap: 6px; }
+.controls button, .controls select, #restore {
+  min-height: 42px; border: 1px solid #e9ebdf80; border-radius: 3px; padding: 0 14px;
+  background: #f5f2e4ed; font-size: 12px; line-height: 1.4; letter-spacing: .04em;
+  transition: background .18s, border-color .18s;
+}
+.controls button:hover, .controls select:hover, #restore:hover { background: #fff8e8; border-color: #c19d73; }
+.controls button[aria-pressed="true"] { background: #d5dfc9; border-color: #758976; }
+.controls select { max-width: 125px; }
+#restore { position: fixed; right: 26px; bottom: max(22px, env(safe-area-inset-bottom)); }
+.is-quiet .inscription, .is-quiet .controls, .is-quiet .gesture { visibility: hidden; }
+dialog {
+  width: min(450px, calc(100vw - 36px)); max-height: calc(100dvh - 48px);
+  border: 0; padding: 34px 38px; border-radius: 3px; background: var(--paper); color: var(--ink);
+  box-shadow: 0 20px 70px #11231b66; overflow-y: auto; scrollbar-color: #91a089 var(--paper);
+}
+dialog::backdrop { background: #14281e99; }
+dialog h2 { margin: 12px 0 8px; font-size: 27px; line-height: 1.5; font-weight: 400; letter-spacing: .06em; }
+dialog .author { margin-bottom: 24px; }
+dialog .full-poem { font-size: 20px; line-height: 2.2; margin: 16px 0 24px; letter-spacing: .1em; }
+dialog .source { font: 12px/1.9 -apple-system, "PingFang SC", system-ui, sans-serif; color: var(--muted); }
+dialog a { color: #76472d; text-underline-offset: 4px; }
+dialog .back { display: inline-block; margin-top: 12px; font-size: 13px; }
+#close-poem { float: right; background: transparent; border: 0; padding: 8px; margin: -15px -18px 0 0; min-height: 38px; font-size: 12px; }
+#loading { position: fixed; inset: 0; display: grid; place-items: center; background: #d5d5b9; transition: opacity .65s ease; pointer-events: none; }
+#loading span { font-size: 14px; letter-spacing: .12em; }
+#loading.ready { opacity: 0; }
+#error { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(440px, 88vw); padding: 22px 26px; background: var(--paper); border-radius: 3px; box-shadow: 0 14px 50px #132b2466; }
+#error p { font: 14px/1.8 -apple-system, "PingFang SC", system-ui, sans-serif; margin: 0 0 16px; }
+#error button { border: 1px solid #8b9a82; background: #dde5cf; min-height: 42px; padding: 0 18px; }
+[hidden] { display: none !important; }
+noscript { position: fixed; top: 45%; left: 10%; background: var(--paper); padding: 20px; }
+@media (max-width: 640px) {
+  .inscription { top: max(26px, env(safe-area-inset-top)); left: 24px; max-width: calc(100vw - 48px); }
+  h1 { font-size: 29px; letter-spacing: .08em; }
+  h1 span { font-size: .55em; }
+  .author { font-size: 12px; margin: 5px 0 17px; }
+  blockquote { font-size: 18px; line-height: 1.85; letter-spacing: .09em; }
+  .controls { left: 14px; right: 14px; gap: 5px; justify-content: center; bottom: max(16px, env(safe-area-inset-bottom)); }
+  .controls button, .controls select { min-height: 44px; padding: 0 10px; font-size: 11px; }
+  .controls select { max-width: 110px; padding-left: 7px; }
+  .gesture { left: 24px; bottom: 73px; font-size: 10px; }
+  dialog { padding: 28px; }
+}
+@media (max-width: 360px) {
+  .controls { flex-wrap: wrap; }
+  .gesture { display: none; }
+  h1 { font-size: 26px; }
+}
+@media (max-height: 500px) and (min-width: 641px) {
+  .inscription { top: 20px; left: 28px; }
+  h1 { font-size: 28px; }
+  .author { margin: 2px 0 8px; }
+  blockquote { font-size: 17px; line-height: 1.7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
