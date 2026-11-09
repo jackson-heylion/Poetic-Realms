@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>念奴娇·赤壁怀古 · 赤壁惊涛</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { color-scheme: dark; background: #17272d; color: #fff0d9; font: 14px system-ui, sans-serif; }
+  body { margin: 0; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; height: 100dvh; touch-action: none; cursor: grab; }
+  canvas:focus-visible { outline: 2px solid #f5cf93; outline-offset: -4px; }
+  header::before { content: ""; position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(ellipse at 6% 10%, #111b22cd, #111b223d 29%, transparent 58%); }
+  header { position: fixed; top: max(7vh, calc(env(safe-area-inset-top) + 18px));
+    left: max(5.5vw, calc(env(safe-area-inset-left) + 22px)); text-shadow: 0 2px 14px #081319; pointer-events: none; isolation: isolate;
+    font-family: "Songti SC", "Noto Serif CJK SC", STSong, SimSun, serif; }
+  header p { margin: 0 0 10px; color: #f5d3a8; font-size: clamp(14px,2vw,16px); letter-spacing: .18em; }
+  h1 { margin: 0; font-size: clamp(32px, 4vw, 62px); font-weight: 600; letter-spacing: .035em; }
+  blockquote { margin: 22px 0 0; padding: 1px 0 1px 14px; border-left: 2px solid #cf9369;
+    font-size: clamp(16px, 1.55vw, 22px); line-height: 1.8; letter-spacing: .065em; }
+  nav { position: fixed; right: max(3vw, calc(env(safe-area-inset-right) + 14px));
+    bottom: max(3vh, calc(env(safe-area-inset-bottom) + 12px));
+    display: flex; gap: 5px; padding: 4px; border: 1px solid #f1dfbe38; border-radius: 8px; background: #111d25ec; }
+  button { background: transparent; border: 0; color: #fff0d9; font: inherit; border-radius: 4px;
+    padding: 0 12px; min-height: 44px; cursor: pointer; }
+  button:hover, button:focus-visible { background: #53626a; }
+  #status { position: fixed; inset: 50% auto auto 50%; transform: translate(-50%, -50%);
+    width: max-content; max-width: 72vw; padding: 14px 22px; text-align: center; background: #111d25; border-radius: 8px; }
+  [hidden] { display: none !important; }
+  @media (max-width: 650px) {
+    header { top: max(5vh, calc(env(safe-area-inset-top) + 12px)); }
+    h1 { font-size: clamp(22px, 7.25vw, 38px); }
+    blockquote { margin-top: 13px; font-size: clamp(13px, 3.9vw, 17px); letter-spacing: .01em; padding-left: 9px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="river" tabindex="0" aria-label="赤壁江峡。拖动或按方向键环顾。"></canvas>
+<header data-scene-ui>
+  <p>宋 · 苏轼</p>
+  <h1>念奴娇·赤壁怀古</h1>
+  <blockquote>乱石穿空，惊涛拍岸，卷起千堆雪。</blockquote>
+</header>
+<nav data-scene-ui aria-label="场景控制">
+  <button id="pause" type="button">暂停</button>
+  <button id="quality" type="button">画质：精细</button>
+  <button id="reset" type="button">归位</button>
+</nav>
+<div id="status" role="status"><p id="message">正在绘制江峡…</p><button id="retry" type="button" hidden>重试</button></div>
+<script>
+"use strict";
+
+// 岩壁、水面、天空和浪花均为程序生成。摘句沿用馆藏，天色与江岸形态为艺术处理。
+const common = `#version 300 es
+precision highp float;
+precision highp int;
+uniform vec3 uEye, uRight, uUp, uForward;
+uniform vec2 uLens;
+uniform float uTime, uPixels;
+const float TAU = 6.2831853;
+const vec3 SUN = vec3(-.48, .27, .835);
+const vec3 HAZE = vec3(.27, .31, .32);
+float square(float x) { return x*x; }
+float hash(vec2 p) {
+  vec3 q = fract(vec3(p.xyx) * .1031);
+  q += dot(q, q.yzx + 33.33);
+  return fract((q.x + q.y) * q.z);
+}
+float noise(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  f = f*f*(3.-2.*f);
+  return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+1.), f.x), f.y);
+}
+float fbm(vec2 p) {
+  mat2 turn = mat2(1.63, 1.17, -1.17, 1.63);
+  return .57*noise(p) + .28*noise(turn*p+7.1) + .15*noise(turn*turn*p+13.3);
+}
+vec4 project(vec3 p) {
+  vec3 q = p-uEye;
+  float z = dot(q,uForward);
+  return vec4(dot(q,uRight)/uLens.x, dot(q,uUp)/uLens.y, 1.0007*z-.201, z);
+}
+vec3 fog(vec3 c, vec3 p) {
+  float d = length(p-uEye);
+  float extinction = square(d*.010) + d*(.003+.004*exp(-max(p.y,0.)*.30));
+  return mix(HAZE,c,exp(-extinction));
+}
+vec3 displayColor(vec3 c) {
+  c = max(c,vec3(0.));
+  return pow(clamp(c*(2.51*c+.03)/(c*(2.43*c+.59)+.14),0.,1.),vec3(1./2.2));
+}
+`;
+const sea = `
+float bank(float z) {
+  return 4.65 + .115*(z-18.) + .82*sin(.42*z) + .58*sin(.79*z);
+}
+float phase(vec2 p) {
+  return .78*p.x - .37*p.y + .43*sin(.31*p.y) + .28*sin(dot(p,vec2(.52,.11)));
+}
+vec3 swell(vec2 p, float t) {
+  float d = bank(p.y)-p.x;
+  float shoal = exp(-.029*square(d-1.9)) * exp(-.0009*square(p.y-23.));
+  float crest = pow(.5+.5*sin(phase(p)-1.84*t), 3.);
+  float group = .76+.22*sin(dot(p,vec2(.17,-.32))+.41*t)+.15*sin(.39*p.y-.27*t);
+  float y = (.64+2.12*shoal)*group*(crest-.28);
+  y += .30*sin(dot(p,vec2(.28,.71))+.86*t) + .15*sin(dot(p,vec2(.91,.61))-1.55*t);
+  return vec3(y,crest,shoal);
+}
+`;
+const skyVert = `
+out vec2 vScreen;
+void main() {
+  vScreen = vec2((gl_VertexID<<1)&2, gl_VertexID&2)*2.-1.;
+  gl_Position = vec4(vScreen,.99999,1.);
+}`;
+const skyFrag = `
+in vec2 vScreen;
+out vec4 pixel;
+void main() {
+  vec3 r = normalize(uForward + uRight*vScreen.x*uLens.x + uUp*vScreen.y*uLens.y);
+  float y = max(0.,r.y);
+  float light = max(0.,dot(r,SUN));
+  vec2 p = r.xz/(.22+y);
+  float cloud = fbm(p*2.3+vec2(uTime*.020,0.));
+  float edges = fbm(p*6.7+vec2(1.1,uTime*.034));
+  float cover = smoothstep(.32,.68,.77*cloud+.23*edges);
+  vec3 clear = mix(vec3(.52,.44,.35),vec3(.115,.211,.29),smoothstep(0.,.67,y));
+  clear += vec3(.88,.46,.19)*pow(light,16.) + vec3(.90,.63,.34)*pow(light,130.);
+  vec3 shade = mix(vec3(.11,.146,.169),vec3(.46,.379,.294),pow(light,9.)*(1.-cover));
+  vec3 sky = mix(clear,shade,cover*.92);
+  sky = mix(HAZE,sky,smoothstep(-.018,.116,r.y));
+  pixel = vec4(displayColor(sky),1.);
+}`;
+const rockVert = `
+layout(location=0) in vec3 aPosition;
+layout(location=1) in vec3 aNormal;
+out vec3 vWorld, vNormal;
+void main() {
+  vWorld = aPosition;
+  vNormal = aNormal;
+  gl_Position = project(vWorld);
+}`;
+const rockFrag = `
+in vec3 vWorld, vNormal;
+out vec4 pixel;
+void main() {
+  vec3 p = vWorld;
+  vec3 dx = dFdx(p), dy = dFdy(p);
+  vec3 faceNormal = normalize(cross(dy,dx));
+  vec3 n = normalize(mix(normalize(vNormal),faceNormal,.23));
+  vec2 face = vec2(p.x*.69+p.z*.79,p.y+p.x*.22-p.z*.13);
+  float broad = fbm(face*.43);
+  float fracture = noise(vec2(face.x*1.8,face.y*.24)+broad);
+  float strata = noise(vec2(face.x*.34,face.y*3.9 + 1.7*broad));
+  float grain = noise(p.xz*12.7+p.y*vec2(9.1,5.8));
+  float relief = .25*broad + .23*fracture + .059*strata + .021*grain;
+  vec3 along = cross(dy,n), across = cross(n,dx);
+  float det = dot(dx,along);
+  n = normalize(abs(det)*n - sign(det)*(dFdx(relief)*along+dFdy(relief)*across));
+  float band = .55*broad + .25*fracture + .20*strata;
+  vec3 stone = mix(vec3(.037,.038,.035),vec3(.32,.143,.083),smoothstep(.24,.72,band));
+  stone *= .51+.65*smoothstep(.21,.50,fracture);
+  float wet = 1.-smoothstep(.30,2.05,p.y+noise(p.xz*1.1)*.62);
+  stone *= mix(vec3(1.),vec3(.30,.44,.50),wet);
+  vec3 lit = stone*(.29+.38*max(n.y,0.)+.18*max(-n.z,0.));
+  lit += stone*max(dot(n,SUN),0.)*vec3(1.68,1.29,1.05);
+  lit += vec3(.045,.057,.061)*wet*pow(max(dot(n,normalize(SUN+normalize(uEye-p))),0.),18.);
+  pixel = vec4(displayColor(fog(lit,p)),1.);
+}`;
+const waterVert = `
+layout(location=0) in vec3 aPosition;
+out vec3 vWorld, vWave, vNormal;
+void main() {
+  vec2 p = aPosition.xz;
+  vWave = swell(p,uTime);
+  vec2 slope = vec2(swell(p+vec2(.12,0.),uTime).x,swell(p+vec2(0.,.12),uTime).x)-vWave.x;
+  vNormal = normalize(vec3(-slope.x,.12,-slope.y));
+  vWorld = aPosition + vec3(.29*vWave.y*vWave.z,vWave.x,0.);
+  gl_Position = project(vWorld);
+}`;
+const waterFrag = `
+in vec3 vWorld, vWave, vNormal;
+out vec4 pixel;
+void main() {
+  vec3 p = vWorld;
+  vec2 drift = p.xz+vec2(-.55,.37)*uTime;
+  float ripple = noise(drift*vec2(4.68,7.40))-.5;
+  float ripple2 = noise(drift.yx*vec2(11.29,7.14)+3.)-.5;
+  vec3 n = normalize(vNormal+vec3(.19*ripple,0.,.14*ripple2));
+  vec3 view = normalize(uEye-p);
+  float fresnel = .035 + .87*pow(1.-clamp(dot(n,view),0.,1.),4.);
+  vec3 ref = reflect(-view,n);
+  float sun = max(0.,dot(ref,SUN));
+  vec3 reflected = mix(vec3(.29,.35,.34),vec3(.095,.181,.218),smoothstep(-.13,.62,ref.y));
+  reflected += vec3(.40,.25,.12)*pow(sun,18.) + vec3(.95,.75,.51)*pow(sun,160.);
+  float shadow = 1.-.66*exp(-.055*square(bank(p.z)-p.x));
+  reflected *= shadow;
+  vec3 body = mix(vec3(.008,.032,.038),vec3(.028,.144,.142),.61*vWave.y+.25*vWave.z);
+  vec3 water = mix(body,reflected,fresnel);
+  float churn = fbm(drift*.68);
+  vec2 foamUV = drift*3.9 + vec2(ripple,ripple2)*1.7;
+  float bubbles = .62*noise(foamUV)+.25*noise(foamUV*2.9)+.13*noise(foamUV*6.4);
+  float froth = smoothstep(.27,.67,bubbles);
+  float shore = exp(-.17*square(max(0.,bank(p.z)-p.x)));
+  float surf = smoothstep(.48,.85,churn+.28*shore+.19*vWave.y*vWave.z);
+  float breakers = smoothstep(.76,1.07,vWave.y+.28*churn+.25*vWave.z);
+  breakers *= smoothstep(.36,.67,churn+.34*vWave.z);
+  float foam = max(surf*(.16+.76*froth),breakers*(.23+.74*froth));
+  water = mix(water,vec3(.65,.75,.74)*(.75+.28*bubbles),foam);
+  pixel = vec4(displayColor(fog(water,p)),1.);
+}`;
+const sprayVert = `
+out vec3 vColor;
+out float vAlpha, vMist;
+void main() {
+  float id = float(gl_VertexID);
+  int site = gl_VertexID % 6;
+  const float sites[6] = float[6](12.4,16.7,19.6,23.3,28.5,34.0);
+  vec4 seed = vec4(hash(vec2(id,1)),hash(vec2(id,2)),hash(vec2(id,3)),hash(vec2(id,4)));
+  float z = sites[site];
+  float x = bank(z)-.12;
+  float hit = (phase(vec2(x,z))-TAU*.25)/1.84;
+  float age = mod(uTime-hit-.42*seed.x,TAU/1.84);
+  vMist = step(.72,seed.w);
+  vec3 p = vec3(x,.34,z);
+  p.x += (seed.y-.37)*1.72 - age*(.76+3.95*seed.x);
+  p.y += age*(4.0+4.8*seed.y) - age*age*(4.4-2.05*vMist);
+  p.z += (seed.z-.5)*(2.1+3.6*age) - .98*age;
+  float fade = smoothstep(0.,.12,age)*(1.-smoothstep(.64,1.65,age))*smoothstep(-.14,.52,p.y);
+  gl_Position = project(p);
+  float size = mix(.025+.14*seed.w*seed.w,.48+.61*age,vMist);
+  gl_PointSize = clamp(uPixels*size/(2.*uLens.y*max(gl_Position.w,.1)),1.3,60.);
+  vAlpha = fade*mix(.90,.125,vMist);
+  vColor = displayColor(fog(vec3(.74,.83,.82),p));
+}`;
+const sprayFrag = `
+in vec3 vColor;
+in float vAlpha, vMist;
+out vec4 pixel;
+void main() {
+  vec2 p = gl_PointCoord*2.-1.;
+  float r = dot(p,p);
+  float edge = 1.-smoothstep(mix(.15,.0,vMist),1.,r);
+  pixel = vec4(vColor,vAlpha*edge*edge);
+}`;
+
+const canvas = document.querySelector("#river");
+const status = document.querySelector("#status");
+const message = document.querySelector("#message");
+const retry = document.querySelector("#retry");
+const pauseButton = document.querySelector("#pause");
+const qualityButton = document.querySelector("#quality");
+let fine = !matchMedia("(pointer: coarse), (max-width: 680px)").matches;
+let paused = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const gl = canvas.getContext("webgl2",{ alpha:false, antialias:false, powerPreference:"high-performance" });
+let scene, frame = 0, previous = 0, elapsed = 1.6;
+let yaw = 0, pitch = 0, pointer, hostVisible = true;
+
+function addSurface(vertices, indices, columns, rows, point) {
+  const base = vertices.length / 6;
+  for (let j = 0; j <= rows; j++) {
+    for (let i = 0; i <= columns; i++) {
+      vertices.push(...point(i / columns, j / rows));
+      if (i === columns || j === rows) continue;
+      const a = base + j * (columns + 1) + i;
+      const b = a + columns + 1;
+      indices.push(a, b, a + 1, b, b + 1, a + 1);
+    }
+  }
+}
+
+function mesh(vertices, indices) {
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+  for (const attribute of [0,1]) {
+    gl.enableVertexAttribArray(attribute);
+    gl.vertexAttribPointer(attribute,3,gl.FLOAT,false,24,12*attribute);
+  }
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(indices), gl.STATIC_DRAW);
+  gl.bindVertexArray(null);
+  return { vao, count: indices.length };
+}
+
+function cliffs() {
+  const vertices = [], indices = [];
+  // 每项依次为中心横距、纵深、横纵半径、顶高（米）。
+  const masses = [
+    [-91,114,44,25,33], [-61,112,24,21,22], [-42,124,22,19,17], [-17,162,25,19,21],
+    [21,143,31,28,26], [32,100,26,18,22], [23,74,16,16,21], [26,57,16,15,27],
+    [17,54,9,11,15], [16,43,9,9,19], [18,37,9,11,23], [13.5,32,6.6,8.2,20.3],
+    [13.5,24.2,6.9,6.0,15.5], [20.8,20,9.8,8.2,15.2], [13.1,19,5.5,5.5,12.4],
+    [9.4,24.2,4.2,4.5,11], [11.9,29,4.4,4.1,17], [8.3,20.8,3.1,2.7,6.2],
+    [7.1,11.9,2.9,2.8,3.8], [7.3,15.6,3.1,2.1,3.4], [6.6,18,3.0,2.5,4.1],
+    [7.0,22.3,3.4,3.6,3.1], [7.7,26.4,3.2,2.4,4.9], [8.6,32.8,3.5,3.2,5.8],
+    [13,10.9,5.1,5.0,7.6], [5.0,15.4,1.0,1.0,1.2], [5.5,23.8,1.7,1.5,1.6]
+  ];
+  masses.forEach(([x,z,rx,rz,height], i) => {
+    const seed = 2.39996 * i;
+    addSurface(vertices,indices,36,21,(u,t) => {
+      const angle = u*2*Math.PI;
+      const a = angle+.078*Math.sin(6*angle+seed)+.036*Math.sin(13*angle-seed);
+      const tooth = 1+.15*Math.sin(3*a+seed)+.12*Math.cos(5*a-seed)+.084*Math.sin(9*a+seed);
+      const seams = .032*Math.sin(t*42+2.1*Math.sin(3*a+seed))+.017*Math.sin(t*81+4*a);
+      const profile = (1.11-.27*t+seams)*Math.pow(1-Math.pow(t,z > 65 ? 2.7 : 8),.57);
+      const rim = Math.pow(Math.max(0,Math.sin(Math.PI*t)),.57);
+      const summit = 1+rim*(.15*Math.cos(2*a+seed)+.13*Math.sin(3*a+seed)+.06*Math.cos(7*a));
+      const c = Math.cos(a), s = Math.sin(a);
+      const notch = .45*Math.cos(3*a+seed)-.60*Math.sin(5*a-seed)+.756*Math.cos(9*a+seed);
+      return [x + rx*(tooth*profile*c+.31*t*Math.cos(seed)), -1.7 + (height+1.7)*t*summit,
+        z + rz*(tooth*profile*s+.27*t*Math.sin(seed)),
+        (tooth*c+notch*s)/rx, (.18+1.8*t**6)/Math.min(rx,rz), (tooth*s-notch*c)/rz];
+    });
+  });
+  return mesh(vertices,indices);
+}
+
+function water() {
+  const vertices = [], indices = [];
+  addSurface(vertices,indices,124,111,(u,v) => {
+    const across = 2*u-1;
+    const z = -7 + 239*Math.pow(v,1.8);
+    const x = Math.sign(across)*Math.pow(Math.abs(across),1.9)*(across < 0 ? 92 : 56);
+    return [x*(1+.006*Math.max(0,z)),0,z,0,1,0];
+  });
+  return mesh(vertices,indices);
+}
+
+function program(name, vertex, fragment) {
+  const handle = gl.createProgram();
+  for (const [type, source] of [[gl.VERTEX_SHADER,vertex],[gl.FRAGMENT_SHADER,fragment]]) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader,common+source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader,gl.COMPILE_STATUS)) {
+      const log = gl.getShaderInfoLog(shader);
+      gl.deleteShader(shader);
+      throw new Error(name+" 着色器编译失败："+log);
+    }
+    gl.attachShader(handle,shader);
+    gl.deleteShader(shader);
+  }
+  gl.linkProgram(handle);
+  if (!gl.getProgramParameter(handle,gl.LINK_STATUS)) {
+    throw new Error(name+" 着色器链接失败："+gl.getProgramInfoLog(handle));
+  }
+  const keys = ["Eye","Right","Up","Forward","Lens","Time","Pixels"];
+  const uniforms = Object.fromEntries(keys.map(key => [key,gl.getUniformLocation(handle,"u"+key)]));
+  return { handle, uniforms };
+}
+
+function showError(text) {
+  message.textContent = text;
+  retry.hidden = false;
+  status.hidden = false;
+}
+
+function initialize() {
+  if (!gl) return showError("此浏览器无法启动 WebGL 2。");
+  try {
+    scene = {
+      sky: program("天光",skyVert,skyFrag),
+      stone: program("岩壁",rockVert,rockFrag),
+      river: program("江水",sea+waterVert,sea+waterFrag),
+      spray: program("飞沫",sea+sprayVert,sprayFrag),
+      rocks: cliffs(), water: water()
+    };
+    gl.enable(gl.DEPTH_TEST);
+    gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+    resize();
+  } catch (error) {
+    showError("江峡绘制失败。");
+    console.error(error);
+  }
+}
+
+function draw() {
+  const aspect = canvas.width / canvas.height;
+  const az = yaw + (aspect < .90 ? .14 : .025);
+  const el = pitch + .055;
+  const sx = Math.sin(az), cx = Math.cos(az), sy = Math.sin(el), cy = Math.cos(el);
+  const lens = aspect < .90 ? .69 : .56;
+  const eye = [-5*Math.sin(yaw),3.53+.09*Math.sin(elapsed*.71),-1.4];
+  function use({ handle, uniforms: u }) {
+    gl.useProgram(handle);
+    gl.uniform3fv(u.Eye,eye);
+    gl.uniform3f(u.Right,cx,0,-sx);
+    gl.uniform3f(u.Up,-sx*sy,cy,-cx*sy);
+    gl.uniform3f(u.Forward,sx*cy,sy,cx*cy);
+    gl.uniform2f(u.Lens,lens*aspect,lens);
+    gl.uniform1f(u.Time,elapsed);
+    gl.uniform1f(u.Pixels,canvas.height);
+  }
+  gl.clear(gl.DEPTH_BUFFER_BIT);
+  use(scene.stone);
+  gl.bindVertexArray(scene.rocks.vao);
+  gl.drawElements(gl.TRIANGLES,scene.rocks.count,gl.UNSIGNED_INT,0);
+  use(scene.river);
+  gl.bindVertexArray(scene.water.vao);
+  gl.drawElements(gl.TRIANGLES,scene.water.count,gl.UNSIGNED_INT,0);
+  gl.bindVertexArray(null);
+  use(scene.sky);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+  use(scene.spray);
+  gl.enable(gl.BLEND);
+  gl.depthMask(false);
+  gl.drawArrays(gl.POINTS,0,fine ? 2352 : 1080);
+  gl.depthMask(true);
+  gl.disable(gl.BLEND);
+}
+
+function schedule(redraw = false) {
+  if (!scene || !hostVisible || document.hidden || frame || (paused && !redraw)) return;
+  frame = requestAnimationFrame(render);
+}
+function render(now) {
+  frame = 0;
+  if (!scene || !hostVisible || document.hidden) return;
+  if (previous && !paused) elapsed += Math.min((now-previous)/1000,.065);
+  previous = now;
+  draw();
+  if (!status.hidden) status.hidden = true;
+  schedule();
+}
+function resize() {
+  if (!scene) return;
+  const { clientWidth: w, clientHeight: h } = canvas;
+  const scale = Math.min(devicePixelRatio,fine ? 1.40 : 1.10,Math.sqrt((fine ? 1080000 : 435000)/Math.max(1,w*h)));
+  canvas.width = Math.max(1,Math.round(w*scale));
+  canvas.height = Math.max(1,Math.round(h*scale));
+  gl.viewport(0,0,canvas.width,canvas.height);
+  schedule(true);
+}
+function stop() {
+  cancelAnimationFrame(frame);
+  frame = previous = 0;
+}
+function move(dx,dy) {
+  yaw = Math.max(-.34,Math.min(.34,yaw+dx));
+  pitch = Math.max(-.22,Math.min(.24,pitch+dy));
+  schedule(true);
+}
+
+pauseButton.textContent = paused ? "播放" : "暂停";
+qualityButton.textContent = fine ? "画质：精细" : "画质：流畅";
+pauseButton.onclick = () => {
+  paused = !paused;
+  pauseButton.textContent = paused ? "播放" : "暂停";
+  stop();
+  schedule();
+};
+qualityButton.onclick = () => {
+  fine = !fine;
+  qualityButton.textContent = fine ? "画质：精细" : "画质：流畅";
+  resize();
+};
+document.querySelector("#reset").onclick = () => { yaw = pitch = 0; schedule(true); };
+retry.onclick = () => location.reload();
+canvas.onpointerdown = (e) => {
+  if (pointer || !e.isPrimary || e.button !== 0) return;
+  canvas.setPointerCapture(e.pointerId);
+  pointer = { id:e.pointerId, x:e.clientX, y:e.clientY };
+};
+canvas.onpointermove = (e) => {
+  if (pointer?.id !== e.pointerId) return;
+  move((pointer.x-e.clientX)*.0026,(e.clientY-pointer.y)*.0026);
+  pointer.x = e.clientX;
+  pointer.y = e.clientY;
+};
+canvas.onlostpointercapture = (e) => { if (pointer?.id === e.pointerId) pointer = null; };
+canvas.onkeydown = (e) => {
+  const step = { ArrowLeft:[-.05,0], ArrowRight:[.05,0], ArrowUp:[0,.05], ArrowDown:[0,-.05] }[e.key];
+  if (!step) return;
+  e.preventDefault();
+  move(...step);
+};
+addEventListener("resize",resize);
+document.addEventListener("visibilitychange",() => { stop(); schedule(true); });
+addEventListener("message",(e) => {
+  if (parent === window || e.source !== parent || (location.protocol !== "file:" && e.origin !== location.origin)) return;
+  if (e.data?.type !== "poetic-realms-visibility" || typeof e.data.visible !== "boolean") return;
+  if (hostVisible === e.data.visible) return;
+  hostVisible = e.data.visible;
+  stop();
+  schedule(true);
+});
+canvas.addEventListener("webglcontextlost",(e) => {
+  e.preventDefault();
+  scene = null;
+  stop();
+  showError("三维画面暂时中断，正在等待恢复。");
+});
+canvas.addEventListener("webglcontextrestored",initialize);
+initialize();
+</script>
+</body>
+</html>

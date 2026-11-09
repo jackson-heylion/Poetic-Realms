@@ -3652,7 +3652,7 @@
       "hardness": "H5",
       "visualBrief": "临江乱石、巨浪飞沫与怀古氛围；文学赤壁非三国战场复原",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -3686,7 +3686,19 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "red-cliff-reverie",
+          "title": "赤壁惊涛",
+          "path": "scenes/chibi/red-cliff-reverie.html",
+          "model": "GPT-6.1-Sol",
+          "tools": [
+            "WebGL2",
+            "GLSL ES 3.00"
+          ],
+          "status": "prototype"
+        }
+      ]
     },
     {
       "id": "dingfengbo",
