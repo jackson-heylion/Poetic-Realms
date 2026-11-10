@@ -1211,10 +1211,15 @@
       "hardness": "H4",
       "visualBrief": "秋风落叶、激流长江与高处眺望",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
-      "model": null,
-      "tools": [],
+      "model": "DeepSeek-V4.1-Flash",
+      "tools": [
+        "three.js r160（仓库 vendor 离线副本 + baomitu / bootcdn / jsdelivr 10 秒镜像回退）",
+        "Custom GLSL（天光、江水、落叶、枯草）",
+        "CanvasTexture 程序化岩层 / 叶形 / 泡沫贴图",
+        "WebGL2"
+      ],
       "issueNumber": null,
       "sources": [
         {
@@ -1241,7 +1246,22 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "endless-river",
+          "title": "无边落木 · 不尽长江",
+          "path": "scenes/denggao/endless-river.html",
+          "model": "DeepSeek-V4.1-Flash",
+          "tools": [
+            "three.js r160（仓库 vendor 离线副本 + baomitu / bootcdn / jsdelivr 10 秒镜像回退）",
+            "Custom GLSL（天光、江水、落叶、枯草）",
+            "CanvasTexture 程序化岩层 / 叶形 / 泡沫贴图",
+            "WebGL2"
+          ],
+          "status": "prototype",
+          "description": "秋日夔门一带的高处：崖坡自左侧压下来，江面在中景铺开并向峡口收束，低日把水汽照成暖白；落叶成阵横掠，随顺江的急风一层层翻落。峡谷走向、崖壁层理、沙渚位置与落叶密度均为艺术处理，不作瞿塘峡或具体地望的复原。"
+        }
+      ]
     },
     {
       "id": "wangyue",
