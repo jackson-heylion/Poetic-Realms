@@ -3553,10 +3553,16 @@
       "hardness": "H4",
       "visualBrief": "庐山不同视点形态切换",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
-      "model": null,
-      "tools": [],
+      "model": "WorkBuddy（claude-opus-6）",
+      "tools": [
+        "three.js r160（仓库 vendor 离线副本 + baomitu / bootcdn / jsdelivr 15 秒镜像回退）",
+        "Custom GLSL（三平面岩层与林线、大气天空）",
+        "CanvasTexture 程序化可平铺噪声与云纹理",
+        "WebGL2 / InstancedMesh 针叶林",
+        "Playwright-core + Chrome（ANGLE Metal）实测"
+      ],
       "issueNumber": null,
       "sources": [
         {
@@ -3578,7 +3584,23 @@
         "mode": "online-text-reviewed",
         "warning": "根据链接中可查的古典作品在线文本编录；未逐字对纸本古籍校勘，异文与版本分歧须以 sourceNote 为准。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "ridges-and-peaks",
+          "title": "横看成岭 · 侧看成峰",
+          "path": "scenes/tixilinbi/ridges-and-peaks.html",
+          "model": "WorkBuddy（claude-opus-6）",
+          "tools": [
+            "three.js r160（仓库 vendor 离线副本 + baomitu / bootcdn / jsdelivr 15 秒镜像回退）",
+            "Custom GLSL（三平面岩层与林线、大气天空）",
+            "CanvasTexture 程序化可平铺噪声与云纹理",
+            "WebGL2 / InstancedMesh 针叶林",
+            "Playwright-core + Chrome（ANGLE Metal）实测"
+          ],
+          "status": "prototype",
+          "description": "同一座各向异性三维山体：沿岭的正面望去群峰连成横岭，绕到岭的一端收作陡峭孤峰，另有远观、入山与自动巡游机位。程序化高度场、三平面岩层与林线、针叶林、云海、飞鸟与低日角天光；山形、林线、云高与日角均为艺术加工，不作庐山地望或地貌复原。"
+        }
+      ]
     },
     {
       "id": "huichong",
