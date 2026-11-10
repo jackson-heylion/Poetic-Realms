@@ -1011,10 +1011,17 @@
       "hardness": "H5",
       "visualBrief": "天梯石栈、悬崖飞瀑与险峻蜀道",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
-      "model": null,
-      "tools": [],
+      "model": "Claude Fable 5 (Claude Code)",
+      "tools": [
+        "three.js r160（仓库 vendor 离线副本 + baomitu / bootcdn / jsdelivr 10 秒镜像回退）",
+        "WebGL2 / Custom GLSL（三平面岩层、湍流水面、瀑布、半分辨率体积云雾、双层阴影、辉光、ACES、FXAA）",
+        "DataTexture / Data3DTexture 程序化噪声与岩面、水面贴图",
+        "InstancedMesh 林木、栈道木构与行旅",
+        "Web Audio 程序合成水声、风声与子规",
+        "Playwright-core + Chrome（ANGLE Metal）实测"
+      ],
       "issueNumber": null,
       "sources": [
         {
@@ -1057,7 +1064,24 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "ladder-to-the-sky",
+          "title": "天梯石栈 · 连峰去天",
+          "path": "scenes/shudao/ladder-to-the-sky.html",
+          "model": "Claude Fable 5 (Claude Code)",
+          "tools": [
+            "three.js r160（仓库 vendor 离线副本 + baomitu / bootcdn / jsdelivr 10 秒镜像回退）",
+            "WebGL2 / Custom GLSL（三平面岩层、湍流水面、瀑布、半分辨率体积云雾、双层阴影、辉光、ACES、FXAA）",
+            "DataTexture / Data3DTexture 程序化噪声与岩面、水面贴图",
+            "InstancedMesh 林木、栈道木构与行旅",
+            "Web Audio 程序合成水声、风声与子规",
+            "Playwright-core + Chrome（ANGLE Metal）实测"
+          ],
+          "status": "prototype",
+          "description": "一道深峡：左壁凿出木栈道贴崖盘升，右壁飞瀑直落回川，栈道尽头的石台上立着关楼，崖顶之后连峰插进云层。五处机位（栈道、回川、飞瀑、剑阁、青天）可漫游或手动切换，晓昼暮夜四个时辰，夜里可见参、井两宿与子规声。山形走向、栈道木构、关楼样式、行旅人畜与星位均为依诗意的程序化艺术加工，不作剑门关或古蜀道的地貌、建筑复原。"
+        }
+      ]
     },
     {
       "id": "jueju-huangli",
