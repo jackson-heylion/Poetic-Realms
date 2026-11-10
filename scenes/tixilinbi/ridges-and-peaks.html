@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#8fa6b4">
+<meta name="description" content="《题西林壁》横看成岭侧成峰，远近高低各不同。同一座庐山，随视点变化显出岭、峰、远、近。实时三维诗境。">
+<title>题西林壁 · 横看成岭侧成峰 | Poetic Realms</title>
+<link rel="icon" href="data:,">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#9fb2bd;color:#f6f1e7;
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC",SimSun,serif;
+  -webkit-tap-highlight-color:transparent}
+#stage{position:fixed;inset:0;display:block;width:100%;height:100dvh;touch-action:none;cursor:grab;outline:none}
+#stage:active{cursor:grabbing}
+#stage:focus-visible{outline:2px solid #f3e3c6;outline-offset:-4px}
+.grade,.grain{position:fixed;inset:0;pointer-events:none;z-index:2}
+.grade{background:radial-gradient(126% 96% at 50% 44%,transparent 38%,rgba(18,26,32,.46) 100%),
+  linear-gradient(to bottom,rgba(28,42,56,.20),transparent 26%,transparent 74%,rgba(20,30,36,.30))}
+.grain{z-index:3;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+header{position:fixed;left:max(3.4vw,calc(env(safe-area-inset-left) + 22px));
+  top:max(5.4vh,calc(env(safe-area-inset-top) + 22px));z-index:4;pointer-events:none;
+  text-shadow:0 2px 24px rgba(10,18,24,.88),0 0 8px rgba(10,18,24,.6);
+  animation:rise 2.2s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.brand{font:10px/1 system-ui,sans-serif;letter-spacing:.34em;color:#d9e5e8;opacity:.78}
+.dynasty{margin:16px 0 0;font-size:clamp(11px,1.1vw,14px);letter-spacing:.36em;color:#e6d3b3}
+h1{margin:.5em 0 0;font-size:clamp(34px,4.2vw,60px);font-weight:400;letter-spacing:.28em;line-height:1.12}
+blockquote{margin:1.15em 0 0;font-size:clamp(14px,1.45vw,20px);line-height:2.05;letter-spacing:.16em;color:#f8ead2}
+blockquote span{display:block;transition:color .5s,text-shadow .5s}
+blockquote span.on{color:#ffe0a4;text-shadow:0 0 22px rgba(255,190,110,.7),0 2px 22px rgba(10,18,24,.9)}
+.seal{display:inline-block;margin-top:1.4em;padding:.4em .32em;writing-mode:vertical-rl;
+  font-size:12px;letter-spacing:.24em;color:#d98a68;border:1px solid #b86a49;border-radius:2px;
+  background:rgba(96,38,22,.22)}
+#viewnote{position:fixed;right:max(3vw,calc(env(safe-area-inset-right) + 20px));
+  top:max(6vh,calc(env(safe-area-inset-top) + 22px));z-index:4;max-width:28ch;text-align:right;
+  pointer-events:none;font-size:clamp(12px,1.15vw,15px);line-height:2;letter-spacing:.15em;
+  color:#f4e7d2;text-shadow:0 2px 20px rgba(10,18,24,.9);animation:rise 2.8s ease both}
+#viewnote b{display:block;font-weight:400;font-size:1.4em;letter-spacing:.22em;color:#ffe2b0;white-space:nowrap}
+#viewnote small{display:block;margin-top:.7em;font:10px/1.9 system-ui,sans-serif;letter-spacing:.12em;opacity:.66}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:max(3.2vh,calc(env(safe-area-inset-bottom) + 16px));
+  z-index:5;display:flex;gap:5px;padding:5px;border-radius:8px;white-space:nowrap;
+  border:1px solid rgba(226,236,238,.26);background:rgba(20,32,40,.58);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+nav button{min-height:38px;padding:0 13px;border:0;border-radius:5px;background:transparent;color:#eee6d8;
+  font:12px/1 system-ui,-apple-system,"PingFang SC",sans-serif;letter-spacing:.08em;cursor:pointer;
+  transition:background .2s,color .2s}
+nav button:hover,nav button:focus-visible{background:rgba(226,196,150,.22)}
+nav button.on{background:rgba(232,196,140,.30);color:#fff2d8}
+#tools{position:fixed;right:max(2.2vw,calc(env(safe-area-inset-right) + 14px));
+  bottom:max(3.2vh,calc(env(safe-area-inset-bottom) + 16px));z-index:5;display:flex;gap:5px}
+#tools button{min-height:34px;padding:0 10px;border:1px solid rgba(226,236,238,.24);border-radius:5px;
+  background:rgba(20,32,40,.5);color:#e8e2d6;font:11px/1 system-ui,sans-serif;letter-spacing:.06em;cursor:pointer}
+#tools button:hover{background:rgba(226,196,150,.24)}
+#fps{position:fixed;left:max(3.4vw,calc(env(safe-area-inset-left) + 22px));
+  bottom:max(3.4vh,calc(env(safe-area-inset-bottom) + 18px));z-index:5;
+  font:10px/1.8 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;
+  color:rgba(236,232,220,.62);pointer-events:none}
+#status{position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);z-index:9;
+  width:max-content;max-width:80vw;padding:18px 26px;text-align:center;border-radius:9px;
+  background:rgba(18,28,36,.92);border:1px solid rgba(220,232,236,.26);color:#f2e8d8;
+  font:13px/1.9 "Songti SC",serif;letter-spacing:.1em}
+#status p{margin:0}
+#retry{margin-top:12px;min-height:36px;padding:0 18px;border-radius:5px;border:1px solid #c8a06a;
+  background:transparent;color:#f2e8d8;font:inherit;cursor:pointer}
+[hidden]{display:none!important}
+html[data-poetic-realms-host] header,html[data-poetic-realms-host] #viewnote,
+html[data-poetic-realms-host] nav,html[data-poetic-realms-host] #tools,html[data-poetic-realms-host] #fps,
+html.embed header,html.embed #viewnote,html.embed nav,html.embed #tools,html.embed #fps{display:none}
+@media(max-width:760px){
+  header{top:max(3.4vh,calc(env(safe-area-inset-top) + 14px));left:16px}
+  h1{font-size:clamp(28px,7.8vw,38px);letter-spacing:.22em}
+  .dynasty{margin-top:10px}
+  blockquote{font-size:clamp(12px,3.3vw,14px);line-height:1.85;letter-spacing:.08em;margin-top:.8em}
+  .seal,.brand{display:none}
+  #viewnote{top:auto;bottom:calc(env(safe-area-inset-bottom) + 92px);right:14px;font-size:11px;max-width:16ch}
+  #viewnote b{font-size:1.3em}
+  #viewnote small{display:none}
+  nav{left:12px;right:12px;transform:none;justify-content:center;flex-wrap:wrap;bottom:calc(env(safe-area-inset-bottom) + 46px)}
+  nav button{min-height:34px;padding:0 9px;font-size:11px}
+  #tools{right:12px;bottom:calc(env(safe-area-inset-bottom) + 10px)}
+  #tools button{min-height:30px;font-size:10px;padding:0 8px}
+  #fps{display:none}
+}
+</style>
+</head>
+<body>
+<canvas id="stage" tabindex="0" aria-label="题西林壁：同一座庐山随视点在岭与峰之间变化，可拖动环顾、切换横看侧看远观入山四种机位。"></canvas>
+<div class="grade" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div>
+
+<header data-scene-ui>
+  <div class="brand">POETIC REALMS / 一诗一境</div>
+  <p class="dynasty">宋 · 苏轼</p>
+  <h1>题西林壁</h1>
+  <blockquote><span id="line1">横看成岭侧成峰，</span><span id="line2">远近高低各不同。</span></blockquote>
+  <span class="seal" aria-hidden="true">庐山</span>
+</header>
+
+<div id="viewnote" data-scene-ui><b id="viewname">横看 · 成岭</b><span id="viewdesc">自正面远望，群峰连成一道横岭</span>
+  <small>拖动环顾 · 滚轮远近 · 双击归位 · 数字键 1—4</small></div>
+
+<nav data-scene-ui aria-label="视点切换">
+  <button type="button" data-view="0" class="on">横看 · 成岭</button>
+  <button type="button" data-view="1">侧看 · 成峰</button>
+  <button type="button" data-view="2">远观 · 高低</button>
+  <button type="button" data-view="3">入山 · 不识</button>
+  <button type="button" data-view="4">巡游</button>
+</nav>
+<div id="tools" data-scene-ui>
+  <button id="pause" type="button">暂停</button>
+  <button id="quality" type="button">画质：精细</button>
+</div>
+<div id="fps" data-scene-ui aria-hidden="true"></div>
+<div id="status" role="status"><p id="message">正在铺陈庐山…</p><button id="retry" type="button" hidden>重新载入</button></div>
+
+<script>if(window.self!==window.top)document.documentElement.classList.add("embed");</script>
+<script src="../../vendor/three-r160.min.js"></script>
+<script type="module">
+/* 题西林壁 · 横看成岭侧成峰，远近高低各不同
+   同一座各向异性三维山体，视点绕转时轮廓由「岭」收作「峰」；远观、入山再变。
+   山形、林线、云高、日角均为程序化艺术加工，不作庐山地望或地貌复原。 */
+const CDN = [
+  'https://lib.baomitu.com/three.js/0.160.0/three.module.min.js',
+  'https://cdn.bootcdn.net/ajax/libs/three.js/0.160.0/three.module.min.js',
+  'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'
+];
+const canvas = document.getElementById('stage');
+const statusEl = document.getElementById('status');
+const msgEl = document.getElementById('message');
+const retryEl = document.getElementById('retry');
+const showError = (m) => { msgEl.textContent = m; statusEl.hidden = false; retryEl.hidden = false; };
+const hideError = () => { statusEl.hidden = true; };
+retryEl.addEventListener('click', () => location.reload());
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error('timeout')), ms))]);
+(async () => {
+  let THREE = window.THREE || null;                       // 同源离线副本优先，CDN 只作兜底
+  for (const url of CDN) {
+    if (THREE) break;
+    try { THREE = await withTimeout(import(url), 15000); break; } catch (e) { /* 换下一个镜像 */ }
+  }
+  if (!THREE) { showError('未能载入三维引擎（离线副本与三个镜像均不可用），请检查网络后重试。'); return; }
+  await new Promise((r) => setTimeout(r, 0));            // 等模块顶层常量初始化完，避免 TDZ
+  try { boot(THREE); } catch (e) { console.error(e); showError('场景初始化失败：' + (e && e.message ? e.message : '未知错误')); }
+})();
+
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = (v, a, b) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function hash2(x, y, s) { let h = Math.imul(x, 374761393) ^ Math.imul(y, 668265263) ^ Math.imul(s, 1442695041); h = Math.imul(h ^ h >>> 13, 1274126177); return ((h ^ h >>> 16) >>> 0) / 4294967296; }
+/* 梯度噪声（Perlin），用于高度场；值噪声带整数周期，用于可平铺贴图 */
+function makeNoise(seed) {
+  const rnd = mulberry32(seed), p = new Uint8Array(256), perm = new Uint8Array(512);
+  for (let i = 0; i < 256; i++) p[i] = i;
+  for (let i = 255; i > 0; i--) { const j = (rnd() * (i + 1)) | 0, t = p[i]; p[i] = p[j]; p[j] = t; }
+  for (let i = 0; i < 512; i++) perm[i] = p[i & 255];
+  const g = (h, x, y) => { switch (h & 7) { case 0: return x + y; case 1: return -x + y; case 2: return x - y; case 3: return -x - y; case 4: return x; case 5: return -x; case 6: return y; default: return -y; } };
+  const f = t => t * t * t * (t * (t * 6 - 15) + 10);
+  return (x, y) => {
+    const X = Math.floor(x) & 255, Y = Math.floor(y) & 255, xf = x - Math.floor(x), yf = y - Math.floor(y);
+    const u = f(xf), v = f(yf);
+    const aa = perm[perm[X] + Y], ab = perm[perm[X] + Y + 1], ba = perm[perm[X + 1] + Y], bb = perm[perm[X + 1] + Y + 1];
+    return lerp(lerp(g(aa, xf, yf), g(ba, xf - 1, yf), u), lerp(g(ab, xf, yf - 1), g(bb, xf - 1, yf - 1), u), v);
+  };
+}
+function fbm(n, x, y, oct) { let a = 0, f = 1, amp = .5, sum = 0; for (let i = 0; i < oct; i++) { a += n(x * f, y * f) * amp; sum += amp; f *= 2.03; amp *= .5; } return a / sum; }
+function ridge(n, x, y, oct) { let a = 0, f = 1, amp = .5, sum = 0; for (let i = 0; i < oct; i++) { const v = 1 - Math.abs(n(x * f, y * f)); a += v * v * amp; sum += amp; f *= 2.07; amp *= .5; } return a / sum; }
+function vnoise(u, v, period, seed) {
+  const x = u * period, y = v * period, xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+  const sx = xf * xf * (3 - 2 * xf), sy = yf * yf * (3 - 2 * yf);
+  const h = (a, b) => hash2(((a % period) + period) % period, ((b % period) + period) % period, seed);
+  return lerp(lerp(h(xi, yi), h(xi + 1, yi), sx), lerp(h(xi, yi + 1), h(xi + 1, yi + 1), sx), sy);
+}
+function tfbm(u, v, base, oct, seed) { let a = 0, f = base, amp = .5, sum = 0; for (let i = 0; i < oct; i++) { a += vnoise(u, v, f, seed + i * 17) * amp; sum += amp; f *= 2; amp *= .5; } return a / sum; }
+const n1 = makeNoise(20261110), n2 = makeNoise(48271);
+
+/* 各向异性峰群：沿 X 拉长成「岭」，绕到 X 轴方向则叠成「峰」——诗意由几何本身承担 */
+const PEAKS = [
+  { x: -30, z: -45, h: 340, sx: 218, sz: 104 }, { x: -305, z: 34, h: 272, sx: 178, sz: 96 },
+  { x: 268, z: -18, h: 292, sx: 188, sz: 99 }, { x: -528, z: 78, h: 202, sx: 152, sz: 101 },
+  { x: 548, z: 56, h: 188, sx: 162, sz: 106 }, { x: 96, z: -246, h: 158, sx: 132, sz: 82 },
+  { x: -196, z: 208, h: 126, sx: 146, sz: 88 }
+];
+function H(x, z) {
+  const wx = x + 58 * fbm(n1, x * .0028 + 3.1, z * .0028 - 1.7, 4);
+  const wz = z + 46 * fbm(n1, x * .0026 - 5.3, z * .0026 + 2.9, 4);
+  let b = 0;
+  for (const p of PEAKS) { const dx = (wx - p.x) / p.sx, dz = (wz - p.z) / p.sz; b += p.h * Math.exp(-(dx * dx + dz * dz) * 1.5); }
+  b *= .70 + .46 * ridge(n2, wx * .0062, wz * .0062, 5) + .10 * fbm(n1, wx * .0018, wz * .0018, 3);
+  const v = Math.pow(clamp(1 - Math.abs(fbm(n2, wx * .0043 + 9.2, wz * .0043 - 4.4, 4)) * 1.9, 0, 1), 2.2);
+  b -= 108 * v * smooth(b, 55, 240);                                   // 侵蚀沟壑
+  b *= 1 - .80 * smooth(z + 22 * fbm(n2, x * .004, z * .004, 3), 238, 402); // 东南断崖
+  b += 26 * fbm(n1, x * .0021, z * .0021, 4) + 9 * fbm(n2, x * .013, z * .013, 3);
+  b += 3.4 * fbm(n2, x * .082, z * .082, 2);                          // 岩面高频起伏，交给顶点法线
+  const edge = 1 - smooth(Math.hypot(x, z), 820, 1060);             // 圆形收边，边缘与底盘齐平
+  return b * edge - 6;
+}
+
+function makeDetailTex(THREE) {
+  const S = 256, c = document.createElement('canvas'); c.width = c.height = S;
+  const ctx = c.getContext('2d'), img = ctx.createImageData(S, S), d = img.data;
+  for (let j = 0; j < S; j++) for (let i = 0; i < S; i++) {
+    const u = i / S, v = j / S, k = (j * S + i) * 4;
+    d[k] = tfbm(u, v, 4, 4, 11) * 255;
+    d[k + 1] = tfbm(u, v, 16, 4, 23) * 255;
+    d[k + 2] = tfbm(u, v, 64, 3, 37) * 255;
+    d[k + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.NoColorSpace;
+  t.anisotropy = 4; return t;
+}
+function makeCloudTex(THREE) {
+  const S = 256, c = document.createElement('canvas'); c.width = c.height = S;
+  const ctx = c.getContext('2d'), img = ctx.createImageData(S, S), d = img.data;
+  for (let j = 0; j < S; j++) for (let i = 0; i < S; i++) {
+    const u = i / S, v = j / S, k = (j * S + i) * 4;
+    const f = tfbm(u, v, 4, 5, 71) * .72 + tfbm(u, v, 8, 4, 91) * .28;
+    const r = Math.hypot(u - .5, v - .5) * 2;
+    const a = clamp((f - .42) * 3.1, 0, 1) * (1 - smooth(r, .34, .96));
+    d[k] = 246; d[k + 1] = 243; d[k + 2] = 236; d[k + 3] = a * 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+
+function boot(THREE) {
+  const isMobile = matchMedia('(pointer:coarse)').matches || innerWidth < 760;
+  const rnd = mulberry32(1084);
+  const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+
+  let fatal = false;                                                  // 着色器/上下文错误，阻止每帧把错误层收起
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, powerPreference: 'high-performance' });
+  let quality = 1;                                                    // 1 精细 / 0 流畅
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.03;
+  renderer.setClearColor(0xb7c6cc, 1);
+  if (renderer.debug) renderer.debug.onShaderError = (gl, prog, vs, fs) => {
+    fatal = true;
+    console.error('[shader]', gl.getShaderInfoLog(vs), gl.getShaderInfoLog(fs));
+    showError('着色器编译失败，请切换画质或刷新页面重试。');
+  };
+
+  const scene = new THREE.Scene();
+  const FOG = 0xb9c8cd;
+  scene.fog = new THREE.FogExp2(FOG, .00042);
+  const camera = new THREE.PerspectiveCamera(46, innerWidth / innerHeight, 1, 6000);
+
+  const sunDir = V3(.55, .34, -.76).normalize();
+  scene.add(new THREE.HemisphereLight(0xa9c8e8, 0x494635, 1.05));     // 天空光提暗部，侧光勾出山脊
+  const sun = new THREE.DirectionalLight(0xffe0b8, 2.55);
+  sun.position.copy(sunDir).multiplyScalar(1400); sun.target.position.set(0, 60, 0);
+  scene.add(sun, sun.target);
+  /* 不启用阴影贴图：大范围高度场在阴影相机边界外会被判为全阴影，出现直线黑块；
+     山体明暗改由方向光 N·L 与片元着色器里的坡度遮蔽近似承担。 */
+
+  /* 天空：大气渐变 + 米氏光晕 + 太阳盘 + 薄卷云；随相机移动，避免视差 */
+  const skyMat = new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false, fog: false,
+    uniforms: { uSun: { value: sunDir }, uHorizon: { value: V3(.73, .78, .80) } },
+    vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+    fragmentShader: `uniform vec3 uSun; uniform vec3 uHorizon; varying vec3 vDir;
+      float h21(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
+      float n2(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.0-2.0*f);
+        return mix(mix(h21(i),h21(i+vec2(1.,0.)),f.x),mix(h21(i+vec2(0.,1.)),h21(i+vec2(1.,1.)),f.x),f.y); }
+      void main(){
+        vec3 d=normalize(vDir); float y=max(d.y,-0.02);
+        float sd=max(dot(d,normalize(uSun)),0.0);
+        vec3 col=mix(uHorizon,vec3(0.13,0.27,0.49),pow(clamp(y,0.0,1.0),0.52));
+        col+=vec3(0.48,0.25,0.11)*pow(1.0-clamp(y*3.0,0.0,1.0),3.0)*pow(sd,2.0)*0.85;
+        col+=vec3(1.0,0.78,0.52)*(pow(sd,5.0)*0.16+pow(sd,22.0)*0.30+pow(sd,240.0)*0.90);
+        col+=vec3(1.0,0.96,0.86)*smoothstep(0.9986,0.9994,sd)*2.0;
+        float band=smoothstep(0.03,0.30,d.y)*(1.0-smoothstep(0.55,0.95,d.y));
+        float cl=n2(d.xz*7.0/max(d.y+0.28,0.18));
+        col=mix(col,vec3(0.94,0.91,0.87),smoothstep(0.50,0.76,cl)*band*0.17);
+        gl_FragColor=vec4(col,1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`
+  });
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(3600, 36, 20), skyMat);
+  sky.frustumCulled = false; scene.add(sky);
+
+  /* 远山剪影环与江湖底盘：只负责纵深，细节交给雾 */
+  function ridgeRing(R, baseH, amp, tint, seed) {
+    const seg = 150, pos = [], col = [], idx = [], nn = makeNoise(seed), c = new THREE.Color(tint);
+    for (let i = 0; i <= seg; i++) {
+      const a = i / seg * Math.PI * 2, ca = Math.cos(a), sa = Math.sin(a);
+      const r = R + 96 * fbm(nn, ca * 2.3, sa * 2.3, 3);
+      const h = baseH + amp * (.32 + .68 * ridge(nn, ca * 3.2 + 7, sa * 3.2 - 4, 4));
+      const x = ca * r, z = sa * r;
+      pos.push(x, -10, z, x, h, z);
+      col.push(c.r * .82, c.g * .86, c.b * .92, c.r, c.g, c.b);
+      if (i < seg) { const k = i * 2; idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2); }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    g.setIndex(idx);
+    return new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide, fog: true }));
+  }
+  scene.add(ridgeRing(1500, 120, 190, 0x8799a6, 771), ridgeRing(2050, 90, 230, 0x9caab3, 913));
+
+  /* 主体高度场：三平面程序化材质，保留 three 的光照、阴影与雾 */
+  const SEG = isMobile ? 160 : 288, EXT = 1000, detailTex = makeDetailTex(THREE);
+  const ground = new THREE.PlaneGeometry(EXT * 2, EXT * 2, SEG, SEG);
+  ground.rotateX(-Math.PI / 2);
+  const pa = ground.attributes.position;
+  for (let i = 0; i < pa.count; i++) pa.setY(i, H(pa.getX(i), pa.getZ(i)));
+  pa.needsUpdate = true; ground.computeVertexNormals(); ground.computeBoundingSphere();
+  const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .94, metalness: 0 });
+  mat.onBeforeCompile = (sh) => {
+    sh.uniforms.uDetail = { value: detailTex };
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vWPos;\nvarying vec3 vWNrm;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvWPos=(modelMatrix*vec4(transformed,1.0)).xyz;\nvWNrm=normalize(mat3(modelMatrix)*objectNormal);');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>
+        uniform sampler2D uDetail; varying vec3 vWPos; varying vec3 vWNrm;
+        vec3 tri(vec3 p, vec3 n, float s){
+          vec3 w=pow(abs(n),vec3(4.0)); w/=max(w.x+w.y+w.z,0.0001);
+          return texture2D(uDetail,p.zy*s).rgb*w.x
+               + texture2D(uDetail,p.xz*s).rgb*w.y
+               + texture2D(uDetail,p.xy*s).rgb*w.z; }`)
+      .replace('#include <map_fragment>', `#include <map_fragment>
+        vec3 nn=normalize(vWNrm);
+        float slope=1.0-clamp(nn.y,0.0,1.0);
+        float alt=vWPos.y;
+        vec3 d1=tri(vWPos,nn,0.012), d2=tri(vWPos,nn,0.058);
+        float blotch=d1.r, rock=d1.g+d2.g*0.45, grain=d2.b;
+        float treeline=298.0+(blotch-0.5)*96.0-slope*130.0;
+        float veg=clamp((1.0-smoothstep(treeline-72.0,treeline+52.0,alt))
+                 *(1.0-smoothstep(0.48,0.90,slope))*(0.50+0.70*blotch),0.0,1.0);
+        vec3 forest=mix(vec3(0.038,0.078,0.042),vec3(0.092,0.150,0.070),blotch);
+        vec3 rockC=mix(vec3(0.160,0.158,0.150),vec3(0.325,0.315,0.295),rock);
+        vec3 baseC=mix(rockC,mix(vec3(0.086,0.140,0.070),forest,0.70),veg);
+        baseC=mix(baseC,vec3(0.395,0.380,0.352),smoothstep(292.0,362.0,alt)*(0.30+0.40*grain));
+        float strata=sin(vWPos.y*0.21+d1.b*11.0)*0.5+0.5;
+        baseC*=0.80+0.28*strata*(1.0-veg);
+        baseC*=0.82+0.32*grain;
+        baseC*=0.88+0.24*blotch;
+        baseC*=0.86+0.14*smoothstep(0.0,130.0,alt);
+        baseC*=0.80+0.20*clamp(nn.y,0.0,1.0);
+        diffuseColor.rgb*=baseC*1.85;`);
+  };
+  const terrain = new THREE.Mesh(ground, mat);
+  scene.add(terrain);
+  const plain = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000), mat); // 底盘共用同一材质，方形网格边不再显形
+  plain.rotation.x = -Math.PI / 2; plain.position.y = -6.2; scene.add(plain);
+
+  /* 云海：多层水平云毯 + 山腰立雾，全部用同一张程序化云纹理 */
+  const cloudTex = makeCloudTex(THREE), clouds = [];
+  for (let i = 0; i < 6; i++) {
+    const t = cloudTex.clone(); t.needsUpdate = true;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(880 + i * 150, 880 + i * 150),
+      new THREE.MeshBasicMaterial({ map: t, transparent: true, opacity: .15 + (i % 3) * .035,
+        depthWrite: false, side: THREE.DoubleSide, fog: false, color: 0xfff4e6 }));
+    m.rotation.x = -Math.PI / 2; m.rotation.z = rnd() * 6.28;
+    m.position.set((rnd() * 2 - 1) * 360, 38 + i * 18 + rnd() * 14, (rnd() * 2 - 1) * 360);
+    m.renderOrder = 3; m.userData.spd = .0016 + rnd() * .0022; scene.add(m); clouds.push(m);
+  }
+  const mist = [];
+  for (let i = 0; i < 8; i++) {
+    const t = cloudTex.clone(); t.needsUpdate = true;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(620 + rnd() * 420, 250 + rnd() * 160),
+      new THREE.MeshBasicMaterial({ map: t, transparent: true, opacity: .15, depthWrite: false,
+        side: THREE.DoubleSide, fog: false, color: 0xeaf0f0 }));
+    const a = rnd() * 6.28;
+    m.position.set(Math.cos(a) * 330, 150 + rnd() * 90, Math.sin(a) * 330);
+    m.lookAt(0, 170, 0); m.renderOrder = 3; scene.add(m); mist.push(m);
+  }
+
+  /* 针叶林：合并低模树形，InstancedMesh 一次绘制；坡度与海拔共同决定分布 */
+  function mergeGeos(geos) {
+    let vc = 0, ic = 0;
+    for (const g of geos) { vc += g.attributes.position.count; ic += g.index.count; }
+    const pos = new Float32Array(vc * 3), nrm = new Float32Array(vc * 3), idx = new Uint32Array(ic);
+    let vo = 0, io = 0;
+    for (const g of geos) {
+      pos.set(g.attributes.position.array, vo * 3); nrm.set(g.attributes.normal.array, vo * 3);
+      const gi = g.index.array;
+      for (let i = 0; i < gi.length; i++) idx[io++] = gi[i] + vo;
+      vo += g.attributes.position.count;
+    }
+    const out = new THREE.BufferGeometry();
+    out.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    out.setAttribute('normal', new THREE.BufferAttribute(nrm, 3));
+    out.setIndex(new THREE.BufferAttribute(idx, 1)); out.computeBoundingSphere(); return out;
+  }
+  const parts = [];
+  const trunk = new THREE.CylinderGeometry(.34, .62, 4.6, 6); trunk.translate(0, 2.3, 0); parts.push(trunk);
+  for (const [r, h, y] of [[3.9, 5.0, 3.2], [3.3, 4.9, 5.6], [2.7, 4.5, 8.0], [2.0, 4.1, 10.2], [1.2, 3.3, 12.3]]) {
+    const c = new THREE.ConeGeometry(r, h, 7); c.translate(0, y, 0); parts.push(c);
+  }
+  const treeGeo = mergeGeos(parts);
+  const TREE_MAX = isMobile ? 700 : 2100;
+  const trees = new THREE.InstancedMesh(treeGeo,
+    new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .95, flatShading: true }), TREE_MAX);
+  trees.frustumCulled = false;
+  const dummy = new THREE.Object3D(), tint = new THREE.Color();
+  let placed = 0, guard = 0;
+  while (placed < TREE_MAX && guard++ < TREE_MAX * 14) {
+    const x = (rnd() * 2 - 1) * 620, z = (rnd() * 2 - 1) * 620, h = H(x, z);
+    if (h < 26 || h > 232) continue;
+    const e = 7, gx = (H(x + e, z) - H(x - e, z)) / (2 * e), gz = (H(x, z + e) - H(x, z - e)) / (2 * e);
+    if (Math.hypot(gx, gz) > .92) continue;
+    const s = .72 + rnd() * .92;
+    dummy.position.set(x, h - 1.1, z);
+    dummy.rotation.set(0, rnd() * 6.28, 0);
+    dummy.scale.set(s * (.86 + rnd() * .3), s * (1.0 + rnd() * .55), s * (.86 + rnd() * .3));
+    dummy.updateMatrix(); trees.setMatrixAt(placed, dummy.matrix);
+    tint.setHSL(.255 + rnd() * .055, .26 + rnd() * .20, .088 + rnd() * .078);
+    trees.setColorAt(placed, tint); placed++;
+  }
+  trees.count = placed; trees.instanceMatrix.needsUpdate = true;
+  if (trees.instanceColor) trees.instanceColor.needsUpdate = true;
+  scene.add(trees);
+
+  /* 盘旋的飞鸟：给静态山体一处活的尺度参照 */
+  const wing = new THREE.BufferGeometry();
+  wing.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, -1.4, -1.7, .35, .6, 0, 0, .25,
+    0, 0, -1.4, 0, 0, .25, 1.7, .35, .6], 3));
+  wing.computeVertexNormals();
+  const birds = [];
+  for (let i = 0; i < 11; i++) {
+    const b = new THREE.Mesh(wing, new THREE.MeshBasicMaterial({ color: 0x2c3336, side: THREE.DoubleSide, fog: true }));
+    b.userData = { a: rnd() * 6.28, r: 190 + rnd() * 330, y: 250 + rnd() * 160, sp: .10 + rnd() * .13, s: 1.4 + rnd() * 1.8 };
+    b.scale.setScalar(b.userData.s); scene.add(b); birds.push(b);
+  }
+
+  /* 相机：五种视点共用一组轨道参数，切换时平滑插值；入山另加密雾 */
+  const VIEWS = [
+    { name: '横看 · 成岭', desc: '自正面远望，群峰连成一道横岭', yaw: 0, pitch: .14, dist: 830, ty: 140, fog: .00042 },
+    { name: '侧看 · 成峰', desc: '绕到岭的一端，横岭收作一座孤峰', yaw: 1.49, pitch: .13, dist: 810, ty: 146, fog: .00042 },
+    { name: '远观 · 高低', desc: '退远抬高，远近层峦显出高下', yaw: -.30, pitch: .26, dist: 1360, ty: 116, fog: .00034 },
+    { name: '入山 · 不识', desc: '行至山腰，云岚满目，不见真面', yaw: .68, pitch: .015, dist: 285, ty: 172, fog: .00135 },
+    { name: '巡游 · 各不同', desc: '视点绕山缓行，岭与峰往复相生', yaw: 0, pitch: .17, dist: 850, ty: 132, fog: .00042 }
+  ];
+  const cam = { yaw: 0, pitch: .14, dist: 830, ty: 140 }, want = Object.assign({}, cam);
+  let view = 4, auto = true, fogWant = .00042;
+  const viewname = document.getElementById('viewname'), viewdesc = document.getElementById('viewdesc');
+  const l1 = document.getElementById('line1'), l2 = document.getElementById('line2');
+  const navButtons = [...document.querySelectorAll('nav button')];
+  function selectView(i) {
+    view = i; auto = (i === 4);
+    const v = VIEWS[i];
+    if (i !== 4) Object.assign(want, { yaw: v.yaw, pitch: v.pitch, dist: v.dist, ty: v.ty });
+    fogWant = v.fog; viewname.textContent = v.name; viewdesc.textContent = v.desc;
+    l1.classList.toggle('on', i === 0 || i === 1 || i === 4);
+    l2.classList.toggle('on', i === 2 || i === 3 || i === 4);
+    navButtons.forEach((b, k) => b.classList.toggle('on', k === i));
+  }
+  navButtons.forEach(b => b.addEventListener('click', () => selectView(+b.dataset.view)));
+  selectView(4);
+
+  let drag = false, lx = 0, ly = 0;
+  canvas.addEventListener('pointerdown', e => { drag = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', e => {
+    if (!drag) return;
+    want.yaw -= (e.clientX - lx) * .0042; want.pitch = clamp(want.pitch + (e.clientY - ly) * .0032, -.12, .72);
+    lx = e.clientX; ly = e.clientY;
+  });
+  canvas.addEventListener('pointerup', () => { drag = false; });
+  canvas.addEventListener('pointercancel', () => { drag = false; });
+  canvas.addEventListener('wheel', e => { e.preventDefault(); want.dist = clamp(want.dist * (1 + Math.sign(e.deltaY) * .085), 190, 2100); }, { passive: false });
+  canvas.addEventListener('dblclick', () => selectView(4));
+  addEventListener('keydown', e => {
+    if (e.key >= '1' && e.key <= '5') selectView(+e.key - 1);
+    if (e.code === 'Space') { e.preventDefault(); togglePause(); }
+  });
+
+  let paused = false, hidden = false;
+  const pauseBtn = document.getElementById('pause');
+  function togglePause() { paused = !paused; pauseBtn.textContent = paused ? '继续' : '暂停'; }
+  pauseBtn.addEventListener('click', togglePause);
+  document.addEventListener('visibilitychange', () => { hidden = document.hidden; });
+  const qBtn = document.getElementById('quality');
+  function applyQuality() {
+    const dpr = quality ? Math.min(devicePixelRatio || 1, isMobile ? 1.4 : 1.75) : 1;
+    renderer.setPixelRatio(dpr); renderer.setSize(innerWidth, innerHeight, false);
+    camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+    trees.count = quality ? placed : Math.min(placed, 480);
+    clouds.forEach((c, i) => { c.visible = quality || i < 4; });
+    mist.forEach((m, i) => { m.visible = quality || i < 2; });
+    qBtn.textContent = '画质：' + (quality ? '精细' : '流畅');
+  }
+  qBtn.addEventListener('click', () => { quality = 1 - quality; applyQuality(); });
+  addEventListener('resize', () => applyQuality());
+  applyQuality();
+
+  canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); fatal = true; paused = true; showError('图形上下文丢失，正在等待恢复…'); });
+  canvas.addEventListener('webglcontextrestored', () => { fatal = false; paused = false; hideError(); });
+
+  const fpsEl = document.getElementById('fps');
+  let last = performance.now(), acc = 0, frames = 0, fps = 0, clock = 0;
+  window.__tixilinbi = () => ({ fps, view: VIEWS[view].name, triangles: renderer.info.render.triangles,
+    calls: renderer.info.render.calls, trees: trees.count, ready: document.documentElement.dataset.ready || '0' });
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min((now - last) / 1000, .05); last = now;
+    if (paused || hidden) return;
+    clock += dt;
+    if (auto && !drag) { want.yaw += dt * .058; want.pitch = .17 + Math.sin(clock * .09) * .055; }
+    const k = 1 - Math.exp(-dt * 3.2);
+    cam.yaw = lerp(cam.yaw, want.yaw, k); cam.pitch = lerp(cam.pitch, want.pitch, k);
+    cam.dist = lerp(cam.dist, want.dist, k); cam.ty = lerp(cam.ty, want.ty, k);
+    scene.fog.density = lerp(scene.fog.density, fogWant, k * .6);
+    const cp = Math.cos(cam.pitch);
+    camera.position.set(Math.sin(cam.yaw) * cam.dist * cp, cam.ty + Math.sin(cam.pitch) * cam.dist, Math.cos(cam.yaw) * cam.dist * cp);
+    camera.lookAt(0, cam.ty, 0);
+    sky.position.copy(camera.position);
+    for (const c of clouds) { c.material.map.offset.x += c.userData.spd * dt * 6; c.position.x += Math.sin(clock * .06 + c.id) * dt * .6; }
+    for (const m of mist) { m.material.map.offset.x += dt * .003; m.position.y += Math.sin(clock * .3 + m.id) * dt * .5; }
+    for (const b of birds) {
+      const u = b.userData; u.a += dt * u.sp;
+      b.position.set(Math.cos(u.a) * u.r, u.y + Math.sin(u.a * 2.1) * 22, Math.sin(u.a) * u.r * .8);
+      b.rotation.y = -u.a + Math.PI / 2; b.rotation.z = Math.sin(clock * 9 + u.a) * .35;
+    }
+    renderer.render(scene, camera);
+    document.documentElement.dataset.ready = '1';
+    if (!fatal) hideError();
+    frames++; acc += dt;
+    if (acc >= .6) { fps = Math.round(frames / acc); frames = 0; acc = 0;
+      fpsEl.textContent = fps + ' FPS · ' + renderer.info.render.calls + ' draws · ' +
+        Math.round(renderer.info.render.triangles / 1000) + 'k 三角'; }
+  }
+  requestAnimationFrame(frame);
+}
+</script>
+</body>
+</html>
