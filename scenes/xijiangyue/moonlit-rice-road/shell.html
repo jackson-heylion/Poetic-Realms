@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>西江月·夜行黄沙道中 · 明月别枝 | 一诗一境</title>
+    <meta
+      name="description"
+      content="辛弃疾《西江月·夜行黄沙道中》：明月别枝惊鹊，清风半夜鸣蝉。可离线打开的动态 Three.js 诗境。"
+    />
+    <!-- SCENE_STYLE -->
+  </head>
+  <body>
+    <canvas id="scene" aria-label="明月别枝的三维诗境"></canvas>
+
+    <header class="plate">
+      <h1 class="plate-title">西江月</h1>
+      <p class="plate-sub">夜行黄沙道中</p>
+      <p class="plate-by">宋 · 辛弃疾</p>
+      <p class="plate-verse">明月别枝惊鹊，<br />清风半夜鸣蝉。</p>
+    </header>
+
+    <p class="note">
+      稻、蝉、鹊、星、雨、茅店、溪桥据词句敷设；山形、屋制与稻穗比例经艺术加工，不作复原。
+    </p>
+
+    <button class="ghost" id="read" type="button" aria-expanded="false">
+      读全词
+    </button>
+
+    <div class="hint" id="hint">拖动环顾 · 滚轮远近 · 空格静观</div>
+    <div class="meter" id="meter" aria-hidden="true">—</div>
+    <div class="notice" id="notice" role="alert"></div>
+
+    <nav class="dock" aria-label="诗境控制">
+      <a class="dock-btn" href="../../index.html">← 返回放映厅</a>
+      <button class="dock-btn" id="moon" type="button">望月</button>
+      <button class="dock-btn" id="widen" type="button" aria-pressed="true">
+        望野
+      </button>
+      <button class="dock-btn" id="still" type="button" aria-pressed="false">
+        静观
+      </button>
+      <button class="dock-btn" id="pause" type="button" aria-pressed="false">
+        暂停
+      </button>
+      <button class="dock-btn" id="sound" type="button" aria-pressed="false">
+        蝉声
+      </button>
+      <label class="dock-quality">
+        画质
+        <select id="quality">
+          <option value="high">精细</option>
+          <option value="normal" selected>标准</option>
+          <option value="low">省电</option>
+        </select>
+      </label>
+    </nav>
+
+    <section class="sheet" id="sheet" hidden aria-label="全词">
+      <div class="sheet-inner">
+        <h2>西江月 · 夜行黄沙道中</h2>
+        <p class="sheet-meta">宋 · 辛弃疾</p>
+        <div class="sheet-text" id="sheet-text"></div>
+        <p class="sheet-source">
+          正文按通行本断句录入；目录电子文本见
+          <code>data/poems.json</code> 的 <code>transcription</code> 字段，尚未逐字校定纸本。
+        </p>
+        <button class="sheet-close" id="sheet-close" type="button">
+          收起
+        </button>
+      </div>
+    </section>
+
+    <div class="veil" id="veil" role="status" aria-live="polite">
+      <p class="veil-title">明月别枝</p>
+      <p class="veil-text" id="veil-text">正在入境……</p>
+      <button class="veil-retry" id="retry" type="button" hidden>
+        重新入境
+      </button>
+    </div>
+
+    <noscript>
+      <p class="noscript">
+        此诗境需要 JavaScript 与 WebGL。<a href="../../catalog.html">返回馆藏</a>
+      </p>
+    </noscript>
+
+    <!-- SCENE_ENGINE -->
+    <!-- SCENE_SCRIPT -->
+  </body>
+</html>
