@@ -282,9 +282,13 @@ void main() {
   } else if (vMaterial < 3.5) {
     float tile = sin(vLocal.x*28.0 + vLocal.z*3.0);
     color *= 0.84 + 0.14*tile + 0.20*noiseAt(vLocal.xz*11.9);
-  } else {
+  } else if (vMaterial < 4.5) {
     vec2 grainUV = vec2(vLocal.x*14.0-vLocal.y*8.0,vLocal.z*0.7+vLocal.y*3.7);
     color *= 0.74+0.48*noiseAt(grainUV);
+  } else {
+    float nap=noiseAt(vWorld.xz*0.52+vWorld.y*vec2(0.31,0.47));
+    float fold=noiseAt(vLocal.xy*vec2(5.2,8.4)+vLocal.z*0.61);
+    color *= 0.88+0.16*nap+0.08*fold;
   }
   float skyFill = 0.52+0.25*max(n.y,0.0);
   float direct = max(dot(n,normalize(vec3(0.30,0.43,-0.85))),0.0);
@@ -309,27 +313,55 @@ out vec4 outColor;
 uniform sampler2D uMirror;
 uniform mat4 uMirrorProjection;
 uniform vec3 uBoat;
+uniform vec3 uPaddle;
 uniform bool uFine;
 ` + atmosphere + `
 void main() {
   vec2 p = vWorld.xz;
-  vec2 flow = p + vec2(0.10,2.05)*uTime;
-  vec2 ripples = vec2(
-    sin(dot(flow,vec2(0.81,0.27))) + 0.60*cos(dot(flow,vec2(1.81,-0.41))),
-    sin(dot(flow,vec2(-0.40,1.58))) + 0.57*cos(dot(flow,vec2(0.77,2.28)))
-  );
-  vec2 chop = vec2(noiseAt(flow*vec2(2.9,1.3)), noiseAt(flow*vec2(3.8,2.4)+27.1))-0.5;
+  vec2 current = vec2(-0.23,1.0);
+  vec2 flow = p + current*uTime*1.78;
+  vec2 wind = normalize(vec2(-0.67,0.74));
+  vec2 bend=vec2(
+    noiseAt(p*0.021+vec2(18.4+uTime*0.021,4.7)),
+    noiseAt(p*0.029+vec2(3.3,27.6-uTime*0.016))
+  )-0.5;
+  vec2 warped=flow+bend*3.8;
+  float phaseNoise=(noiseAt(p*0.043+vec2(41.7+uTime*0.034,8.1))-0.5)*1.6;
+  float swell=dot(warped,normalize(vec2(-0.18,1.0)))*0.27-uTime*0.63+phaseNoise;
+  float crossWave=dot(warped,wind)*0.73-uTime*0.86+(bend.x-bend.y)*1.15;
+  float shortWave=dot(warped,normalize(vec2(0.92,0.39)))*2.36+uTime*1.43+phaseNoise*0.61;
+  float capillary=dot(warped,normalize(vec2(-0.58,0.81)))*5.15-uTime*2.38+phaseNoise*0.34;
+  vec2 rippleSlope=normalize(vec2(-0.18,1.0))*cos(swell)*0.071
+    + wind*cos(crossWave)*0.038
+    + normalize(vec2(0.92,0.39))*cos(shortWave)*0.017
+    + normalize(vec2(-0.58,0.81))*cos(capillary)*0.0048;
+  vec2 chop=vec2(noiseAt(flow*vec2(1.2,1.75)),
+    noiseAt(flow*vec2(1.73,1.06)+vec2(7.2,13.4)))-0.5;
   float distanceToEye = length(uEye-vWorld);
+  rippleSlope*=mix(1.0,0.28,smoothstep(45.0,390.0,distanceToEye));
   float behind = p.y-uBoat.y;
   float across = p.x-uBoat.x-uBoat.z*behind*exp(-abs(behind)*0.013);
-  float wake = smoothstep(1.2,6.3,behind)*exp(-max(0.0,behind)*0.033);
-  float waveFront = abs(across) - 0.62 - max(0.0,behind)*0.22;
-  float wakeEdge = exp(-abs(waveFront)*1.7)*wake;
-  float trail = exp(-pow(across/(1.42+max(0.0,behind)*0.037),2.0))*wake;
+  float wake = smoothstep(1.4,5.5,behind)*exp(-max(0.0,behind)*0.022);
+  float fanWidth = 0.54 + max(0.0,behind)*0.135;
+  float waveFront = abs(across)-fanWidth;
+  float wakeEdge = exp(-abs(waveFront)*4.8)*wake;
+  float outerWake = exp(-abs(waveFront-0.46)*3.6)*wake*0.48;
+  float trail = exp(-pow(across/(1.10+max(0.0,behind)*0.052),2.0))*wake;
+  float bowDistance = length(vec2(across/1.25,(behind+4.05)/0.57));
+  float bowRing = exp(-abs(bowDistance-1.0)*7.5)*smoothstep(-5.0,-1.1,behind);
+  float paddleDistance = length((p-uPaddle.xy)*vec2(1.0,0.72));
+  float paddleWave = exp(-abs(paddleDistance-(0.47+0.10*sin(uTime*3.8)))*11.0)
+    * exp(-paddleDistance*0.76)*uPaddle.z;
+  float paddlePhase=paddleDistance*13.4-uTime*4.3+(noiseAt(flow*0.16)-0.5)*1.3;
+  float paddleRipple=sin(paddlePhase)*exp(-paddleDistance*1.12)*uPaddle.z*0.22;
+  float paddleRings=smoothstep(0.18,0.75,sin(paddlePhase))*exp(-paddleDistance*1.32)*uPaddle.z;
+  float turbulence = noiseAt(flow*vec2(2.6,3.8)+vec2(across*0.23,behind*0.61));
+  vec2 wakeSlope = sign(across)*vec2(1.0,-uBoat.z)*(
+    0.20*wakeEdge+0.11*outerWake+0.08*trail+0.11*bowRing+0.15*paddleWave);
   vec3 n = normalize(vec3(
-    0.037*ripples.x + 0.079*chop.x + 0.10*sin(waveFront*4.9)*wakeEdge,
+    rippleSlope.x+0.030*chop.x+0.10*(turbulence-0.5)+wakeSlope.x,
     1.0,
-    0.050*ripples.y + 0.090*chop.y + 0.047*sin(behind*5.3)*trail
+    rippleSlope.y+0.029*(chop.y-0.2)+wakeSlope.y+paddleRipple
   ));
   vec3 view = normalize(uEye-vWorld);
   vec3 specularRay = reflect(-view,n);
@@ -347,11 +379,14 @@ void main() {
   vec3 deep = mix(vec3(0.128,0.258,0.273),vec3(0.260,0.382,0.346),pigment);
   vec3 color = mix(deep,reflection*vec3(0.91,0.94,0.94),fresnel);
   color *= 1.0 - 0.47*exp(-pow(across*0.70,2.0)-pow((behind-0.35)*0.23,2.0));
-  float glitter = pow(max(0.0,dot(sun,specularRay)),118.0);
-  color += vec3(1.0,0.66,0.34)*min(0.54,glitter*0.63);
-  float spume = smoothstep(0.34,0.74,noiseAt(flow*vec2(4.3,0.95)+vec2(0.0,behind*0.60)));
-  float foam = (0.78*wakeEdge + 0.33*trail)*(0.32+spume*0.68);
-  color = mix(color,vec3(0.72,0.84,0.79),foam);
+  float glitter = pow(max(0.0,dot(sun,specularRay)),154.0);
+  color += vec3(1.0,0.73,0.43)*min(0.47,glitter*0.59);
+  float spume = smoothstep(0.38,0.73,noiseAt(flow*vec2(5.2,1.25)+vec2(across*0.7,behind*0.52)));
+  float foam = (0.65*wakeEdge+0.20*outerWake+0.14*trail)*(0.18+spume*0.66);
+  foam += 0.30*paddleWave*smoothstep(0.24,0.68,spume);
+  foam += 0.13*paddleRings*smoothstep(0.32,0.70,spume);
+  foam += 0.10*bowRing*smoothstep(0.58,0.82,turbulence);
+  color = mix(color,vec3(0.77,0.86,0.81),clamp(foam,0.0,0.83));
   // 倒影已带峡雾，水面只补少量贴水散射。
   color = mix(color,fogged(color,vWorld),0.37);
   color = mix(color,airColor(-view),smoothstep(510.0,1370.0,distanceToEye));
@@ -513,6 +548,29 @@ class Mesh {
     }
   }
 
+  ellipsoid(center,radii,color,material,segments=12,rows=7) {
+    const rings = [];
+    for (let row=0; row<=rows; row++) {
+      const latitude = -Math.PI/2+Math.PI*row/rows;
+      const ring = [];
+      for (let segment=0; segment<segments; segment++) {
+        const longitude = segment*2*Math.PI/segments;
+        ring.push([
+          center[0]+radii[0]*Math.cos(latitude)*Math.cos(longitude),
+          center[1]+radii[1]*Math.sin(latitude),
+          center[2]+radii[2]*Math.cos(latitude)*Math.sin(longitude)
+        ]);
+      }
+      rings.push(ring);
+    }
+    for (let row=0; row<rows; row++) {
+      for (let segment=0; segment<segments; segment++) {
+        const next=(segment+1)%segments;
+        this.face([rings[row][segment],rings[row+1][segment],rings[row+1][next],rings[row][next]],color,material);
+      }
+    }
+  }
+
   data() { return { vertices: new Float32Array(this.vertices) }; }
 }
 
@@ -630,60 +688,167 @@ function buildShoreRocks(mesh,grids) {
 }
 function buildBoat() {
   const mesh = new Mesh();
-  const wood = [0.433,0.248,0.129];
-  const wet = [0.190,0.122,0.081];
-  const edge = [0.559,0.374,0.186];
+  const wood = [0.421,0.239,0.120];
+  const wet = [0.165,0.114,0.078];
+  const edge = [0.540,0.352,0.163];
+  const seams = [0.274,0.175,0.100];
   const sections = [
-    [-4.95,0.05,0.88],[-4.14,0.63,0.47],[-2.96,1.04,0.30],[-1.50,1.29,0.18],
-    [0.25,1.36,0.18],[1.78,1.20,0.23],[3.21,0.83,0.38],[4.34,0.18,0.60]
+    [-4.95,0.04,0.85],[-4.48,0.42,0.62],[-3.82,0.75,0.45],[-2.96,1.04,0.29],
+    [-1.50,1.27,0.17],[0.25,1.35,0.16],[1.78,1.22,0.23],[3.21,0.86,0.37],
+    [4.07,0.48,0.51],[4.47,0.13,0.65]
   ];
+  const heights = [0,0.29,0.67,0.91,1];
   const hull = (side,i,j) => {
     const [z,w,y] = sections[i];
-    return [side*w*[0.02,0.62,0.91,0.97,1.0][j],mix(-0.43,y,[0,0.33,0.73,0.91,1][j]),z];
+    return [side*w*[0.025,0.58,0.87,0.97,1.0][j],mix(-0.42,y,heights[j]),z];
   };
   for (let i=0; i<sections.length-1; i++) {
     for (const side of [-1,1]) {
       for (let j=0; j<4; j++) {
         const face = [hull(side,i,j),hull(side,i+1,j),hull(side,i+1,j+1),hull(side,i,j+1)];
-        mesh.face(side>0 ? face.reverse() : face,[wet,wood,wet,edge][j],4);
+        const finish=scale([wet,wood,wood,edge][j],(i+j)%4===0 ? 0.92 : 1);
+        mesh.face(side>0 ? face.reverse() : face,finish,4);
       }
-      mesh.tube(hull(side,i,4),hull(side,i+1,4),0.052,0.052,edge,4);
+      mesh.tube(hull(side,i,4),hull(side,i+1,4),0.068,0.065,edge,4,7);
+      for (let row=1; row<4; row++) {
+        mesh.tube(hull(side,i,row),hull(side,i+1,row),row===3 ? 0.025 : 0.018,
+          row===3 ? 0.023 : 0.016,row===3 ? edge : seams,4,5);
+      }
     }
-    const a=hull(-1,i,4),b=hull(1,i,4),c=hull(1,i+1,4),d=hull(-1,i+1,4);
-    mesh.face([a,d,c,b].map(([x,y,z]) => [x*0.94,y-0.13,z]),wood,4);
+    const a=hull(-1,i,0),b=hull(1,i,0),c=hull(1,i+1,0),d=hull(-1,i+1,0);
+    mesh.face([a,d,c,b],wet,4);
+    mesh.tube([0,-0.49,sections[i][0]],[0,-0.49,sections[i+1][0]],0.073,0.048,seams,4,6);
   }
-  for (const z of [-3.4,-2.8,1.3,2.0,2.7,3.3]) {
-    mesh.box(0,0.15,z,z>2.7||z<-3.0 ? 1.38 : 2.04,0.075,0.19,edge,4);
+  for (let i=0; i<sections.length-1; i++) {
+    const z=(sections[i][0]+sections[i+1][0])*0.5;
+    const halfWidth=Math.min(sections[i][1],sections[i+1][1])*0.82;
+    const plankWidth=halfWidth*2/5;
+    for (let plank=0; plank<5; plank++) {
+      const x=-halfWidth+plankWidth*(plank+0.5);
+      mesh.box(x,-0.12,z,plankWidth+0.018,0.085,sections[i][0]-sections[i+1][0]+0.035,
+        (i+plank)%3===0 ? [0.402,0.264,0.148] : [0.354,0.222,0.119],4);
+    }
+  }
+  for (const z of [-3.55,-2.75,-1.82,-0.73,0.38,1.44,2.45,3.27]) {
+    const width=z>2.9 ? 0.82 : z<-3.3 ? 0.95 : z>2.0 ? 1.52 : 1.86;
+    mesh.box(0,-0.17,z,width,0.075,0.11,seams,4);
+  }
+  for (const z of [-1.35,1.2,2.65]) {
+    mesh.box(0,0.24,z,1.8,0.11,0.31,[0.423,0.291,0.169],4);
+    mesh.box(0,0.31,z,1.64,0.045,0.22,[0.565,0.404,0.232],4);
   }
 
-  const cane = [0.502,0.373,0.232];
+  const cane = [0.464,0.342,0.203];
+  const rib = [0.300,0.214,0.126];
   const canopy = (angle,z) => [
-    Math.cos(angle)*1.09, 0.43+Math.sin(angle)*(1.24-0.09*Math.abs(z+0.48)), z
+    Math.cos(angle)*1.06,
+    0.48+Math.sin(angle)*(1.16-0.065*Math.abs(z+0.48))-0.034*Math.pow(Math.sin(angle*2),2),
+    z
   ];
-  for (let i=0; i<16; i++) {
-    const a = i*Math.PI/16, b = (i+1)*Math.PI/16;
-    for (let j=0; j<12; j++) {
-      const z = -2.41+j*0.23, end = z+0.23;
-      mesh.face([canopy(a,z),canopy(b,z),canopy(b,end),canopy(a,end)],scale(cane,j%3===0 ? 0.84 : 1),4);
-    }
-    for (const z of [-2.41,-1.52,-0.59,0.35]) {
-      mesh.tube(canopy(a,z),canopy(b,z),0.025,0.025,edge,4,4);
+  for (let i=0; i<24; i++) {
+    const a=i*Math.PI/24,b=(i+1)*Math.PI/24;
+    for (let j=0; j<20; j++) {
+      const z=-2.39+j*0.14,end=z+0.14;
+      mesh.face([canopy(a,z),canopy(b,z),canopy(b,end),canopy(a,end)],
+        scale(cane,(i+j)%7===0 ? 0.87 : 0.97+0.045*Math.sin(i*0.73+j*0.58)),4);
     }
   }
+  for (const z of [-2.35,-1.70,-1.06,-0.42,0.22]) {
+    for (let i=0; i<16; i++) {
+      mesh.tube(canopy(i*Math.PI/16,z),canopy((i+1)*Math.PI/16,z),0.037,0.037,rib,4,5);
+    }
+  }
+  for (let i=1; i<6; i++) {
+    const angle=i*Math.PI/7;
+    for (let j=0; j<9; j++) {
+      const z=-2.34+j*0.32;
+      mesh.tube(canopy(angle,z),canopy(angle,z+0.33),0.018,0.018,edge,4,4);
+    }
+  }
+  for (const side of [-1,1]) {
+    mesh.tube([side*1.05,0.42,-2.34],[side*1.05,0.42,0.23],0.048,0.040,edge,4,5);
+  }
+  mesh.tube([0,0.14,-4.78],[0,0.58,-4.25],0.060,0.046,[0.410,0.287,0.168],4,7);
+  mesh.tube([0,0.58,-4.25],[0,0.68,-3.88],0.046,0.028,edge,4,6);
 
-  const robe = [0.151,0.235,0.262], skin = [0.52,0.331,0.200];
-  mesh.tube([0.21,0.30,2.11],[0.12,1.46,1.88],0.36,0.25,robe,4,8);
-  mesh.tube([0.12,1.46,1.88],[0.10,1.79,1.88],0.133,0.15,skin,4,7);
-  mesh.tube([0.10,1.71,1.88],[0.10,1.92,1.88],0.36,0.075,cane,4,12);
-  mesh.tube([0.29,1.34,1.89],[0.64,1.07,2.13],0.11,0.071,robe,4);
-  mesh.tube([0.64,1.07,2.13],[0.76,0.97,1.94],0.070,0.055,skin,4);
   return mesh.data();
 }
+
+function buildFigure() {
+  const mesh = new Mesh();
+  const robe=[0.126,0.205,0.222], robeLight=[0.174,0.258,0.270], robeDark=[0.088,0.145,0.158];
+  const skin=[0.508,0.321,0.201], hair=[0.123,0.103,0.079], reed=[0.570,0.413,0.236];
+  mesh.ellipsoid([0.00,0.38,2.56],[0.49,0.25,0.55],robeDark,5,12,7);
+  mesh.ellipsoid([0.02,0.49,2.65],[0.47,0.22,0.51],robe,5,12,7);
+  mesh.tube([0.01,0.43,2.48],[-0.10,1.38,2.10],0.39,0.285,robe,5,10);
+  mesh.tube([-0.03,0.56,2.52],[-0.16,1.31,2.16],0.30,0.226,robeLight,5,9);
+  mesh.tube([-0.11,1.30,2.16],[-0.14,1.48,2.12],0.118,0.09,skin,5,8);
+  mesh.ellipsoid([-0.14,1.70,2.07],[0.181,0.235,0.18],skin,5,12,8);
+  mesh.ellipsoid([-0.14,1.865,2.105],[0.184,0.125,0.182],hair,5,12,7);
+  mesh.ellipsoid([-0.14,1.927,2.10],[0.067,0.080,0.073],hair,5,9,6);
+  mesh.ellipsoid([-0.14,1.969,2.07],[0.465,0.046,0.365],reed,4,16,7);
+
+  const crown=[{y:1.982,r:0.38},{y:2.035,r:0.275},{y:2.108,r:0.155},{y:2.154,r:0.025}];
+  for (let row=0; row<crown.length-1; row++) {
+    const lower=crown[row],upper=crown[row+1];
+    for (let i=0; i<16; i++) {
+      const a=i*Math.PI/8,b=(i+1)*Math.PI/8;
+      const point=(angle,ring)=>[-0.14+Math.cos(angle)*ring.r,ring.y,2.07+Math.sin(angle)*ring.r*0.81];
+      mesh.face([point(a,lower),point(b,lower),point(b,upper),point(a,upper)],scale(reed,i%4===0 ? 0.87 : 1),4);
+    }
+  }
+  mesh.tube([-0.59,1.969,2.07],[0.31,1.969,2.07],0.029,0.029,[0.371,0.269,0.161],4,6);
+  for (let i=0; i<12; i++) {
+    const angle=i*Math.PI/6;
+    mesh.tube([-0.14,2.153,2.07],[-0.14+Math.cos(angle)*0.44,1.978,2.07+Math.sin(angle)*0.34],
+      0.009,0.011,[0.405,0.292,0.172],4,4);
+  }
+
+  mesh.tube([-0.34,1.24,2.18],[-0.54,0.91,2.38],0.163,0.128,robe,5,8);
+  mesh.tube([-0.54,0.91,2.38],[-0.35,0.68,2.69],0.102,0.065,robeLight,5,8);
+  mesh.tube([-0.35,0.68,2.69],[-0.28,0.64,2.73],0.062,0.048,skin,5,7);
+  mesh.tube([-0.42,0.58,2.68],[-0.14,0.43,2.49],0.023,0.029,robeLight,5,5);
+  mesh.tube([0.02,0.58,2.68],[0.30,0.47,2.49],0.024,0.029,robeLight,5,5);
+  return mesh.data();
+}
+
+function buildRowingArm(angle,lift) {
+  const mesh = new Mesh();
+  const shoulder=[0.30,1.27,2.15];
+  const elbow=[0.60+Math.sin(angle)*0.14,1.04+lift*0.11,2.18];
+  const hand=[0.75+Math.sin(angle)*0.07,0.96+lift*0.10,1.94];
+  mesh.tube(shoulder,elbow,0.158,0.128,[0.133,0.214,0.229],5,8);
+  mesh.ellipsoid(elbow,[0.135,0.133,0.144],[0.146,0.227,0.239],5,9,6);
+  mesh.tube(elbow,hand,0.093,0.057,[0.175,0.257,0.268],5,8);
+  mesh.tube(mixPoint(elbow,hand,0.69),hand,0.062,0.068,[0.121,0.192,0.206],5,7);
+  mesh.ellipsoid(hand,[0.082,0.067,0.077],[0.505,0.317,0.193],5,8,6);
+  return mesh.data();
+}
+
+function mixPoint(a,b,t) {
+  return a.map((value,index)=>mix(value,b[index],t));
+}
+
+function transformPoint(matrix,point) {
+  return [
+    matrix[0]*point[0]+matrix[4]*point[1]+matrix[8]*point[2]+matrix[12],
+    matrix[1]*point[0]+matrix[5]*point[1]+matrix[9]*point[2]+matrix[13],
+    matrix[2]*point[0]+matrix[6]*point[1]+matrix[10]*point[2]+matrix[14]
+  ];
+}
+
 function buildOar() {
   const mesh = new Mesh();
-  const start = [-0.45,0.20,-0.50], end = [1.86,-0.79,1.48];
-  mesh.tube(start,end,0.048,0.055,[0.42,0.269,0.146],4);
-  mesh.face([end,[2.68,-0.99,2.13],[2.52,-1.13,2.37],add(end,[-0.06,-0.04,0.18])],[0.46,0.308,0.171],4);
+  const shaft=[0.405,0.250,0.139], blade=[0.486,0.331,0.182];
+  const root=[1.79,-0.69,1.39], neck=[2.08,-0.88,1.82];
+  const left=[2.40,-1.47,2.30], tip=[2.63,-1.56,2.70], right=[2.78,-1.43,2.24];
+  mesh.tube([-0.42,0.15,-0.48],root,0.045,0.063,shaft,4,7);
+  mesh.tube(root,neck,0.063,0.073,blade,4,7);
+  mesh.face([neck,left,tip,right],blade,4);
+  mesh.face([neck,right,tip,left],[0.330,0.218,0.122],4);
+  mesh.tube(neck,tip,0.032,0.021,[0.605,0.432,0.248],4,5);
+  mesh.tube(left,right,0.020,0.020,[0.566,0.391,0.207],4,5);
+  mesh.tube([-0.49,0.18,-0.54],[-0.34,0.14,-0.41],0.078,0.078,[0.359,0.258,0.155],4,7);
   return mesh.data();
 }
 
@@ -706,6 +871,15 @@ function placement(x,y,z,heading,pitch=0,roll=0) {
     -c*sz+s*sy*cz, cy*cz, s*sz+c*sy*cz, 0,
     s*cy, -sy, c*cy, 0, x, y, z, 1
   ]);
+}
+function rowingStroke(time) {
+  const phase=(time*0.46)%1;
+  const drive=phase<0.66;
+  const progress=drive ? phase/0.66 : (phase-0.66)/0.34;
+  const eased=0.5-0.5*Math.cos(Math.PI*progress);
+  return drive
+    ? { angle:mix(-0.36,0.33,eased), pitch:mix(0.12,-0.02,eased), lift:0.02, immersion:0.92 }
+    : { angle:mix(0.33,-0.36,eased), pitch:mix(-0.02,-0.25,eased), lift:eased, immersion:1-eased };
 }
 function cameraAt(eye,forward,verticalSlope,aspect) {
   const right = unit(cross(forward,[0,1,0]));
@@ -745,11 +919,12 @@ function createRenderer(gl) {
     const uniforms = Object.fromEntries(names.map(name => [name,gl.getUniformLocation(program,name)]));
     return { program, uniforms };
   }
-  function upload(data,withMaterial=true) {
+  function upload(data,withMaterial=true,dynamic=false) {
     const vao = allocate("VertexArray");
     gl.bindVertexArray(vao);
-    gl.bindBuffer(gl.ARRAY_BUFFER,allocate("Buffer"));
-    gl.bufferData(gl.ARRAY_BUFFER,data.vertices,gl.STATIC_DRAW);
+    const vertexBuffer=allocate("Buffer");
+    gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,data.vertices,dynamic ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW);
     const stride = withMaterial ? 10 : 3;
     const widths = withMaterial ? [3,3,3,1] : [3];
     let offset = 0;
@@ -762,7 +937,12 @@ function createRenderer(gl) {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,allocate("Buffer"));
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,data.indices,gl.STATIC_DRAW);
     }
-    return { vao, indexed: !!data.indices, count: data.indices?.length ?? data.vertices.length/stride };
+    return { vao, vertexBuffer, indexed: !!data.indices, count: data.indices?.length ?? data.vertices.length/stride };
+  }
+  function update(mesh,data) {
+    gl.bindBuffer(gl.ARRAY_BUFFER,mesh.vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,data.vertices,gl.DYNAMIC_DRAW);
+    mesh.count=data.vertices.length/10;
   }
   function draw(mesh) {
     gl.bindVertexArray(mesh.vao);
@@ -779,7 +959,7 @@ function createRenderer(gl) {
     const sky = makeProgram(skyVertex,skyFragment,[...common,"uForward","uRight","uUp","uSlope"]);
     const land = makeProgram(landVertex,landFragment,[...common,"uViewProjection","uModel","uReflection","uCliff"]);
     const water = makeProgram(riverVertex,riverFragment,[...common,"uViewProjection","uMirror",
-      "uMirrorProjection","uBoat","uFine"]);
+      "uMirrorProjection","uBoat","uPaddle","uFine"]);
     const screen = allocate("VertexArray");
     if (!stageData) {
       const banks = new Mesh();
@@ -787,10 +967,17 @@ function createRenderer(gl) {
       buildClifftop(banks,grids[0]);
       buildTrees(banks,grids);
       buildShoreRocks(banks,grids);
-      stageData = { terrain: data, banks: banks.data(), boat: buildBoat(), oar: buildOar() };
+      stageData = {
+        terrain:data,
+        banks:banks.data(),
+        boat:buildBoat(),
+        figure:buildFigure(),
+        oar:buildOar()
+      };
     }
     const terrain = upload(stageData.terrain), banks = upload(stageData.banks);
-    const boat = upload(stageData.boat), oar = upload(stageData.oar);
+    const boat = upload(stageData.boat), figure = upload(stageData.figure);
+    const rowingArm = upload(buildRowingArm(0,0),true,true), oar = upload(stageData.oar);
     const surface = upload({ vertices: new Float32Array([
       -465,0,255, 465,0,255, -465,0,-1550, -465,0,-1550, 465,0,255, 465,0,-1550
     ]) },false);
@@ -887,11 +1074,14 @@ function createRenderer(gl) {
       draw(banks);
       gl.uniformMatrix4fv(shape.uModel,false,models.boat);
       draw(boat);
+      draw(figure);
+      draw(rowingArm);
       gl.uniformMatrix4fv(shape.uModel,false,models.oar);
       draw(oar);
     }
     function render(time,pose) {
       const { fine, aspect, w, h } = resize();
+      update(rowingArm,buildRowingArm(pose.stroke.angle,pose.stroke.lift));
       const camera = cameraAt(pose.eye,pose.forward,pose.slope,aspect);
       const reflected = cameraAt([pose.eye[0],-pose.eye[1],pose.eye[2]],
         [pose.forward[0],-pose.forward[1],pose.forward[2]],pose.slope,aspect);
@@ -907,6 +1097,7 @@ function createRenderer(gl) {
       gl.uniformMatrix4fv(liquid.uViewProjection,false,camera.matrix);
       gl.uniformMatrix4fv(liquid.uMirrorProjection,false,reflected.matrix);
       gl.uniform3fv(liquid.uBoat,pose.wake);
+      gl.uniform3fv(liquid.uPaddle,pose.paddle);
       gl.uniform1i(liquid.uFine,fine);
       gl.uniform1i(liquid.uMirror,1);
       draw(surface);
@@ -931,17 +1122,19 @@ let firstFrame = true;
 
 function scenePose(time) {
   const position = Math.min(time%journeySeconds,journeySeconds-0.5);
-  const s = 27+position*7.35;
+  const stroke = rowingStroke(time);
+  const s = 27+position*7.35+Math.sin(time*0.46*2*Math.PI)*0.19;
   const xAt = d => channel(d)+2.7*Math.sin(d*0.024);
   const x = xAt(s);
   const slope = (xAt(s+1)-xAt(s-1))*0.5;
   const heading = Math.atan(slope);
-  const pitch = 0.028*Math.sin(time*2.6)+0.012*Math.sin(time*4.7);
-  const roll = 0.049*Math.sin(time*1.8+0.4)+0.017*Math.sin(time*4.1);
-  const boat = placement(x,0.093*Math.sin(time*2.75),-s,-heading,pitch,roll);
-  const paddleAngle = time*3.05;
-  const oar = multiply(boat,placement(0.75,0.95,1.94,
-    0.16*Math.sin(paddleAngle),0.11*Math.cos(paddleAngle),0.11*Math.sin(paddleAngle)));
+  const pitch=0.025*Math.sin(time*2.3)+0.014*Math.sin(time*5.1);
+  const roll=0.041*Math.sin(time*1.8+0.4)+0.014*Math.sin(time*4.4);
+  const boat=placement(x,0.31+0.055*Math.sin(time*2.25)+0.016*Math.sin(time*4.9),-s,-heading,pitch,roll);
+  const handX=0.75+Math.sin(stroke.angle)*0.07;
+  const handY=0.96+stroke.lift*0.10;
+  const oar=multiply(boat,placement(handX,handY,1.94,stroke.angle,stroke.pitch,0.035*Math.sin(stroke.angle)));
+  const paddleTip=transformPoint(oar,[2.63,-1.56,2.70]);
   const fromAbove = cameraControl.overlook;
   const narrow = portrait.matches;
   const distance = (fromAbove ? 34 : narrow ? 26 : 28.5)*cameraControl.zoom;
@@ -950,10 +1143,14 @@ function scenePose(time) {
   const eyeS = s-Math.cos(yaw)*distance;
   const eyeX = clamp(x+Math.sin(yaw)*distance,bankX(-1,eyeS)+3,bankX(1,eyeS)-3);
   const eye = [eyeX,Math.max(2.0,height),-eyeS];
-  const target = [x+(narrow ? -5.0 : -4.2)+(channel(s+27)-channel(s))*0.35,
+  const target = [x+(narrow ? -1.9 : -4.2)+(channel(s+27)-channel(s))*0.35,
     fromAbove ? 2.0 : 7.05, -s-(fromAbove ? 18 : 20)];
   const forward = unit(minus(target,eye));
-  return { eye, forward, slope: narrow ? 0.71 : 0.49, boat, oar, wake:[x,-s,-slope] };
+  return {
+    eye,forward,slope:narrow ? 0.71 : 0.49,boat,oar,stroke,
+    wake:[x,-s,-slope],
+    paddle:[paddleTip[0],paddleTip[2],stroke.immersion]
+  };
 }
 
 function setStatus(message,canRetry=false) {
