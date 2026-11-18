@@ -660,7 +660,7 @@
       "hardness": "H4",
       "visualBrief": "清晨峡江高速行舟、两岸山影",
       "textReview": "待版本校勘",
-      "sceneStatus": "available",
+      "sceneStatus": "prototype",
       "scenePath": null,
       "model": null,
       "tools": [],
@@ -688,7 +688,20 @@
         "mode": "digital-exact-match",
         "warning": "来源为社区电子转录，尚未逐字与纸本校勘；保留原语料字形和标点。"
       },
-      "scenes": []
+      "scenes": [
+        {
+          "id": "dawn-through-kuimen",
+          "title": "夔门晓发",
+          "path": "scenes/baidicheng/dawn-through-kuimen.html",
+          "model": "GPT-6 (Codex)",
+          "tools": [
+            "WebGL2",
+            "GLSL ES 3.00",
+            "HTML/CSS/Vanilla JS"
+          ],
+          "status": "prototype"
+        }
+      ]
     },
     {
       "id": "huanghelou-songbie",
